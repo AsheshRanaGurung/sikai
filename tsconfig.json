@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "baseUrl": ".",
+    "paths": {
+      "@sikaai/hooks/*": ["hooks/*"],
+      "@sikaai/components/*": ["components/*"],
+      "@sikaai/pages/*": ["pages/*"],
+      "@sikaai/providers/*": ["providers/*"],
+      "@sikaai/routes/*": ["routes/*"],
+      "@sikaai/service/*": ["service/*"],
+      "@sikaai/theme/*": ["theme/*"],
+      "@sikaai/translations/*": ["translations/*"],
+      "@sikaai/types/*": ["types/*"],
+      "@sikaai/assets/*": ["assets/*"],
+      "@sikaai/utils/*": ["utils/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src", "types.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
