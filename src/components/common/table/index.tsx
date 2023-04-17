@@ -16,7 +16,6 @@ import {
   useSortBy,
   useGlobalFilter,
 } from "react-table";
-//   import { ExportIcon, NoDataIcon } from "@sikaai/assets/svgs";
 
 import {
   Box,
@@ -46,6 +45,7 @@ import {
 } from "@chakra-ui/icons";
 // import { AddIcon } from "@sikaai/assets/svgs";
 import { sikaai_colors } from "@sikaai/theme/color";
+import { AddCircleIcon } from "@sikaai/assets/svgs";
 
 export function getPager(
   totalRows: number,
@@ -65,7 +65,7 @@ const styleTableWithRightBorder = {
     color: "#585858",
     paddingY: 4,
     paddingX: 2,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   "& tr": {
     "&:nth-of-type(even)": {
@@ -74,7 +74,7 @@ const styleTableWithRightBorder = {
   },
   "& td": {
     border: 0,
-    color: "#585858",
+    color: sikaai_colors.gray,
     boxShadow: "none",
     paddingY: 4,
     paddingX: 2,
@@ -269,7 +269,7 @@ const DataTable = React.memo(
                 placeholder="Search"
                 height="44px"
                 fontSize="16px"
-                fontFamily="'Mukta', sans-serif"
+                fontFamily="'Urbanist', sans-serif"
                 pr={12}
                 borderRadius={8}
                 onChange={(e) => {
@@ -319,7 +319,7 @@ const DataTable = React.memo(
 
             {exports && (
               <Button
-                backgroundColor={sikaai_colors.gray_header}
+                backgroundColor={sikaai_colors.gray}
                 color={sikaai_colors.primary}
                 size={"md"}
                 //leftIcon={<ExportIcon />}
@@ -343,8 +343,8 @@ const DataTable = React.memo(
             {btnText && (
               <Button
                 variant={"primary"}
-                size={"md"}
-                // leftIcon={<AddIcon />}
+                size={"fit"}
+                leftIcon={<AddCircleIcon />}
                 onClick={onAction}
                 outline="none"
                 border={"none"}
@@ -355,6 +355,11 @@ const DataTable = React.memo(
                   },
                   "&::after": {
                     border: "none",
+                  },
+                  "&:hover": {
+                    "svg path": {
+                      fill: sikaai_colors.primary,
+                    },
                   },
                 }}
               >
@@ -427,7 +432,7 @@ const DataTable = React.memo(
                     <Text
                       fontSize={14}
                       textAlign="center"
-                      color={sikaai_colors.light_gray}
+                      color={sikaai_colors.gray}
                     >
                       No data
                     </Text>
@@ -599,7 +604,7 @@ export const Pagination = ({
                       },
                     }}
                     fontSize="18px"
-                    fontFamily="'Mukta', sans-serif"
+                    fontFamily="'Urbanist', sans-serif"
                     cursor="pointer"
                     onClick={() => {
                       pageChange?.(page);

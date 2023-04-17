@@ -8,7 +8,7 @@
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "@sikaai/hooks/*": ["hooks/*"],
       "@sikaai/components/*": ["components/*"],
@@ -32,6 +32,8 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "types.ts"],
+  "include": ["src"],
+  "exclude": ["d.ts"],
+  "files": ["src/@types/env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
