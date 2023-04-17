@@ -4,6 +4,7 @@ export const NAVIGATION_ROUTES = {
   SERVICES: "/services",
   ADVERTISEMENT: "/advertisement",
   FAQ: "/FAQ",
+  FAQ_CREATE: "/FAQ/create",
   FORUM: "/forum",
   ABOUT_US: "/about-us",
   NOTIFICATION: "/notification",
@@ -11,5 +12,5 @@ export const NAVIGATION_ROUTES = {
   ADVANCE_AD: "/advance-ad",
   BASIC_AD: "/basic-ad",
   SETTINGS: "/settings",
-  LOGOUT: "./logout"
+  LOGOUT: "./logout",
 };

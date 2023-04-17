@@ -6,6 +6,8 @@ import Layout from "@sikaai/components/layouts/Layout";
 import PremiumAd from "@sikaai/pages/Advertisement/PremiumAd";
 import AdvanceAd from "@sikaai/pages/Advertisement/AdvanceAd";
 import BasicAd from "@sikaai/pages/Advertisement/BasicAd";
+import FAQ from "@sikaai/pages/FAQ";
+import CreateFAQ from "@sikaai/pages/FAQ/CreateFAQ";
 
 const routes = [
   {
@@ -36,7 +38,23 @@ const routes = [
     path: NAVIGATION_ROUTES.BASIC_AD,
     element: (
       <Layout>
-        <BasicAd/>
+        <BasicAd />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.FAQ,
+    element: (
+      <Layout>
+        <FAQ />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.FAQ_CREATE,
+    element: (
+      <Layout>
+        <CreateFAQ />
       </Layout>
     ),
   },
