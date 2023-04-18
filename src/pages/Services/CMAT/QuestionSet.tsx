@@ -8,9 +8,11 @@ import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-const AdvanceAd = () => {
+const QuestionSet = () => {
   const { register } = useForm();
+  const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -20,13 +22,10 @@ const AdvanceAd = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Advertisement Banner",
-        accessor: "advertisementBanner",
+        Header: "Question Set",
+        accessor: "questionSet",
       },
-      {
-        Header: "Advertisement Link",
-        accessor: "advertisementLink",
-      },
+
       {
         Header: "Status",
         accessor: "status",
@@ -41,10 +40,17 @@ const AdvanceAd = () => {
           const onEdit = () => {
             onModalOpen();
           };
+          const onShowQues = () => {
+            navigate(NAVIGATION_ROUTES.CREATE_QUESTION_SET);
+          };
           const onDelete = () => {};
           return (
             <Stack alignItems={"flex-start"}>
-              <TableActions onEdit={onEdit} onDelete={onDelete} />
+              <TableActions
+                onEdit={onEdit}
+                onShowQues={onShowQues}
+                onDelete={onDelete}
+              />
             </Stack>
           );
         },
@@ -53,87 +59,64 @@ const AdvanceAd = () => {
     []
   );
 
+  // React queries
+
+  // React queries end
+
   return (
     <>
       <div>
-        <BreadCrumb
-          title={"Advertisement"}
-          items={[
-            {
-              name: `Advance Ads`,
-              route: NAVIGATION_ROUTES.PREMIUM_AD,
-            },
-          ]}
-        />
+        <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
           data={[
             {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
+              questionSet: "1234",
               status: "true",
               uploadDate: "123",
             },
             {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
+              questionSet: "1234",
               status: "true",
               uploadDate: "123",
             },
           ]}
+          //   loading={}
           columns={columns}
-          btnText={"Add New Advertisement"}
+          btnText={"Create question Set"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm
           isModalOpen={isModalOpen}
-          title={"Upload Advertisement"}
+          title={"Edit service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}
         >
           <>
             <FormControl
-              control="file"
+              control="input"
               size="lg"
               register={register}
-              name="image"
-              label={"Upload Image"}
+              name="link"
+              placeholder={"Service Name"}
+              label={"Service Name"}
             />
             <FormControl
               control="input"
               size="lg"
               register={register}
               name="link"
-              placeholder={"Enter Link"}
-              label={"Advertisement Link"}
-            />
-            <FormControl
-              control="select"
-              options={[]}
-              size="lg"
-              register={register}
-              name="advertisementPlacement"
-              placeholder={"Choose the placement of Advertisement"}
-              label={"Choose the placement of advertisement"}
+              placeholder={"Description"}
+              label={"Description"}
             />
           </>
         </ModalForm>
-
-        {/* <ModalForm
-          isModalOpen={isModalOpen}
-          title={"Edit service"}
-          closeModal={onModalClose}
-          resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
-        >
-
-        </ModalForm> */}
       </div>
     </>
   );
 };
 
-export default AdvanceAd;
+export default QuestionSet;

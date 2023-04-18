@@ -5,11 +5,10 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-const AdvanceAd = () => {
+const AbroadStudies = () => {
   const { register } = useForm();
   const {
     isOpen: isModalOpen,
@@ -20,31 +19,39 @@ const AdvanceAd = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Advertisement Banner",
-        accessor: "advertisementBanner",
+        Header: "Full Name",
+        accessor: "fullName",
       },
       {
-        Header: "Advertisement Link",
-        accessor: "advertisementLink",
+        Header: "Email",
+        accessor: "email",
       },
       {
-        Header: "Status",
-        accessor: "status",
+        Header: "Address",
+        accessor: "address",
       },
       {
-        Header: "Upload Date",
-        accessor: "uploadDate",
+        Header: "Phone Number",
+        accessor: "phoneNumber",
+      },
+      {
+        Header: "College",
+        accessor: "College",
+      },
+      {
+        Header: "Date",
+        accessor: "Date",
       },
       {
         Header: "Action",
         Cell: () => {
-          const onEdit = () => {
+          const onView = () => {
             onModalOpen();
           };
           const onDelete = () => {};
           return (
             <Stack alignItems={"flex-start"}>
-              <TableActions onEdit={onEdit} onDelete={onDelete} />
+              <TableActions onView={onView} onDelete={onDelete} />
             </Stack>
           );
         },
@@ -53,20 +60,16 @@ const AdvanceAd = () => {
     []
   );
 
+  // React queries
+  // React queries end
+
   return (
     <>
       <div>
-        <BreadCrumb
-          title={"Advertisement"}
-          items={[
-            {
-              name: `Advance Ads`,
-              route: NAVIGATION_ROUTES.PREMIUM_AD,
-            },
-          ]}
-        />
+        <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
+          // data={tableData || []}
           data={[
             {
               advertisementBanner: "1234",
@@ -81,59 +84,72 @@ const AdvanceAd = () => {
               uploadDate: "123",
             },
           ]}
+          // loading={tableDataFetching}
           columns={columns}
-          btnText={"Add New Advertisement"}
-          onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm
-          isModalOpen={isModalOpen}
-          title={"Upload Advertisement"}
-          closeModal={onModalClose}
-          resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
-        >
-          <>
-            <FormControl
-              control="file"
-              size="lg"
-              register={register}
-              name="image"
-              label={"Upload Image"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Enter Link"}
-              label={"Advertisement Link"}
-            />
-            <FormControl
-              control="select"
-              options={[]}
-              size="lg"
-              register={register}
-              name="advertisementPlacement"
-              placeholder={"Choose the placement of Advertisement"}
-              label={"Choose the placement of advertisement"}
-            />
-          </>
-        </ModalForm>
-
-        {/* <ModalForm
           isModalOpen={isModalOpen}
           title={"Edit service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}
         >
-
-        </ModalForm> */}
+          <>
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="fullName"
+              placeholder={"Full Name"}
+              label={"Full Name"}
+            />
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="email"
+              placeholder={"Email"}
+              label={"Email"}
+            />
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="address"
+              placeholder={"Address"}
+              label={"Address"}
+            />
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="phoneNumber"
+              placeholder={"Phone Number"}
+              label={"Phone Number"}
+            />
+            <FormControl
+              control="textArea"
+              size="lg"
+              register={register}
+              name="college"
+              placeholder={"College"}
+              label={"College"}
+            />
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="link"
+              placeholder={"Message"}
+              label={"Message"}
+            />
+          </>
+        </ModalForm>
       </div>
     </>
   );
 };
 
-export default AdvanceAd;
+export default AbroadStudies;

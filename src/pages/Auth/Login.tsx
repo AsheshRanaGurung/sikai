@@ -2,25 +2,41 @@ import {
   Box,
   Button,
   Flex,
-  HStack,
-  Spacer,
   Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { SikaaiLoginIcon, SikaaiLogoIcon } from "@sikaai/assets/svgs";
 import FormControl from "@sikaai/components/form/FormControl";
+import { LoginDetails, useLoginMutation } from "@sikaai/service/sikaai-auth";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useNavigate } from "react-router-dom";
+import httpStatus from "http-status";
+
+const defaultValues: LoginDetails = {
+  email: "",
+  password: ""
+}
 
 const Login = () => {
-  const { t } = useTranslation();
+  const navigate = useNavigate();  
   const { isOpen: isVisible, onToggle: onToggleVisibility } = useDisclosure();
+  const {mutateAsync:initLogin, isLoading } = useLoginMutation();
 
-  const { register } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     mode: "onBlur",
+    defaultValues: defaultValues
   });
+
+  const onSubmitHandler = async(loginDetails: LoginDetails) => {
+    const response= await initLogin(loginDetails);
+    if(response?.status === httpStatus.OK){
+      navigate(NAVIGATION_ROUTES.DASHBOARD, { replace: true});
+    }
+    reset(defaultValues);
+  }
 
   return (
     <Box
@@ -29,15 +45,21 @@ const Login = () => {
       justifyContent={"center"}
       alignItems="center"
     >
-      <Flex w={"74rem"}>
-        <Flex flex={1} flexDirection={"column"} gap={4} mx="6rem" py={"2rem"}>
+      <Flex w={"100rem"}>
+        <Flex
+          flex={1}
+          flexDirection={"column"}
+          gap={4}
+          ml="6rem"
+          mr="20rem"
+          py={"2rem"}
+        >
           <Box>
             <SikaaiLogoIcon />
             <Flex mt={6}>
               <Text
                 fontSize={"20px"}
                 color={sikaai_colors.black}
-                mb={3}
                 fontWeight={400}
               >
                 {"Welcome to"}&nbsp;
@@ -45,7 +67,7 @@ const Login = () => {
               <Text
                 fontSize={"20px"}
                 color={sikaai_colors.primary}
-                mb={3}
+                mb={1}
                 fontWeight={400}
               >
                 {"Sikaai"}
@@ -55,15 +77,15 @@ const Login = () => {
               {"Sign in"}
             </Text>
 
-            <form>
-              <VStack pt={6} spacing={5}>
+            <form onSubmit={handleSubmit(onSubmitHandler)}>
+              <VStack pt={6} spacing={8}>
                 <FormControl
                   control="input"
                   size="lg"
                   type="email"
                   register={register}
                   placeholder={"Email"}
-                  label={t("Enter Your Email")}
+                  label="Enter Your Email"
                   name="email"
                   // error={t(errors?.email?.message ?? "")}
                 />
@@ -75,20 +97,15 @@ const Login = () => {
                   onToggleVisibility={onToggleVisibility}
                   name="password"
                   placeholder={"Password"}
-                  label={t("Enter your Password")}
+                  label="Enter your Password"
                   // error={t(errors?.password?.message ?? "")}
                 />
-
-                <HStack width={"100%"}>
-                  <Spacer />
-                  {t("forgotPasswordText")}
-                </HStack>
 
                 <Button
                   type="submit"
                   variant="primary"
-                  size="lg"
-                  // isLoading={isLoading}
+                  size="lg_fit"
+                  isLoading={isLoading}
                 >
                   {"Sign in"}
                 </Button>

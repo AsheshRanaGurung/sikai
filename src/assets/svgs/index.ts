@@ -21,3 +21,6 @@ export { ReactComponent as ActiveUsersIcon } from "./activeUsersIcon.svg";
 export { ReactComponent as SearchIcon } from "./searchIcon.svg";
 export { ReactComponent as PlusIcon } from "./plusIcon.svg";
 export { ReactComponent as TrashIcon } from "./trashIcon.svg";
+export { ReactComponent as EditIcon } from "./editIcon.svg";
+export { ReactComponent as SettingTableIcon } from "./settingTableIcon.svg";
+export { ReactComponent as QuestionIcon } from "./questionIcon.svg";

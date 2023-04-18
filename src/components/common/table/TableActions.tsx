@@ -1,24 +1,25 @@
 import { Flex, IconButton } from "@chakra-ui/react";
 
-// import {
-//   SettingIcon,
-//   EditIcon,
-//   DeleteIcon,
-//   ViewIcon,
-//   RecordIcon,
-// } from "@sikaai/assets/svgs";
+import {
+  SettingTableIcon,
+  EditIcon,
+  TrashIcon,
+  EyeIcon,
+  QuestionIcon,
+} from "@sikaai/assets/svgs";
 
 const TableActions = ({
   onEdit,
   onView,
   onDelete,
   onSetting,
-  onShowRecord,
-  onDisableSetting,
+  onShowQues,
+
   onDisableEdit,
   onDisableDelete,
   onDisableView,
-  onDisableShowRecord,
+  onDisableSetting,
+  onDisableShowQues,
 }: ITableActions) => {
   return (
     <Flex
@@ -27,6 +28,50 @@ const TableActions = ({
       alignItems="center"
       justifyContent={"center"}
     >
+      {!!onView && (
+        <IconButton
+          disabled={onDisableView}
+          width={"20px"}
+          aria-label="settings"
+          bgColor={"transparent"}
+          icon={<EyeIcon />}
+          onClick={onView}
+          sx={{
+            "&:hover": {
+              bgColor: "transparent",
+            },
+            "&:focus": {
+              outline: "none",
+            },
+            "&:disabled": {
+              background: "none !important",
+            },
+          }}
+        />
+      )}
+
+      {!!onEdit && (
+        <IconButton
+          disabled={onDisableEdit}
+          width={"20px"}
+          aria-label="settings"
+          bgColor={"transparent"}
+          onClick={onEdit}
+          icon={<EditIcon />}
+          sx={{
+            "&:hover": {
+              bgColor: "transparent",
+            },
+            "&:focus": {
+              outline: "none",
+            },
+            "&:disabled": {
+              background: "none !important",
+            },
+          }}
+        />
+      )}
+
       {!!onSetting && (
         <IconButton
           disabled={onDisableSetting}
@@ -34,7 +79,7 @@ const TableActions = ({
           aria-label="settings"
           bgColor={"transparent"}
           onClick={onSetting}
-            // icon={<SettingIcon />}
+          icon={<SettingTableIcon />}
           sx={{
             "&:hover": {
               bgColor: "transparent",
@@ -45,15 +90,15 @@ const TableActions = ({
           }}
         />
       )}
-      {!!onEdit && (
+
+      {!!onShowQues && (
         <IconButton
-          disabled={onDisableEdit}
+          disabled={onDisableShowQues}
           width={"20px"}
           aria-label="settings"
           bgColor={"transparent"}
-          onClick={onEdit}
-          //   icon={<EditIcon />}
-          // TODO: make a generic component for repeating code
+          icon={<QuestionIcon />}
+          onClick={onShowQues}
           sx={{
             "&:hover": {
               bgColor: "transparent",
@@ -74,52 +119,8 @@ const TableActions = ({
           width={"20px"}
           aria-label="settings"
           bgColor={"transparent"}
-          //   icon={<DeleteIcon />}
+          icon={<TrashIcon />}
           onClick={onDelete}
-          sx={{
-            "&:hover": {
-              bgColor: "transparent",
-            },
-            "&:focus": {
-              outline: "none",
-            },
-            "&:disabled": {
-              background: "none !important",
-            },
-          }}
-        />
-      )}
-
-      {!!onView && (
-        <IconButton
-          disabled={onDisableView}
-          width={"20px"}
-          aria-label="settings"
-          bgColor={"transparent"}
-          //   icon={<ViewIcon />}
-          onClick={onView}
-          sx={{
-            "&:hover": {
-              bgColor: "transparent",
-            },
-            "&:focus": {
-              outline: "none",
-            },
-            "&:disabled": {
-              background: "none !important",
-            },
-          }}
-        />
-      )}
-
-      {!!onShowRecord && (
-        <IconButton
-          disabled={onDisableShowRecord}
-          width={"20px"}
-          aria-label="settings"
-          bgColor={"transparent"}
-          //   icon={<RecordIcon />}
-          onClick={onShowRecord}
           sx={{
             "&:hover": {
               bgColor: "transparent",
@@ -141,13 +142,13 @@ interface ITableActions {
   onView?: () => void;
   onDelete?: () => void;
   onSetting?: () => void;
-  onShowRecord?: () => void;
-  // to disable button for some user: pass boolean value to the disable props
+  onShowQues?: () => void;
+  // To disable button for some user: pass boolean value to the disable props
   onDisableEdit?: boolean;
   onDisableView?: boolean;
   onDisableDelete?: boolean;
   onDisableSetting?: boolean;
-  onDisableShowRecord?: boolean;
+  onDisableShowQues?: boolean;
 }
 
 export default TableActions;
