@@ -18,3 +18,7 @@ export { ReactComponent as EyeIcon } from "./eyeIcon.svg";
 export { ReactComponent as TotalAddIcon } from "./totalAddIcon.svg";
 export { ReactComponent as TotalQuesCreatedIcon } from "./totalQuesCreatedIcon.svg";
 export { ReactComponent as ActiveUsersIcon } from "./activeUsersIcon.svg";
+export { ReactComponent as EditIcon } from "./editIcon.svg";
+export { ReactComponent as TrashIcon } from "./trashIcon.svg";
+export { ReactComponent as SettingTableIcon } from "./settingTableIcon.svg";
+export { ReactComponent as QuestionIcon } from "./questionIcon.svg";

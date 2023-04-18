@@ -84,7 +84,7 @@ export const buttonTheme = defineStyleConfig({
       width: "fit-content",
     },
     lg_fit: {
-      height: "40px",
+      height: "50px",
       fontSize: 16,
       fontWeight: "600",
       width: "100%",

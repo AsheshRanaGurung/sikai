@@ -6,11 +6,14 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+// import { useGetServices } from "@sikaai/service/sikaai-services";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-const AdvanceAd = () => {
+const Services = () => {
   const { register } = useForm();
+  const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -20,12 +23,12 @@ const AdvanceAd = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Advertisement Banner",
-        accessor: "advertisementBanner",
+        Header: "Services",
+        accessor: "Services",
       },
       {
-        Header: "Advertisement Link",
-        accessor: "advertisementLink",
+        Header: "Description",
+        accessor: "Description",
       },
       {
         Header: "Status",
@@ -42,10 +45,16 @@ const AdvanceAd = () => {
             onModalOpen();
           };
           const onDelete = () => {};
+          const onSetting = () => {
+            navigate(`${NAVIGATION_ROUTES.CMAT_SECTION}`);
+          };
+          const onShowQues = () => {};
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
                 onEdit={onEdit}
+                onSetting={onSetting}
+                onShowQues={onShowQues}
                 onDelete={onDelete}
               />
             </Stack>
@@ -56,20 +65,18 @@ const AdvanceAd = () => {
     []
   );
 
+  // React queries
+  // const { data: tableData = [], isFetching: tableDataFetching } =
+  //   useGetServices();
+  // React queries end
+
   return (
     <>
       <div>
-        <BreadCrumb
-          title={"Advertisement"}
-          items={[
-            {
-              name: `Advance Ads`,
-              route: NAVIGATION_ROUTES.PREMIUM_AD,
-            },
-          ]}
-        />
+        <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
+          // data={tableData || []}
           data={[
             {
               advertisementBanner: "1234",
@@ -84,59 +91,42 @@ const AdvanceAd = () => {
               uploadDate: "123",
             },
           ]}
+          // loading={tableDataFetching}
           columns={columns}
-          btnText={"Add New Advertisement"}
+          btnText={"Create new service"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm
           isModalOpen={isModalOpen}
-          title={"Upload Advertisement"}
+          title={"Edit service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}
         >
           <>
             <FormControl
-              control="file"
+              control="input"
               size="lg"
               register={register}
-              name="image"
-              label={"Upload Image"}
+              name="link"
+              placeholder={"Service Name"}
+              label={"Service Name"}
             />
             <FormControl
               control="input"
               size="lg"
               register={register}
               name="link"
-              placeholder={"Enter Link"}
-              label={"Advertisement Link"}
-            />
-            <FormControl
-              control="select"
-              options={[]}
-              size="lg"
-              register={register}
-              name="advertisementPlacement"
-              placeholder={"Choose the placement of Advertisement"}
-              label={"Choose the placement of advertisement"}
+              placeholder={"Description"}
+              label={"Description"}
             />
           </>
         </ModalForm>
-
-        {/* <ModalForm
-          isModalOpen={isModalOpen}
-          title={"Edit service"}
-          closeModal={onModalClose}
-          resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
-        >
-
-        </ModalForm> */}
       </div>
     </>
   );
 };
 
-export default AdvanceAd;
+export default Services;
