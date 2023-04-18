@@ -6,6 +6,7 @@ import Layout from "@sikaai/components/layouts/Layout";
 import PremiumAd from "@sikaai/pages/Advertisement/PremiumAd";
 import AdvanceAd from "@sikaai/pages/Advertisement/AdvanceAd";
 import BasicAd from "@sikaai/pages/Advertisement/BasicAd";
+import FAQ from "@sikaai/pages/FAQ";
 import Services from "@sikaai/pages/Services";
 import ServiceSection from "@sikaai/pages/Services/CMAT/AddSection";
 import QuestionSet from "@sikaai/pages/Services/CMAT/QuestionSet";
@@ -42,6 +43,14 @@ const routes = [
     element: (
       <Layout>
         <BasicAd />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.FAQ,
+    element: (
+      <Layout>
+        <FAQ />
       </Layout>
     ),
   },
