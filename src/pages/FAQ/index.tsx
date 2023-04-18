@@ -5,33 +5,37 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const FAQ = () => {
   const navigate = useNavigate();
-  const columns = [
-    {
-      Header: "Question",
-      accessor: "question",
-    },
-    {
-      Header: "Answer",
-      accessor: "answer",
-    },
-    {
-      Header: "Status",
-      accessor: "status",
-    },
-    {
-      Header: "Created Date",
-      accessor: "createddate",
-    },
-    {
-      Header: "Action",
-      accessor: "action",
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Question",
+        accessor: "question",
+      },
+      {
+        Header: "Answer",
+        accessor: "answer",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+      },
+      {
+        Header: "Created Date",
+        accessor: "createddate",
+      },
+      {
+        Header: "Action",
+        accessor: "action",
+      },
+    ],
+    []
+  );
   const { register } = useForm();
   const { isOpen, onOpen, onClose: onModalClose } = useDisclosure();
   return (

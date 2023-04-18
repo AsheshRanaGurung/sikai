@@ -59,6 +59,14 @@ const routes = [
     ),
   },
   {
+    path: NAVIGATION_ROUTES.FAQ_CREATE,
+    element: (
+      <Layout>
+        <CreateFAQ />
+      </Layout>
+    ),
+  },
+  {
     path: NAVIGATION_ROUTES.LOGIN,
     element: <Login />,
   },

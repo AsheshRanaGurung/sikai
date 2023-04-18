@@ -4,11 +4,12 @@ import { useFieldArray, useForm } from "react-hook-form";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { PlusIcon, TrashIcon } from "@sikaai/assets/svgs";
+import { sikaai_colors } from "@sikaai/theme/color";
 
 const CreateFAQ = () => {
   const { control, register } = useForm({
     defaultValues: {
-      test: [
+      faq: [
         {
           question: "",
           answer: "",
@@ -16,15 +17,19 @@ const CreateFAQ = () => {
       ],
     },
   });
-  const { append, fields, remove } = useFieldArray({ control, name: "test" });
-  console.log(fields);
+  const { append, fields, remove } = useFieldArray({ control, name: "faq" });
   return (
     <>
       <BreadCrumb
         title="Frequently Asked Question"
         items={[{ name: "create FAQ", route: NAVIGATION_ROUTES.FAQ_CREATE }]}
       />
-      <Text fontWeight={"bold"} fontSize={"sm"} mb={"10px"} color={["#585858"]}>
+      <Text
+        fontWeight={"bold"}
+        fontSize={"sm"}
+        mb={"10px"}
+        color={sikaai_colors.gray_text}
+      >
         Create FAQ
       </Text>
       {fields.map((item, index) => {
@@ -61,7 +66,7 @@ const CreateFAQ = () => {
       })}
 
       <Flex
-        backgroundColor={"white"}
+        backgroundColor={sikaai_colors.white}
         padding={5}
         borderRadius={"8px"}
         mt={"10px"}
@@ -70,7 +75,7 @@ const CreateFAQ = () => {
       >
         <Box
           borderRadius={"full"}
-          backgroundColor={["rgba(88, 95, 205, 0.2)"]}
+          backgroundColor={sikaai_colors.primary_light}
           p={"2"}
           onClick={() => {
             append({
@@ -84,7 +89,7 @@ const CreateFAQ = () => {
         <Text fontSize={"sm"}>Add More</Text>
       </Flex>
       <Flex
-        backgroundColor={"white"}
+        backgroundColor={sikaai_colors.white}
         padding={5}
         borderRadius={"8px"}
         mt={"10px"}
