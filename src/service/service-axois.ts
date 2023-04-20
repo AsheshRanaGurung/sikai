@@ -14,7 +14,7 @@ export const baseURL = import.meta.env.VITE_APP_BACKEND_API;
 
 const baseConfig = (disableAuth?: boolean): AxiosRequestConfig<RequestData> => {
   const token = TokenService.getToken()?.access_token;
-  const refresh_token = TokenService.getToken()?.refresh_token;
+  // const refresh_token = TokenService.getToken()?.refresh_token;
   return {
     baseURL,
     timeout: THREE_MINUTES,
@@ -22,7 +22,7 @@ const baseConfig = (disableAuth?: boolean): AxiosRequestConfig<RequestData> => {
       ? {}
       : {
           Authorization: `Bearer ${token}`,
-          refresh_token,
+          // refresh_token,
         },
   };
 };

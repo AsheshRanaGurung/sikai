@@ -8,7 +8,7 @@ interface ISwitch {
 }
 
 const variants = {
-  primary: sikaai_colors.green,
+  primary: "green",
 };
 
 const Switch = ({ variant, value, toggleSwitch, disabled }: ISwitch) => {

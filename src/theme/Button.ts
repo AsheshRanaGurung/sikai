@@ -57,12 +57,20 @@ const secondary = defineStyle({
   },
 });
 
+const round = defineStyle({
+  ...secondary,
+  height: "34px",
+  width: "34px",
+  borderRadius: "50%",
+});
+
 export const buttonTheme = defineStyleConfig({
   variants: {
     primary,
     reset,
     primaryOutline,
     secondary,
+    round,
   },
   sizes: {
     sm: {

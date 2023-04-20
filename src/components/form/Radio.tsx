@@ -40,7 +40,7 @@ const Radio = ({
         </FormLabel>
       )}
       <RadioGroup value={initialValue} onChange={setInitialValue}>
-        <Flex direction={"row"} gap={20}>
+        <Flex gap={20}>
           {options.map(({ label, value }) => {
             return (
               <ChakraRadio

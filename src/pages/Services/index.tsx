@@ -6,7 +6,7 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-// import { useGetServices } from "@sikaai/service/sikaai-services";
+import { useGetServices } from "@sikaai/service/sikaai-services";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -24,11 +24,11 @@ const Services = () => {
     () => [
       {
         Header: "Services",
-        accessor: "Services",
+        accessor: "name",
       },
       {
         Header: "Description",
-        accessor: "Description",
+        accessor: "description",
       },
       {
         Header: "Status",
@@ -66,8 +66,8 @@ const Services = () => {
   );
 
   // React queries
-  // const { data: tableData = [], isFetching: tableDataFetching } =
-  //   useGetServices();
+  const { data: tableData = [], isFetching: tableDataFetching } =
+    useGetServices();
   // React queries end
 
   return (
@@ -76,22 +76,22 @@ const Services = () => {
         <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
-          // data={tableData || []}
-          data={[
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-          ]}
-          // loading={tableDataFetching}
+          data={tableData || []}
+          // data={[
+          //   {
+          //     advertisementBanner: "1234",
+          //     advertisementLink: "link",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          //   {
+          //     advertisementBanner: "1234",
+          //     advertisementLink: "link",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          // ]}
+          loading={tableDataFetching}
           columns={columns}
           btnText={"Create new service"}
           onAction={onModalOpen}

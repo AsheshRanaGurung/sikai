@@ -74,7 +74,7 @@ const styleTableWithRightBorder = {
   },
   "& td": {
     border: 0,
-    color: sikaai_colors.gray,
+    color: sikaai_colors.text,
     boxShadow: "none",
     paddingY: 4,
     paddingX: 2,

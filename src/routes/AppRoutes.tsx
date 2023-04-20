@@ -11,13 +11,14 @@ import ServiceSection from "@sikaai/pages/Services/CMAT/AddSection";
 import QuestionSet from "@sikaai/pages/Services/CMAT/QuestionSet";
 import AddQuestionSet from "@sikaai/pages/Services/CMAT/AddQuestionSet";
 import AbroadStudies from "@sikaai/pages/Services/AbroadStudies";
+import Test from "../pages";
 
 const routes = [
   {
     path: NAVIGATION_ROUTES.DASHBOARD,
     element: (
       <Layout>
-        <Dashboard />
+        <Test />
       </Layout>
     ),
   },
