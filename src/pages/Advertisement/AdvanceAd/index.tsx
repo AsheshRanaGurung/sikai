@@ -44,10 +44,7 @@ const AdvanceAd = () => {
           const onDelete = () => {};
           return (
             <Stack alignItems={"flex-start"}>
-              <TableActions
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
+              <TableActions onEdit={onEdit} onDelete={onDelete} />
             </Stack>
           );
         },

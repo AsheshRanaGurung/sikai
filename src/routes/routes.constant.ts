@@ -4,6 +4,7 @@ export const NAVIGATION_ROUTES = {
   SERVICES: "/services",
   ADVERTISEMENT: "/advertisement",
   FAQ: "/FAQ",
+  FAQ_CREATE: "/FAQ/create",
   FORUM: "/forum",
   ABOUT_US: "/about-us",
   NOTIFICATION: "/notification",
