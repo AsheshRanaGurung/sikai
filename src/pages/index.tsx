@@ -58,7 +58,7 @@ const Test = () => {
   const {
     fields: subFields,
     append: appendSubField,
-    remove: removeSubField,
+    // remove: removeSubField,
   } = useFieldArray({
     name: "subGroup",
     control,
@@ -70,7 +70,7 @@ const Test = () => {
   const {
     isOpen: isStatusOpen,
     onOpen: onStatusOpen,
-    onClose: onStatusClose,
+    // onClose: onStatusClose,
   } = useDisclosure();
 
   const toggleSwitch = (index: string) => {
