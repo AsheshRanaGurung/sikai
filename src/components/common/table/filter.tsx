@@ -29,7 +29,6 @@ interface ISelectOptions {
 }
 
 const Filter = ({ filter }: { filter: IFilterParams[] }) => {
-  console.log(filter);
   const { register } = useForm();
   return (
     <Menu>

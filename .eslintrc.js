@@ -27,20 +27,23 @@ module.exports = {
   },
   plugins: ["react", "prettier", "jsx-a11y", "import", "@typescript-eslint"],
   rules: {
-    "@typescript-eslint/no-unused-vars": ["off"],
-    "no-console": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "no-console": 1,
+    "no-unused-vars": ["error"],
     "import/first": "error",
     "react/prop-types": 0,
-    "linebreak-style": [
-      "error",
-      process.platform === "win32" ? "windows" : "unix",
-    ],
-    "prettier/prettier": 2,
-    "arrow-body-style": "off",
+    // "linebreak-style": [
+    //   "error",
+    //   process.platform === "win32" ? "windows" : "unix"
+    // ],
     "prefer-arrow-callback": "off",
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/ban-ts-comment": 2,
-    "@typescript-eslint/no-explicit-any": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+        trailingComma: "none",
+      },
+    ],
   },
 };
