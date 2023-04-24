@@ -1,6 +1,6 @@
 import { useRoutes } from "react-router-dom";
 import { NAVIGATION_ROUTES } from "./routes.constant";
-import Dashboard from "@sikaai/pages/Dashboard";
+// import Dashboard from "@sikaai/pages/Dashboard";
 import Login from "@sikaai/pages/Auth/Login";
 import Layout from "@sikaai/components/layouts/Layout";
 import PremiumAd from "@sikaai/pages/Advertisement/PremiumAd";
@@ -12,14 +12,14 @@ import ServiceSection from "@sikaai/pages/Services/CMAT/AddSection";
 import QuestionSet from "@sikaai/pages/Services/CMAT/QuestionSet";
 import AddQuestionSet from "@sikaai/pages/Services/CMAT/AddQuestionSet";
 import AbroadStudies from "@sikaai/pages/Services/AbroadStudies";
-import Test from "../pages";
+import MainComponent from "../pages/test";
 
 const routes = [
   {
     path: NAVIGATION_ROUTES.DASHBOARD,
     element: (
       <Layout>
-        <Test />
+        <MainComponent />
       </Layout>
     ),
   },
@@ -64,7 +64,7 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.CMAT_SECTION,
+    path: `${NAVIGATION_ROUTES.CMAT_SECTION}/:id`,
     element: (
       <Layout>
         <ServiceSection />

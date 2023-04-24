@@ -6,10 +6,11 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { useGetServices } from "@sikaai/service/sikaai-services";
+import { useGetCourse } from "@sikaai/service/service-course";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { CellProps } from "react-table";
 
 const Services = () => {
   const { register } = useForm();
@@ -40,13 +41,13 @@ const Services = () => {
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ id: string }>) => {
           const onEdit = () => {
             onModalOpen();
           };
           const onDelete = () => {};
           const onSetting = () => {
-            navigate(`${NAVIGATION_ROUTES.CMAT_SECTION}`);
+            navigate(`${NAVIGATION_ROUTES.CMAT_SECTION}/${row.original?.id}`);
           };
           const onShowQues = () => {};
           return (
@@ -67,7 +68,7 @@ const Services = () => {
 
   // React queries
   const { data: tableData = [], isFetching: tableDataFetching } =
-    useGetServices();
+    useGetCourse();
   // React queries end
 
   return (
@@ -77,20 +78,6 @@ const Services = () => {
 
         <DataTable
           data={tableData || []}
-          // data={[
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          // ]}
           loading={tableDataFetching}
           columns={columns}
           btnText={"Create new service"}

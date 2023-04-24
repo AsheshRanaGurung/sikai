@@ -6,7 +6,7 @@ import { UseFormRegister, FieldValues } from "react-hook-form";
 
 enum Type {
   TEXT = "type",
-  PASSWORD = "password"
+  PASSWORD = "password",
 }
 
 const PasswordViewIcon = ({ onToggle, isVisible }: ISetPasswordViewIcon) => {
@@ -21,8 +21,8 @@ const PasswordViewIcon = ({ onToggle, isVisible }: ISetPasswordViewIcon) => {
         color: sikaai_colors.black,
         "&:hover": {
           bgColor: "transparent",
-          color: sikaai_colors.primary
-        }
+          color: sikaai_colors.primary,
+        },
       }}
     />
   );

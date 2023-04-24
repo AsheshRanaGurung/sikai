@@ -8,8 +8,8 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useForm } from "react-hook-form";
 
 const PremiumAd = () => {
-  const {isOpen, onOpen ,onClose: onModalClose} = useDisclosure();
-  const {register} = useForm();
+  const { isOpen, onOpen, onClose: onModalClose } = useDisclosure();
+  const { register } = useForm();
   const columns = [
     {
       Header: "Advertisement Banner",

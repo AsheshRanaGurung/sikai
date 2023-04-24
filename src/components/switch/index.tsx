@@ -1,5 +1,4 @@
 import { Switch as ChakraSwitch } from "@chakra-ui/react";
-import { sikaai_colors } from "@sikaai/theme/color";
 interface ISwitch {
   value: boolean;
   variant?: keyof typeof variants;

@@ -9,6 +9,7 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { CellProps } from "react-table";
 
 const CMATSection = () => {
   const { register } = useForm();
@@ -35,14 +36,14 @@ const CMATSection = () => {
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ id: string }>) => {
           const onEdit = () => {
             onModalOpen();
           };
           const onShowQues = () => {
-            navigate(NAVIGATION_ROUTES.QUESTION_SET);
+            navigate(`${NAVIGATION_ROUTES.QUESTION_SET}/${row.original?.id}`);
           };
-          const onDelete = () => {};
+          const onDelete = () => {console.log("here")};
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
