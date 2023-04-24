@@ -43,7 +43,7 @@ const QuestionSet = () => {
           const onShowQues = () => {
             navigate(NAVIGATION_ROUTES.CREATE_QUESTION_SET);
           };
-          const onDelete = () => {console.log("here")};
+          const onDelete = () => {};
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
@@ -60,7 +60,7 @@ const QuestionSet = () => {
   );
 
   // React queries
-  // const {tableData} =
+
   // React queries end
 
   return (

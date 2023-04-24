@@ -77,7 +77,7 @@ const NavItem = ({ name, to, child, icon, isCollapse, visible }: INavItem) => {
                     transition: "0.1s",
                     "&:hover": {
                       cursor: "pointer",
-                      transition: "0.1s",
+                      transition: "0.1s"
                     },
                   }}
                 />
