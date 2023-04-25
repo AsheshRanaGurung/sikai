@@ -12,6 +12,7 @@ export const NAVIGATION_ROUTES = {
   ADVANCE_AD: "/advance-ad",
   CMAT_SECTION: "/services/CMAT/section",
   QUESTION_SET: "/services/CMAT/question-set",
+  MODEL_SET: "/services/CMAT/model-set",
   CREATE_QUESTION_SET: "/services/CMAT/question-set/create",
   ABROAD_STUDIES: "/services/abroad-studies",
   BASIC_AD: "/basic-ad",

@@ -42,7 +42,9 @@ const CMATSection = () => {
           const onShowQues = () => {
             navigate(NAVIGATION_ROUTES.QUESTION_SET);
           };
-          const onDelete = () => {};
+          const onDelete = () => {
+            console.log("here");
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions

@@ -44,11 +44,15 @@ const Services = () => {
           const onEdit = () => {
             onModalOpen();
           };
-          const onDelete = () => {};
+          const onDelete = () => {
+            console.log("here");
+          };
           const onSetting = () => {
             navigate(`${NAVIGATION_ROUTES.CMAT_SECTION}`);
           };
-          const onShowQues = () => {};
+          const onShowQues = () => {
+            console.log("here");
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions

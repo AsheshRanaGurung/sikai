@@ -48,7 +48,9 @@ const AbroadStudies = () => {
           const onView = () => {
             onModalOpen();
           };
-          const onDelete = () => {};
+          const onDelete = () => {
+            console.log("here");
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions onView={onView} onDelete={onDelete} />

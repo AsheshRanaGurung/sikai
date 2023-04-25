@@ -20,10 +20,6 @@ const FileUpload = ({
   isDisabled,
   labelDisabled,
   isRequired,
-  type,
-  startIcon,
-  endIcons,
-  onIconClick,
   required,
   ...rest
 }: IInput) => {

@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn tsc
+yarn tsc --noEmit
+if ["$OSTYPE" == "msys"]; then
+    exec >/dev/console 2>&1
+fi
 yarn lint-staged
