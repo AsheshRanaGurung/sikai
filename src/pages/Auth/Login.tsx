@@ -17,26 +17,26 @@ import httpStatus from "http-status";
 
 const defaultValues: LoginDetails = {
   email: "",
-  password: ""
-}
+  password: "",
+};
 
 const Login = () => {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const { isOpen: isVisible, onToggle: onToggleVisibility } = useDisclosure();
-  const {mutateAsync:initLogin, isLoading } = useLoginMutation();
+  const { mutateAsync: initLogin, isLoading } = useLoginMutation();
 
   const { register, handleSubmit, reset } = useForm({
     mode: "onBlur",
-    defaultValues: defaultValues
+    defaultValues: defaultValues,
   });
 
-  const onSubmitHandler = async(loginDetails: LoginDetails) => {
-    const response= await initLogin(loginDetails);
-    if(response?.status === httpStatus.OK){
-      navigate(NAVIGATION_ROUTES.DASHBOARD, { replace: true});
+  const onSubmitHandler = async (loginDetails: LoginDetails) => {
+    const response = await initLogin(loginDetails);
+    if (response?.status === httpStatus.OK) {
+      navigate(NAVIGATION_ROUTES.DASHBOARD, { replace: true });
     }
     reset(defaultValues);
-  }
+  };
 
   return (
     <Box

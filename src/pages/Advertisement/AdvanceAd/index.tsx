@@ -41,7 +41,9 @@ const AdvanceAd = () => {
           const onEdit = () => {
             onModalOpen();
           };
-          const onDelete = () => {};
+          const onDelete = () => {
+            console.log("here");
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions onEdit={onEdit} onDelete={onDelete} />

@@ -2,10 +2,15 @@ import { defineConfig } from "vite";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
+import checker from "vite-plugin-checker";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [
+    svgr(),
+    react(),
+    checker({ eslint: { lintCommand: "eslint src" }, overlay: false }),
+  ],
   resolve: {
     alias: {
       src: path.resolve("src/"),

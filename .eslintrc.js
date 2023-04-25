@@ -1,48 +1,63 @@
 module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
   settings: {
     react: {
       version: "detect",
     },
+    "import/resolver": {
+      typescript: {},
+      node: {
+        paths: ["src"],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+      alias: {
+        map: [["@mofin", "./src"]],
+      },
+    },
   },
   env: {
     browser: true,
-    es2021: true,
+    amd: true,
     node: true,
   },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
-    "prettier",
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
+    // "plugin:import/recommended",
+    "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
+    "eslint-config-prettier", // Make sure this is always the last element in the array.
   ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 2020,
-    sourceType: "module",
-  },
-  plugins: ["react", "prettier", "jsx-a11y", "import", "@typescript-eslint"],
+  plugins: ["react", "import", "jsx-a11y", "@typescript-eslint", "prettier"],
   rules: {
-    "@typescript-eslint/no-unused-vars": ["error"],
-    "no-console": 1,
-    "no-unused-vars": ["error"],
-    "import/first": "error",
-    "react/prop-types": 0,
-    // "linebreak-style": [
-    //   "error",
-    //   process.platform === "win32" ? "windows" : "unix"
-    // ],
-    "prefer-arrow-callback": "off",
+    "no-console": "off",
     "react/react-in-jsx-scope": "off",
+    "jsx-a11y/accessible-emoji": "off",
+    "react/prop-types": "off",
     "prettier/prettier": [
       "error",
       {
         endOfLine: "auto",
-        trailingComma: "none",
+      },
+    ],
+    "@typescript-eslint/no-unused-vars": ["warn"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        components: ["Link"],
+        specialLink: ["hrefLeft", "hrefRight"],
+        aspects: ["invalidHref", "preferButton"],
       },
     ],
   },

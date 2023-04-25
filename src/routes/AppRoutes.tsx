@@ -13,6 +13,7 @@ import QuestionSet from "@sikaai/pages/Services/CMAT/QuestionSet";
 import AddQuestionSet from "@sikaai/pages/Services/CMAT/AddQuestionSet";
 import AbroadStudies from "@sikaai/pages/Services/AbroadStudies";
 import Test from "../pages/test";
+import ModelSet from "@sikaai/pages/Services/CMAT/ModelSet";
 
 const routes = [
   {
@@ -84,6 +85,14 @@ const routes = [
     element: (
       <Layout>
         <AddQuestionSet />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.MODEL_SET,
+    element: (
+      <Layout>
+        <ModelSet />
       </Layout>
     ),
   },

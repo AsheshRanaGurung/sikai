@@ -74,7 +74,7 @@ const styleTableWithRightBorder = {
   },
   "& td": {
     border: 0,
-    color: sikaai_colors.text,
+    color: sikaai_colors.gray_text,
     boxShadow: "none",
     paddingY: 4,
     paddingX: 2,
@@ -272,7 +272,7 @@ const DataTable = React.memo(
                 fontFamily="'Urbanist', sans-serif"
                 pr={12}
                 borderRadius={8}
-                onChange={(e) => {
+                onChange={e => {
                   setSearchValue && setSearchValue(e.target.value);
                 }}
               />
@@ -391,13 +391,13 @@ const DataTable = React.memo(
             <Thead
               background={headerBackgroundColor ? headerBackgroundColor : ""}
             >
-              {headerGroups.map((headergroup) => {
+              {headerGroups.map(headergroup => {
                 return (
                   <Tr
                     {...headergroup.getHeaderGroupProps()}
                     key={headergroup.id}
                   >
-                    {headergroup.headers.map((column) => {
+                    {headergroup.headers.map(column => {
                       return (
                         <Th
                           {...column.getHeaderProps()}
@@ -432,14 +432,14 @@ const DataTable = React.memo(
                     <Text
                       fontSize={14}
                       textAlign="center"
-                      color={sikaai_colors.gray}
+                      color={sikaai_colors.gray_text}
                     >
                       No data
                     </Text>
                   </Td>
                 </Tr>
               )}
-              {(isClientPagination ? page : rows).map((row) => {
+              {(isClientPagination ? page : rows).map(row => {
                 prepareRow(row);
                 return (
                   <Fragment key={row.id}>
@@ -460,7 +460,7 @@ const DataTable = React.memo(
                           : "static"
                       }
                     >
-                      {row.cells.map((cell) => {
+                      {row.cells.map(cell => {
                         return (
                           <Td
                             {...cell.getCellProps()}

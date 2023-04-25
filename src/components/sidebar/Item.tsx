@@ -25,7 +25,7 @@ const Item = ({
       <ListItem
         display={"flex"}
         mr={4}
-        ml ={isChild ? 10 : 4}
+        ml={isChild ? 10 : 4}
         p={2}
         mb={3}
         borderRadius={9}
