@@ -41,15 +41,15 @@ const Filter = ({ filter }: { filter: IFilterParams[] }) => {
       <MenuList>
         <Tabs>
           <TabList>
-            {filter.map(({ type }: IFilterParams) => {
-              return <Tab>{type}</Tab>;
+            {filter.map(({ type }: IFilterParams, index: number) => {
+              return <Tab key={index}>{type}</Tab>;
             })}
           </TabList>
 
           <TabPanels>
-            {filter.map(({ type }: IFilterParams) => {
+            {filter.map(({ type }: IFilterParams, index: number) => {
               return type === "Status" ? (
-                <TabPanel>
+                <TabPanel key={index}>
                   <FormControl
                     control="radio"
                     options={[
@@ -67,7 +67,7 @@ const Filter = ({ filter }: { filter: IFilterParams[] }) => {
                   </Button>
                 </TabPanel>
               ) : (
-                <TabPanel>
+                <TabPanel key={index}>
                   <p>{type}</p>
                 </TabPanel>
               );

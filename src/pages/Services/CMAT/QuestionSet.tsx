@@ -43,7 +43,9 @@ const QuestionSet = () => {
           const onShowQues = () => {
             navigate(NAVIGATION_ROUTES.CREATE_QUESTION_SET);
           };
-          const onDelete = () => {};
+          const onDelete = () => {
+            console.log("here");
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions

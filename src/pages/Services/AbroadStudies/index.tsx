@@ -1,15 +1,15 @@
-import { Stack, useDisclosure } from "@chakra-ui/react";
+import { Stack, useDisclosure, Text } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
-import FormControl from "@sikaai/components/form/FormControl";
+// import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 
 const AbroadStudies = () => {
-  const { register } = useForm();
+  // const { register } = useForm();
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -91,7 +91,7 @@ const AbroadStudies = () => {
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
-        <ModalForm
+        {/* <ModalForm
           isModalOpen={isModalOpen}
           title={"Edit service"}
           closeModal={onModalClose}
@@ -147,6 +147,20 @@ const AbroadStudies = () => {
               placeholder={"Message"}
               label={"Message"}
             />
+          </>
+        </ModalForm> */}
+        <ModalForm
+          isModalOpen={isModalOpen}
+          title={"User Details"}
+          closeModal={onModalClose}
+        >
+          <>
+            <Text>Full Name:</Text>
+            <Text>Full Name:</Text>
+            <Text>Full Name:</Text>
+            <Text>Full Name:</Text>
+            <Text>Full Name:</Text>
+            <Text>Full Name:</Text>
           </>
         </ModalForm>
       </div>
