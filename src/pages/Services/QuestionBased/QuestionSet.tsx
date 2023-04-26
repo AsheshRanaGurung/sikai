@@ -1,3 +1,4 @@
+// QUESTION SET === SUBJECT SET
 import { Stack, useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
@@ -5,13 +6,21 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { toastSuccess } from "@sikaai/service/service-toast";
+import {
+  useCreateQuestionSet,
+  useGetQuestionSet,
+} from "@sikaai/service/sikaai-question";
+import httpStatus from "http-status";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { CellProps } from "react-table";
 
 const QuestionSet = () => {
-  const { register } = useForm();
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
@@ -19,20 +28,40 @@ const QuestionSet = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isStatusOpen,
+    onOpen: onStatusOpen,
+    onClose: onStatusClose,
+  } = useDisclosure();
+
+  const { id } = useParams();
+
   const columns = useMemo(
     () => [
       {
         Header: "Question Set",
-        accessor: "questionSet",
+        accessor: "name",
       },
 
       {
         Header: "Status",
-        accessor: "status",
+        Cell: () => {
+          const toggleSwitch = () => {
+            if (isStatusOpen) {
+              onStatusClose();
+            } else {
+              onStatusOpen();
+            }
+          };
+          return <Switch value={false} toggleSwitch={toggleSwitch} />;
+        },
       },
       {
         Header: "Upload Date",
-        accessor: "uploadDate",
+        Cell: ({ row }: CellProps<{ created_at: string }>) => {
+          const date = row.original?.created_at.substring(0, 10);
+          return date;
+        },
       },
       {
         Header: "Action",
@@ -62,8 +91,19 @@ const QuestionSet = () => {
   );
 
   // React queries
-
+  const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
+  const { data: tableData = [], isLoading } = useGetQuestionSet();
   // React queries end
+
+  const onSubmitHandler = async (questionSetDetails: any) => {
+    const response = await createQuestionSet({
+      ...questionSetDetails,
+      subject_id: id,
+    });
+    if (response.status === httpStatus.OK) {
+      toastSuccess("Question set created successful");
+    }
+  };
 
   return (
     <>
@@ -71,19 +111,20 @@ const QuestionSet = () => {
         <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
-          data={[
-            {
-              questionSet: "1234",
-              status: "true",
-              uploadDate: "123",
-            },
-            {
-              questionSet: "1234",
-              status: "true",
-              uploadDate: "123",
-            },
-          ]}
-          //   loading={}
+          // data={[
+          //   {
+          //     questionSet: "1234",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          //   {
+          //     questionSet: "1234",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          // ]}
+          data={tableData || []}
+          loading={isLoading}
           columns={columns}
           btnText={"Create question Set"}
           onAction={onModalOpen}
@@ -96,25 +137,16 @@ const QuestionSet = () => {
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}
+          submitHandler={handleSubmit(onSubmitHandler)}
         >
-          <>
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Service Name"}
-              label={"Service Name"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Description"}
-              label={"Description"}
-            />
-          </>
+          <FormControl
+            control="input"
+            size="lg"
+            register={register}
+            name="name"
+            placeholder={"Service Name"}
+            label={"Service Name"}
+          />
         </ModalForm>
       </div>
     </>

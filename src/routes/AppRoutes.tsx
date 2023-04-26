@@ -1,6 +1,5 @@
 import { useRoutes } from "react-router-dom";
 import { NAVIGATION_ROUTES } from "./routes.constant";
-// import Dashboard from "@sikaai/pages/Dashboard";
 import Login from "@sikaai/pages/Auth/Login";
 import Layout from "@sikaai/components/layouts/Layout";
 import PremiumAd from "@sikaai/pages/Advertisement/PremiumAd";
@@ -8,19 +7,20 @@ import AdvanceAd from "@sikaai/pages/Advertisement/AdvanceAd";
 import BasicAd from "@sikaai/pages/Advertisement/BasicAd";
 import FAQ from "@sikaai/pages/FAQ";
 import Services from "@sikaai/pages/Services";
-import ServiceSection from "@sikaai/pages/Services/CMAT/AddSection";
-import QuestionSet from "@sikaai/pages/Services/CMAT/QuestionSet";
-import AddQuestionSet from "@sikaai/pages/Services/CMAT/AddQuestionSet";
-import AbroadStudies from "@sikaai/pages/Services/AbroadStudies";
-import Test from "../pages/test";
-import ModelSet from "@sikaai/pages/Services/CMAT/ModelSet";
+import ServiceSection from "@sikaai/pages/Services/QuestionBased/Subjects";
+import QuestionSet from "@sikaai/pages/Services/QuestionBased/QuestionSet";
+import AbroadStudies from "@sikaai/pages/Services/FormBased";
+import ModelSet from "@sikaai/pages/Services/QuestionBased/ModelSet";
+import Courses from "@sikaai/pages/Services/QuestionBased/Courses";
+import Question from "../pages/Services/QuestionBased/Questions/Question";
+import Dashboard from "@sikaai/pages/Dashboard";
 
 const routes = [
   {
     path: NAVIGATION_ROUTES.DASHBOARD,
     element: (
       <Layout>
-        <Test />
+        <Dashboard />
       </Layout>
     ),
   },
@@ -65,7 +65,15 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.CMAT_SECTION,
+    path: NAVIGATION_ROUTES.COURSES,
+    element: (
+      <Layout>
+        <Courses />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.SUBJECTS,
     element: (
       <Layout>
         <ServiceSection />
@@ -73,7 +81,7 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.QUESTION_SET,
+    path: `${NAVIGATION_ROUTES.QUESTION_SET}/:id`,
     element: (
       <Layout>
         <QuestionSet />
@@ -84,7 +92,7 @@ const routes = [
     path: NAVIGATION_ROUTES.CREATE_QUESTION_SET,
     element: (
       <Layout>
-        <AddQuestionSet />
+        <Question />
       </Layout>
     ),
   },

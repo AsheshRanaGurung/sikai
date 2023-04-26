@@ -1,9 +1,10 @@
-import { Stack, useDisclosure, Text } from "@chakra-ui/react";
+import { Stack, useDisclosure, Text, Flex, Box } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
+import { sikaai_colors } from "@sikaai/theme/color";
 // import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo } from "react";
 // import { useForm } from "react-hook-form";
@@ -155,12 +156,48 @@ const AbroadStudies = () => {
           closeModal={onModalClose}
         >
           <>
-            <Text>Full Name:</Text>
-            <Text>Full Name:</Text>
-            <Text>Full Name:</Text>
-            <Text>Full Name:</Text>
-            <Text>Full Name:</Text>
-            <Text>Full Name:</Text>
+            <Flex gap={5}>
+              <Box>
+                <Text fontWeight={600} fontSize={"16px"} mb={2}>
+                  Full Name:
+                </Text>
+                <Text fontWeight={600} fontSize={"16px"} mb={2}>
+                  Email:
+                </Text>
+                <Text fontWeight={600} fontSize={"16px"} mb={2}>
+                  Address:
+                </Text>
+                <Text fontWeight={600} fontSize={"16px"} mb={2}>
+                  Phone Number:
+                </Text>
+                <Text fontWeight={600} fontSize={"16px"} mb={2}>
+                  College:
+                </Text>
+                <Text fontWeight={600} fontSize={"16px"}>
+                  Message:
+                </Text>
+              </Box>
+              <Box>
+                <Text fontSize={"16px"} mb={2}>
+                  Full Name
+                </Text>
+                <Text fontSize={"16px"} mb={2}>
+                  Email
+                </Text>
+                <Text fontSize={"16px"} mb={2}>
+                  Address
+                </Text>
+                <Text fontSize={"16px"} mb={2}>
+                  Phone Number
+                </Text>
+                <Text fontSize={"16px"} mb={2}>
+                  College
+                </Text>
+              </Box>
+            </Flex>
+            <Box border="1px" borderColor={sikaai_colors.gray} p={2}>
+              <Text fontSize={"16px"}>Message</Text>
+            </Box>
           </>
         </ModalForm>
       </div>

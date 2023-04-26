@@ -16,7 +16,7 @@ import Switch from "@sikaai/components/switch";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import MainComponent2 from "./test1";
+import SubQuestion from "./subQuestion";
 
 function MyComponent() {
   const { register, handleSubmit } = useForm();
@@ -32,7 +32,7 @@ function MyComponent() {
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <Accordion defaultIndex={[0]} allowToggle>
+      <Accordion defaultIndex={0} allowToggle>
         <AccordionItem>
           <h2>
             <AccordionButton
@@ -76,7 +76,7 @@ function MyComponent() {
                     toggleSwitch={toggleSwitch}
                   />
                 </Flex>
-                <Box>{isStatusOpen && <MainComponent2 />}</Box>
+                <Box>{isStatusOpen && <SubQuestion />}</Box>
               </Box>
               {!isStatusOpen && (
                 <>
@@ -199,7 +199,7 @@ function MyComponent() {
   );
 }
 
-function MainComponent() {
+function Question() {
   const [clickCount, setClickCount] = useState(0);
 
   const handleClick = () => {
@@ -223,4 +223,4 @@ function MainComponent() {
   );
 }
 
-export default MainComponent;
+export default Question;

@@ -5,11 +5,13 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetServices } from "@sikaai/service/sikaai-services";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { CellProps } from "react-table";
 
 const Services = () => {
   const { register } = useForm();
@@ -18,6 +20,12 @@ const Services = () => {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
     onClose: onModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isStatusOpen,
+    onOpen: onStatusOpen,
+    onClose: onStatusClose,
   } = useDisclosure();
 
   const columns = useMemo(
@@ -32,11 +40,23 @@ const Services = () => {
       },
       {
         Header: "Status",
-        accessor: "status",
+        Cell: () => {
+          const toggleSwitch = () => {
+            if (!isStatusOpen) {
+              onStatusOpen();
+            } else {
+              onStatusClose();
+            }
+          };
+          return <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />;
+        },
       },
       {
         Header: "Upload Date",
-        accessor: "uploadDate",
+        Cell: ({ row }: CellProps<{ created_at: string }>) => {
+          const date = row.original?.created_at.substring(0, 10);
+          return date;
+        },
       },
       {
         Header: "Action",
@@ -47,18 +67,14 @@ const Services = () => {
           const onDelete = () => {
             console.log("here");
           };
-          const onSetting = () => {
-            navigate(`${NAVIGATION_ROUTES.CMAT_SECTION}`);
-          };
-          const onShowQues = () => {
-            console.log("here");
+          const onView = () => {
+            navigate(`${NAVIGATION_ROUTES.COURSES}`);
           };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
                 onEdit={onEdit}
-                onSetting={onSetting}
-                onShowQues={onShowQues}
+                onView={onView}
                 onDelete={onDelete}
               />
             </Stack>
@@ -97,7 +113,7 @@ const Services = () => {
           // ]}
           loading={tableDataFetching}
           columns={columns}
-          btnText={"Create new service"}
+          // btnText={"Create new service"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />

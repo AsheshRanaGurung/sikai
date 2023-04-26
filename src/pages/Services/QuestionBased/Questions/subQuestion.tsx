@@ -193,7 +193,7 @@ function MyComponent({ key }: { key: number }) {
   );
 }
 
-function MainComponent2() {
+function SubQuestion() {
   const [clickCount, setClickCount] = useState(0);
 
   const handleClick = () => {
@@ -217,4 +217,4 @@ function MainComponent2() {
   );
 }
 
-export default MainComponent2;
+export default SubQuestion;

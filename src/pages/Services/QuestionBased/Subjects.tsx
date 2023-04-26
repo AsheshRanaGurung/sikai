@@ -5,12 +5,15 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useGetSubjects } from "@sikaai/service/sikaai-subjects";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { CellProps } from "react-table";
 
-const CMATSection = () => {
+const Subjects = () => {
   const { register } = useForm();
   const navigate = useNavigate();
   const {
@@ -19,28 +22,50 @@ const CMATSection = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isStatusOpen,
+    onOpen: onStatusOpen,
+    onClose: onStatusClose,
+  } = useDisclosure();
+
+  // react queries
+  const { data: tableData = [], isLoading } = useGetSubjects();
+  // react queries end
+
   const columns = useMemo(
     () => [
       {
         Header: "Section",
-        accessor: "Section",
+        accessor: "name",
       },
       {
         Header: "Status",
-        accessor: "Status",
+        Cell: () => {
+          const toggleSwitch = () => {
+            if (isStatusOpen) {
+              onStatusClose();
+            } else {
+              onStatusOpen();
+            }
+          };
+          return <Switch value={false} toggleSwitch={toggleSwitch} />;
+        },
       },
       {
-        Header: "Upload Date",
-        accessor: "uploadDate",
+        Header: "Created Date",
+        Cell: ({ row }: CellProps<{ created_at: string }>) => {
+          const date = row.original?.created_at.substring(0, 10);
+          return date;
+        },
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ id: string }>) => {
           const onEdit = () => {
             onModalOpen();
           };
           const onShowQues = () => {
-            navigate(NAVIGATION_ROUTES.QUESTION_SET);
+            navigate(`${NAVIGATION_ROUTES.QUESTION_SET}/${row.original?.id}`);
           };
           const onDelete = () => {
             console.log("here");
@@ -66,22 +91,10 @@ const CMATSection = () => {
         <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
-          data={[
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-          ]}
+          data={tableData || []}
           columns={columns}
-          btnText={"Create new service"}
+          loading={isLoading}
+          btnText={"Create new section"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
@@ -117,4 +130,4 @@ const CMATSection = () => {
   );
 };
 
-export default CMATSection;
+export default Subjects;

@@ -5,6 +5,15 @@ export const api = {
   service: {
     get: "/api/v1/service/",
   },
+  courses: {
+    get: "/api/v1/service/course/",
+  },
+  subjects: {
+    get: "/api/v1/service/subject/",
+  },
+  subjects_set: {
+    get: "/api/v1/assessment/subject-set/",
+  },
 };
 
 export interface SikaaiResponse<T = unknown> {

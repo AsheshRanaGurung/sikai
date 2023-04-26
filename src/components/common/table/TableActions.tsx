@@ -22,12 +22,7 @@ const TableActions = ({
   onDisableShowQues,
 }: ITableActions) => {
   return (
-    <Flex
-      gap={2}
-      justifyItems="center"
-      alignItems="center"
-      justifyContent={"center"}
-    >
+    <Flex justifyItems="center" alignItems="center" justifyContent={"center"}>
       {!!onView && (
         <IconButton
           disabled={onDisableView}

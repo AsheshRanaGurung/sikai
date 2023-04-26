@@ -53,19 +53,21 @@ const ModalForm: FC<IModal> = ({
             <ModalBody display={"flex"} flexDirection="column" pt={3} gap={4}>
               {children}
             </ModalBody>
-            <ModalFooter gap={3}>
-              <Button variant="reset" onClick={closeModal}>
-                {resetButttonText}
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                onClick={handleSubmit}
-                isLoading={isLoading}
-              >
-                {submitButtonText}
-              </Button>
-            </ModalFooter>
+            {resetButttonText && submitButtonText && (
+              <ModalFooter gap={3}>
+                <Button variant="reset" onClick={closeModal}>
+                  {resetButttonText}
+                </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={handleSubmit}
+                  isLoading={isLoading}
+                >
+                  {submitButtonText}
+                </Button>
+              </ModalFooter>
+            )}
           </ModalContent>
         </form>
       </Modal>
