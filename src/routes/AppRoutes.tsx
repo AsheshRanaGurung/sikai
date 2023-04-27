@@ -14,6 +14,8 @@ import ModelSet from "@sikaai/pages/Services/QuestionBased/ModelSet";
 import Courses from "@sikaai/pages/Services/QuestionBased/Courses";
 import Question from "../pages/Services/QuestionBased/Questions/Question";
 import Dashboard from "@sikaai/pages/Dashboard";
+import Forum from "@sikaai/pages/Forum";
+import Forum_answer from "@sikaai/pages/ForumAnswer";
 
 const routes = [
   {
@@ -109,6 +111,22 @@ const routes = [
     element: (
       <Layout>
         <AbroadStudies />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.FORUM,
+    element: (
+      <Layout>
+        <Forum />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.FORUM_ANSWER,
+    element: (
+      <Layout>
+        <Forum_answer />
       </Layout>
     ),
   },
