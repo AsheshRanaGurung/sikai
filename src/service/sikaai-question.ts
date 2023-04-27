@@ -39,6 +39,11 @@ const useCreateQuestionSet = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
     },
+    onError: (e: any) => {
+      toastFail(
+        e.response.data.errors[0].name || "Question set creation failed"
+      );
+    },
   });
 };
 

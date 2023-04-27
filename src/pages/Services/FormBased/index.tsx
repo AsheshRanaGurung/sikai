@@ -4,12 +4,16 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
+import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
 import { sikaai_colors } from "@sikaai/theme/color";
 // import FormControl from "@sikaai/components/form/FormControl";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { CellProps } from "react-table";
 // import { useForm } from "react-hook-form";
 
-const AbroadStudies = () => {
+const FormBased = () => {
+  const { id = "" } = useParams();
   // const { register } = useForm();
   const {
     isOpen: isModalOpen,
@@ -17,11 +21,12 @@ const AbroadStudies = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
+  const [modalId, setModalId] = useState("");
   const columns = useMemo(
     () => [
       {
         Header: "Full Name",
-        accessor: "fullName",
+        accessor: "full_name",
       },
       {
         Header: "Email",
@@ -33,20 +38,24 @@ const AbroadStudies = () => {
       },
       {
         Header: "Phone Number",
-        accessor: "phoneNumber",
+        accessor: "phone_number",
       },
       {
         Header: "College",
-        accessor: "College",
+        accessor: "college",
       },
       {
         Header: "Date",
-        accessor: "Date",
+        Cell: ({ row }: CellProps<{ created_at: string }>) => {
+          const date = row.original?.created_at.substring(0, 10);
+          return date;
+        },
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ id: string }>) => {
           const onView = () => {
+            setModalId(row.original?.id);
             onModalOpen();
           };
           const onDelete = () => {
@@ -64,6 +73,10 @@ const AbroadStudies = () => {
   );
 
   // React queries
+  const { data: tableData = [], isLoading: tableDataLoading } = useGetForm({
+    id: id,
+  });
+  const { data = [] } = useGetFormById({ id: modalId });
   // React queries end
 
   return (
@@ -72,84 +85,12 @@ const AbroadStudies = () => {
         <BreadCrumb title={"Services"} items={[]} />
 
         <DataTable
-          // data={tableData || []}
-          data={[
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-          ]}
-          // loading={tableDataFetching}
+          data={tableData || []}
+          loading={tableDataLoading}
           columns={columns}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
-        {/* <ModalForm
-          isModalOpen={isModalOpen}
-          title={"Edit service"}
-          closeModal={onModalClose}
-          resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
-        >
-          <>
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="fullName"
-              placeholder={"Full Name"}
-              label={"Full Name"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="email"
-              placeholder={"Email"}
-              label={"Email"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="address"
-              placeholder={"Address"}
-              label={"Address"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="phoneNumber"
-              placeholder={"Phone Number"}
-              label={"Phone Number"}
-            />
-            <FormControl
-              control="textArea"
-              size="lg"
-              register={register}
-              name="college"
-              placeholder={"College"}
-              label={"College"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Message"}
-              label={"Message"}
-            />
-          </>
-        </ModalForm> */}
         <ModalForm
           isModalOpen={isModalOpen}
           title={"User Details"}
@@ -179,24 +120,24 @@ const AbroadStudies = () => {
               </Box>
               <Box>
                 <Text fontSize={"16px"} mb={2}>
-                  Full Name
+                  {data[0]?.full_name}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  Email
+                  {data[0]?.email}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  Address
+                  {data[0]?.address}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  Phone Number
+                  {data[0]?.phone_number}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  College
+                  {data[0]?.college}
                 </Text>
               </Box>
             </Flex>
             <Box border="1px" borderColor={sikaai_colors.gray} p={2}>
-              <Text fontSize={"16px"}>Message</Text>
+              <Text fontSize={"16px"}>{data[0]?.content}</Text>
             </Box>
           </>
         </ModalForm>
@@ -205,4 +146,4 @@ const AbroadStudies = () => {
   );
 };
 
-export default AbroadStudies;
+export default FormBased;

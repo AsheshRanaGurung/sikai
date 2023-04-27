@@ -66,21 +66,21 @@ const QuestionSet = () => {
       {
         Header: "Action",
         Cell: () => {
-          const onEdit = () => {
-            onModalOpen();
-          };
+          // const onEdit = () => {
+          //   onModalOpen();
+          // };
           const onShowQues = () => {
             navigate(NAVIGATION_ROUTES.CREATE_QUESTION_SET);
           };
-          const onDelete = () => {
-            console.log("here");
-          };
+          // const onDelete = () => {
+          //   console.log("here");
+          // };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                onEdit={onEdit}
+                // onEdit={onEdit}
                 onShowQues={onShowQues}
-                onDelete={onDelete}
+                // onDelete={onDelete}
               />
             </Stack>
           );
@@ -108,7 +108,15 @@ const QuestionSet = () => {
   return (
     <>
       <div>
-        <BreadCrumb title={"Services"} items={[]} />
+        <BreadCrumb
+          title={"Services"}
+          items={[
+            { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
+            { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
+            { name: "Subject", route: `${NAVIGATION_ROUTES.SUBJECTS}` },
+            { name: "Subject-set", route: `${NAVIGATION_ROUTES.QUESTION_SET}` },
+          ]}
+        />
 
         <DataTable
           // data={[
@@ -133,7 +141,7 @@ const QuestionSet = () => {
 
         <ModalForm
           isModalOpen={isModalOpen}
-          title={"Edit service"}
+          title={"Add question set"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}

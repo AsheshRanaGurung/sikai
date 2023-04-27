@@ -14,6 +14,7 @@ import ModelSet from "@sikaai/pages/Services/QuestionBased/ModelSet";
 import Courses from "@sikaai/pages/Services/QuestionBased/Courses";
 import Question from "../pages/Services/QuestionBased/Questions/Question";
 import Dashboard from "@sikaai/pages/Dashboard";
+import FormBased from "@sikaai/pages/Services/FormBased";
 
 const routes = [
   {
@@ -69,6 +70,14 @@ const routes = [
     element: (
       <Layout>
         <Courses />
+      </Layout>
+    ),
+  },
+  {
+    path: `${NAVIGATION_ROUTES.FORM}/:id`,
+    element: (
+      <Layout>
+        <FormBased />
       </Layout>
     ),
   },

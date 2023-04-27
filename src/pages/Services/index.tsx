@@ -60,22 +60,26 @@ const Services = () => {
       },
       {
         Header: "Action",
-        Cell: () => {
-          const onEdit = () => {
-            onModalOpen();
-          };
-          const onDelete = () => {
-            console.log("here");
-          };
+        Cell: ({ row }: CellProps<{ id: string; service_type: string }>) => {
+          // const onEdit = () => {
+          //   onModalOpen();
+          // };
+          // const onDelete = () => {
+          //   console.log("here");
+          // };
           const onView = () => {
-            navigate(`${NAVIGATION_ROUTES.COURSES}`);
+            if (row.original?.service_type === "1") {
+              navigate(`${NAVIGATION_ROUTES.COURSES}`);
+            } else {
+              navigate(`${NAVIGATION_ROUTES.FORM}/${row.original?.id}`);
+            }
           };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                onEdit={onEdit}
+                // onEdit={onEdit}
                 onView={onView}
-                onDelete={onDelete}
+                // onDelete={onDelete}
               />
             </Stack>
           );
@@ -93,24 +97,13 @@ const Services = () => {
   return (
     <>
       <div>
-        <BreadCrumb title={"Services"} items={[]} />
+        <BreadCrumb
+          title={"Services"}
+          items={[{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }]}
+        />
 
         <DataTable
           data={tableData || []}
-          // data={[
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          // ]}
           loading={tableDataFetching}
           columns={columns}
           // btnText={"Create new service"}

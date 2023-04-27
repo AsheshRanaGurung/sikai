@@ -31,7 +31,7 @@ const useLoginMutation = () => {
       queryClient.setQueryData(authTokenKey, () => true);
       toastSuccess("Login Successful");
     },
-    onError: (error) => {
+    onError: error => {
       const loginErr = error as AxiosError<{ message: string; error: string }>;
       toastFail(
         loginErr.response?.data?.message ??
@@ -41,5 +41,42 @@ const useLoginMutation = () => {
     },
   });
 };
+
+// const logout = async () => {
+//   try {
+//     await httpClient.get(api.user.logout);
+//     return Promise.resolve(true);
+//   } catch (error) {
+//     if ((error as AxiosError).response?.status === httpStatus.UNAUTHORIZED) {
+//       return Promise.resolve(true);
+//     }
+//     return Promise.resolve(false);
+//   }
+// };
+
+// const useLogoutMutation = () => {
+//   const navigate = useNavigate();
+//   const queryClient = useQueryClient();
+//   return useMutation(logout, {
+//     onMutate() {
+//       toastPromise(logout(), api.user.logout, "Logging out");
+//     },
+//     onSuccess() {
+//       navigate("/");
+//       queryClient.setQueryData(authTokenKey, () => false);
+//       TokenService.clearToken();
+//       queryClient.clear();
+//       queryClient.removeQueries();
+//     },
+
+//     onError: (error: AxiosError<{ error: string; message: string }>) => {
+//       toastFail(
+//         error.response?.data?.message ??
+//           error.response?.data?.error ??
+//           "Logout Failed!"
+//       );
+//     }
+//   });
+// };
 
 export { useLoginMutation };

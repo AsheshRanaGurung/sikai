@@ -11,6 +11,7 @@ export const NAVIGATION_ROUTES = {
   PREMIUM_AD: "/permium-ad",
   ADVANCE_AD: "/advance-ad",
   COURSES: "/services/course",
+  FORM: "/services/form",
   SUBJECTS: "/services/subjects",
   QUESTION_SET: "/services/subjects/question-set",
   MODEL_SET: "/services/CMAT/model-set",
@@ -18,5 +19,5 @@ export const NAVIGATION_ROUTES = {
   ABROAD_STUDIES: "/services/abroad-studies",
   BASIC_AD: "/basic-ad",
   SETTINGS: "/settings",
-  LOGOUT: "./logout",
+  // LOGOUT: "./logout",
 };

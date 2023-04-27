@@ -8,6 +8,10 @@ export const api = {
   courses: {
     get: "/api/v1/service/course/",
   },
+  form: {
+    get: "/api/v1/service/{service_id}/service-form/",
+    getById: "/api/v1/service/service-form/{id}/",
+  },
   subjects: {
     get: "/api/v1/service/subject/",
   },

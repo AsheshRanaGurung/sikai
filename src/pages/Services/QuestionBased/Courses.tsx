@@ -6,6 +6,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
@@ -47,25 +48,25 @@ const Courses = () => {
       {
         Header: "Action",
         Cell: () => {
-          const onEdit = () => {
-            onModalOpen();
-          };
-          const onDelete = () => {
-            console.log("here");
-          };
+          // const onEdit = () => {
+          //   onModalOpen();
+          // };
+          // const onDelete = () => {
+          //   console.log("here");
+          // };
           const onSetting = () => {
             navigate(`${NAVIGATION_ROUTES.SUBJECTS}`);
           };
-          const onShowQues = () => {
-            console.log("here");
-          };
+          // const onShowQues = () => {
+          //   console.log("here");
+          // };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                onEdit={onEdit}
+                // onEdit={onEdit}
                 onSetting={onSetting}
-                onShowQues={onShowQues}
-                onDelete={onDelete}
+                // onShowQues={onShowQues}
+                // onDelete={onDelete}
               />
             </Stack>
           );
@@ -76,6 +77,13 @@ const Courses = () => {
   );
   return (
     <>
+      <BreadCrumb
+        title={"Services"}
+        items={[
+          { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
+          { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
+        ]}
+      />
       <DataTable
         columns={columns}
         data={tableData || []}

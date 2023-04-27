@@ -61,21 +61,21 @@ const Subjects = () => {
       {
         Header: "Action",
         Cell: ({ row }: CellProps<{ id: string }>) => {
-          const onEdit = () => {
-            onModalOpen();
-          };
+          // const onEdit = () => {
+          //   onModalOpen();
+          // };
           const onShowQues = () => {
             navigate(`${NAVIGATION_ROUTES.QUESTION_SET}/${row.original?.id}`);
           };
-          const onDelete = () => {
-            console.log("here");
-          };
+          // const onDelete = () => {
+          //   console.log("here");
+          // };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                onEdit={onEdit}
+                // onEdit={onEdit}
                 onShowQues={onShowQues}
-                onDelete={onDelete}
+                // onDelete={onDelete}
               />
             </Stack>
           );
@@ -88,7 +88,14 @@ const Subjects = () => {
   return (
     <>
       <div>
-        <BreadCrumb title={"Services"} items={[]} />
+        <BreadCrumb
+          title={"Services"}
+          items={[
+            { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
+            { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
+            { name: "Subject", route: `${NAVIGATION_ROUTES.SUBJECTS}` },
+          ]}
+        />
 
         <DataTable
           data={tableData || []}
@@ -101,7 +108,7 @@ const Subjects = () => {
 
         <ModalForm
           isModalOpen={isModalOpen}
-          title={"Edit service"}
+          title={"Add service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
           submitButtonText={"Upload"}

@@ -77,7 +77,7 @@ const Sidebar = ({
     },
     {
       name: "Logout",
-      to: NAVIGATION_ROUTES.LOGOUT,
+      to: NAVIGATION_ROUTES.LOGIN,
       icon: <LogoutIcon />,
       visible: true,
     },
@@ -108,7 +108,7 @@ const Sidebar = ({
             <img src={images.logo} alt="logo" />
           </Link>
         </ListItem>
-        {navItems.map((item) => (
+        {navItems.map(item => (
           <NavItem
             key={item.name}
             {...item}
