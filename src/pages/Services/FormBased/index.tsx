@@ -4,6 +4,7 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
 import { sikaai_colors } from "@sikaai/theme/color";
 // import FormControl from "@sikaai/components/form/FormControl";
@@ -13,7 +14,10 @@ import { CellProps } from "react-table";
 // import { useForm } from "react-hook-form";
 
 const FormBased = () => {
-  const { id = "" } = useParams();
+  const { id = "", service = "" } = useParams();
+  // For customized breadcrumb
+  const decodedService = decodeURIComponent(service);
+  //
   // const { register } = useForm();
   const {
     isOpen: isModalOpen,
@@ -82,7 +86,15 @@ const FormBased = () => {
   return (
     <>
       <div>
-        <BreadCrumb title={"Services"} items={[]} />
+        <BreadCrumb
+          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
+          items={[
+            {
+              name: decodedService,
+              route: `${NAVIGATION_ROUTES.FORM}/${decodedService}/${id}`,
+            },
+          ]}
+        />
 
         <DataTable
           data={tableData || []}

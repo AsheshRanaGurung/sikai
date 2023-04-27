@@ -1,6 +1,7 @@
 import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import { CommentIcon } from "@sikaai/assets/svgs";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +13,10 @@ const Forum = () => {
   };
   return (
     <>
-      <BreadCrumb items={[]} title={"Forum"} />
+      <BreadCrumb
+        items={[]}
+        title={{ name: "Forum", route: `${NAVIGATION_ROUTES.FORM}` }}
+      />
       <Box width={"100%"} backgroundColor={sikaai_colors.white} p={6}>
         <Box
           backgroundColor={sikaai_colors.gray}

@@ -60,7 +60,9 @@ const Services = () => {
       },
       {
         Header: "Action",
-        Cell: ({ row }: CellProps<{ id: string; service_type: string }>) => {
+        Cell: ({
+          row,
+        }: CellProps<{ id: string; service_type: string; name: string }>) => {
           // const onEdit = () => {
           //   onModalOpen();
           // };
@@ -68,10 +70,13 @@ const Services = () => {
           //   console.log("here");
           // };
           const onView = () => {
+            const encodedName = encodeURIComponent(row.original?.name);
             if (row.original?.service_type === "1") {
-              navigate(`${NAVIGATION_ROUTES.COURSES}`);
+              navigate(`${NAVIGATION_ROUTES.COURSES}/${encodedName}`);
             } else {
-              navigate(`${NAVIGATION_ROUTES.FORM}/${row.original?.id}`);
+              navigate(
+                `${NAVIGATION_ROUTES.FORM}/${encodedName}/${row.original?.id}`
+              );
             }
           };
           return (
@@ -98,8 +103,8 @@ const Services = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Services"}
-          items={[{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }]}
+          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
+          items={[]}
         />
 
         <DataTable

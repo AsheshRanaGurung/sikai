@@ -34,7 +34,9 @@ const QuestionSet = () => {
     onClose: onStatusClose,
   } = useDisclosure();
 
-  const { id } = useParams();
+  const { id, service = "", course = "", subject = "" } = useParams();
+  const encodedService = encodeURIComponent(service);
+  const encodedCourse = encodeURIComponent(course);
 
   const columns = useMemo(
     () => [
@@ -109,12 +111,20 @@ const QuestionSet = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Services"}
+          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
           items={[
-            { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
-            { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
-            { name: "Subject", route: `${NAVIGATION_ROUTES.SUBJECTS}` },
-            { name: "Subject-set", route: `${NAVIGATION_ROUTES.QUESTION_SET}` },
+            {
+              name: service,
+              route: `${NAVIGATION_ROUTES.SERVICES}`,
+            },
+            {
+              name: course,
+              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}`,
+            },
+            {
+              name: subject,
+              route: `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${encodedCourse}`,
+            },
           ]}
         />
 

@@ -68,7 +68,7 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.COURSES,
+    path: `${NAVIGATION_ROUTES.COURSES}/:service`,
     element: (
       <Layout>
         <Courses />
@@ -76,15 +76,7 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.FORM}/:id`,
-    element: (
-      <Layout>
-        <FormBased />
-      </Layout>
-    ),
-  },
-  {
-    path: NAVIGATION_ROUTES.SUBJECTS,
+    path: `${NAVIGATION_ROUTES.SUBJECTS}/:service/:course`,
     element: (
       <Layout>
         <ServiceSection />
@@ -92,10 +84,18 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.QUESTION_SET}/:id`,
+    path: `${NAVIGATION_ROUTES.QUESTION_SET}/:service/:course/:subject/:id`,
     element: (
       <Layout>
         <QuestionSet />
+      </Layout>
+    ),
+  },
+  {
+    path: `${NAVIGATION_ROUTES.FORM}/:service/:id`,
+    element: (
+      <Layout>
+        <FormBased />
       </Layout>
     ),
   },

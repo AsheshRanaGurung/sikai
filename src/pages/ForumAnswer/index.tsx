@@ -16,7 +16,7 @@ const ForumAnswer = () => {
   return (
     <>
       <BreadCrumb
-        title={"Forum"}
+        title={{ name: "Forum", route: `${NAVIGATION_ROUTES.FORM}` }}
         items={[
           {
             name: `Answer`,

@@ -10,7 +10,7 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetSubjects } from "@sikaai/service/sikaai-subjects";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
 const Subjects = () => {
@@ -27,6 +27,10 @@ const Subjects = () => {
     onOpen: onStatusOpen,
     onClose: onStatusClose,
   } = useDisclosure();
+
+  const { service = "", course = "" } = useParams();
+  const encodedService = encodeURIComponent(service);
+  const encodedCourse = encodeURIComponent(course);
 
   // react queries
   const { data: tableData = [], isLoading } = useGetSubjects();
@@ -60,12 +64,15 @@ const Subjects = () => {
       },
       {
         Header: "Action",
-        Cell: ({ row }: CellProps<{ id: string }>) => {
+        Cell: ({ row }: CellProps<{ id: string; name: string }>) => {
           // const onEdit = () => {
           //   onModalOpen();
           // };
           const onShowQues = () => {
-            navigate(`${NAVIGATION_ROUTES.QUESTION_SET}/${row.original?.id}`);
+            const encodedName = encodeURIComponent(row.original?.name);
+            navigate(
+              `${NAVIGATION_ROUTES.QUESTION_SET}/${encodedService}/${encodedCourse}/${encodedName}/${row.original?.id}`
+            );
           };
           // const onDelete = () => {
           //   console.log("here");
@@ -89,11 +96,13 @@ const Subjects = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Services"}
+          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
           items={[
-            { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
-            { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
-            { name: "Subject", route: `${NAVIGATION_ROUTES.SUBJECTS}` },
+            { name: service, route: `${NAVIGATION_ROUTES.SERVICES}` },
+            {
+              name: course,
+              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}`,
+            },
           ]}
         />
 

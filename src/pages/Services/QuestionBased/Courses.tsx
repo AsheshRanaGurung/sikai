@@ -15,7 +15,7 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetCourse } from "@sikaai/service/sikaai-course";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
 const Courses = () => {
@@ -32,6 +32,12 @@ const Courses = () => {
   const { data: tableData = [], isLoading } = useGetCourse();
   // react queries end
 
+  // For customized breadcrumb
+  const { service = "" } = useParams();
+  const decodedService = decodeURIComponent(service);
+  const encodedService = encodeURIComponent(service);
+  //
+
   const columns = useMemo(
     () => [
       { Header: "Services", accessor: "name" },
@@ -47,7 +53,7 @@ const Courses = () => {
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ name: string }>) => {
           // const onEdit = () => {
           //   onModalOpen();
           // };
@@ -55,7 +61,10 @@ const Courses = () => {
           //   console.log("here");
           // };
           const onSetting = () => {
-            navigate(`${NAVIGATION_ROUTES.SUBJECTS}`);
+            const encodedName = encodeURIComponent(row.original?.name);
+            navigate(
+              `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${encodedName}`
+            );
           };
           // const onShowQues = () => {
           //   console.log("here");
@@ -75,13 +84,16 @@ const Courses = () => {
     ],
     []
   );
+
   return (
     <>
       <BreadCrumb
-        title={"Services"}
+        title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
         items={[
-          { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
-          { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
+          {
+            name: decodedService || "",
+            route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}`,
+          },
         ]}
       />
       <DataTable
