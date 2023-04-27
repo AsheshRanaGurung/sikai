@@ -6,6 +6,101 @@ import {
 } from "@sikaai/assets/svgs";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import { sikaai_colors } from "@sikaai/theme/color";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend,
+  ArcElement,
+} from "chart.js";
+import { Line, Doughnut } from "react-chartjs-2";
+import { faker } from "@faker-js/faker";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend,
+  ArcElement
+);
+
+const labels = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "DEC",
+];
+
+// options for line graph
+const options_line = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+    title: {
+      display: true,
+      text: "MONTHLY CUSTOMER ONBOARD",
+    },
+  },
+};
+
+//data for line graph
+const data_line = {
+  labels,
+  datasets: [
+    {
+      fill: true,
+      label: "Dataset",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 5000 })),
+      borderColor: sikaai_colors.primary,
+      backgroundColor: "rgba(207, 202, 255, 1)",
+    },
+  ],
+};
+
+// options for doghnut graph
+const options_doghnut = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+    title: {
+      display: true,
+      text: "ADVERTISEMENT STATISTICS",
+    },
+  },
+};
+//data for doghnut
+const data_doghnut = {
+  labels: ["Premium", "Advanced", "Basic"],
+  datasets: [
+    {
+      label: "Adertisement Percent",
+      data: [50, 20, 30],
+      backgroundColor: [
+        "rgba(251, 166, 57, 1)",
+        "rgba(88, 95, 205, 1)",
+        "rgba(232, 232, 232, 1)",
+      ],
+    },
+  ],
+};
 
 const Dashboard = () => {
   return (
@@ -62,6 +157,31 @@ const Dashboard = () => {
               </Text>
             </Box>
           </Flex>
+        </GridItem>
+      </Grid>
+      <Grid templateColumns="repeat(1, 3fr 2fr)" gap={6} marginTop={"20px"}>
+        <GridItem
+          w={"100%"}
+          h={"400px"}
+          borderRadius={"16px"}
+          background={sikaai_colors.white}
+          display="flex"
+          justifyContent="center"
+          alignItems={"center"}
+        >
+          <Line options={options_line} data={data_line} />
+        </GridItem>
+        <GridItem
+          w={"100%"}
+          height="400px"
+          borderRadius={"16px"}
+          background={sikaai_colors.white}
+          p={4}
+          display="flex"
+          justifyContent="center"
+          alignItems={"center"}
+        >
+          <Doughnut options={options_doghnut} data={data_doghnut} />
         </GridItem>
       </Grid>
     </>
