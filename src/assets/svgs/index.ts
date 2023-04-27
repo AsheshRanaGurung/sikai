@@ -24,3 +24,4 @@ export { ReactComponent as TrashIcon } from "./trashIcon.svg";
 export { ReactComponent as EditIcon } from "./editIcon.svg";
 export { ReactComponent as SettingTableIcon } from "./settingTableIcon.svg";
 export { ReactComponent as QuestionIcon } from "./questionIcon.svg";
+export { ReactComponent as CommentIcon } from "./comments.svg";
