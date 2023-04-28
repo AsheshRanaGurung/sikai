@@ -1,7 +1,7 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
-import { toastFail } from "./service-toast";
+import { toastFail, toastSuccess } from "./service-toast";
 
 export interface ICourseResponse {
   id: number;
@@ -10,12 +10,30 @@ export interface ICourseResponse {
   service: number;
 }
 
-const getCourse = () => {
-  return httpClient.get<SikaaiResponse<ICourseResponse[]>>(api.courses.get);
+export interface ICourseResById {
+  name: string;
+  description: string;
+  course_info: CourseInfo;
+}
+
+export interface ICourseReqById extends ICourseResById {
+  id: string;
+}
+
+export interface CourseInfo {
+  deduction_mark: string;
+  time_limit: string;
+  total_questions: number;
+}
+
+const getCourse = (id: string) => () => {
+  return httpClient.get<SikaaiResponse<ICourseResponse[]>>(
+    api.courses.get.replace("{service_id}", id)
+  );
 };
 
-const useGetCourse = () => {
-  return useQuery([api.courses.get], getCourse, {
+const useGetCourse = (id: string) => {
+  return useQuery([api.courses.get, id], getCourse(id), {
     select: ({ data }) => data.data,
     onError: (error: any) => {
       toastFail(error.response?.data.message || "");
@@ -23,4 +41,40 @@ const useGetCourse = () => {
   });
 };
 
-export { useGetCourse };
+const getCourseById = (id: string) => () => {
+  return httpClient.get<SikaaiResponse<ICourseResById[]>>(
+    api.courses.getById.replace("{id}", id)
+  );
+};
+
+const useGetCourseById = (id: string) => {
+  return useQuery([api.courses.getById, id], getCourseById(id), {
+    select: ({ data }) => data.data[0],
+    enabled: !!id,
+    onError: () => {
+      toastFail("Couldn't fetch course");
+    },
+  });
+};
+
+const updateCourse = (CourseDetails: ICourseReqById) => {
+  return httpClient.patch(
+    api.courses.patch.replace("{id}", CourseDetails.id),
+    CourseDetails
+  );
+};
+
+const useUpdateCourse = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateCourse, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.courses.get);
+      toastSuccess("Course updated successfuly!");
+    },
+    onError: () => {
+      toastFail("Couldn't update the course!  ");
+    },
+  });
+};
+
+export { useGetCourse, useGetCourseById, useUpdateCourse };

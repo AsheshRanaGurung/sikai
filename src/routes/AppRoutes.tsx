@@ -68,7 +68,7 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.COURSES}/:service`,
+    path: `${NAVIGATION_ROUTES.COURSES}/:service/:serviceId`,
     element: (
       <Layout>
         <Courses />
@@ -76,7 +76,7 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.SUBJECTS}/:service/:course`,
+    path: `${NAVIGATION_ROUTES.SUBJECTS}/:service/:serviceId/:course/:courseId`,
     element: (
       <Layout>
         <ServiceSection />
@@ -84,7 +84,7 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.QUESTION_SET}/:service/:course/:subject/:id`,
+    path: `${NAVIGATION_ROUTES.QUESTION_SET}/:service/:serviceId/:course/:courseId/:subject/:subjectId`,
     element: (
       <Layout>
         <QuestionSet />

@@ -5,7 +5,6 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetServices } from "@sikaai/service/sikaai-services";
 import { useMemo } from "react";
@@ -22,11 +21,11 @@ const Services = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
-  const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isStatusOpen,
+  //   onOpen: onStatusOpen,
+  //   onClose: onStatusClose,
+  // } = useDisclosure();
 
   const columns = useMemo(
     () => [
@@ -38,19 +37,19 @@ const Services = () => {
         Header: "Description",
         accessor: "description",
       },
-      {
-        Header: "Status",
-        Cell: () => {
-          const toggleSwitch = () => {
-            if (!isStatusOpen) {
-              onStatusOpen();
-            } else {
-              onStatusClose();
-            }
-          };
-          return <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />;
-        },
-      },
+      // {
+      //   Header: "Status",
+      //   Cell: () => {
+      //     const toggleSwitch = () => {
+      //       if (!isStatusOpen) {
+      //         onStatusOpen();
+      //       } else {
+      //         onStatusClose();
+      //       }
+      //     };
+      //     return <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />;
+      //   },
+      // },
       {
         Header: "Upload Date",
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
@@ -72,7 +71,9 @@ const Services = () => {
           const onView = () => {
             const encodedName = encodeURIComponent(row.original?.name);
             if (row.original?.service_type === "1") {
-              navigate(`${NAVIGATION_ROUTES.COURSES}/${encodedName}`);
+              navigate(
+                `${NAVIGATION_ROUTES.COURSES}/${encodedName}/${row.original?.id}`
+              );
             } else {
               navigate(
                 `${NAVIGATION_ROUTES.FORM}/${encodedName}/${row.original?.id}`
