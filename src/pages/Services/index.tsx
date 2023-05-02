@@ -1,4 +1,4 @@
-import { Stack, useDisclosure } from "@chakra-ui/react";
+import { Skeleton, Stack, useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
@@ -6,14 +6,28 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { useGetServices } from "@sikaai/service/sikaai-services";
-import { useMemo } from "react";
+import {
+  useGetServiceById,
+  useGetServices,
+  useUpdateServices,
+} from "@sikaai/service/sikaai-services";
+import httpStatus from "http-status";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { CellProps } from "react-table";
 
+const defaultValues = {
+  name: "",
+  description: "",
+};
+
 const Services = () => {
-  const { register } = useForm();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: defaultValues,
+  });
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [updateId, setUpdateId] = useState("");
   const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
@@ -62,9 +76,11 @@ const Services = () => {
         Cell: ({
           row,
         }: CellProps<{ id: string; service_type: string; name: string }>) => {
-          // const onEdit = () => {
-          //   onModalOpen();
-          // };
+          const onEdit = () => {
+            setUpdateId(row.original?.id);
+            setIsUpdate(true);
+            onModalOpen();
+          };
           // const onDelete = () => {
           //   console.log("here");
           // };
@@ -83,7 +99,7 @@ const Services = () => {
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                // onEdit={onEdit}
+                onEdit={onEdit}
                 onView={onView}
                 // onDelete={onDelete}
               />
@@ -98,7 +114,29 @@ const Services = () => {
   // React queries
   const { data: tableData = [], isFetching: tableDataFetching } =
     useGetServices();
+  const { mutateAsync: updateService } = useUpdateServices();
+  const { data: service, isFetching: serviceLoading } =
+    useGetServiceById(updateId);
   // React queries end
+
+  const onSubmitHandler = async (serviceDetails: typeof defaultValues) => {
+    const response = await updateService({ ...serviceDetails, id: updateId });
+
+    if (response.status === httpStatus.OK) {
+      onModalClose();
+      reset(defaultValues);
+    }
+  };
+
+  useEffect(() => {
+    if (service) {
+      reset({
+        ...defaultValues,
+        name: service.name,
+        description: service.description,
+      });
+    }
+  }, [service]);
 
   return (
     <>
@@ -122,26 +160,36 @@ const Services = () => {
           title={"Edit service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
+          submitButtonText={isUpdate ? "Upload" : "Add"}
+          submitHandler={handleSubmit(onSubmitHandler)}
         >
-          <>
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Service Name"}
-              label={"Service Name"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Description"}
-              label={"Description"}
-            />
-          </>
+          {serviceLoading ? (
+            <Stack>
+              <Skeleton height="20px" />
+              <Skeleton height="40px" />
+              <Skeleton height="20px" />
+              <Skeleton height="40px" />
+            </Stack>
+          ) : (
+            <>
+              <FormControl
+                control="input"
+                size="lg"
+                register={register}
+                name="name"
+                placeholder={"Service Name"}
+                label={"Service Name"}
+              />
+              <FormControl
+                control="input"
+                size="lg"
+                register={register}
+                name="description"
+                placeholder={"Description"}
+                label={"Description"}
+              />
+            </>
+          )}
         </ModalForm>
       </div>
     </>

@@ -4,6 +4,8 @@ export const api = {
   },
   service: {
     get: "/api/v1/service/",
+    getById: "/api/v1/service/{id}/",
+    patch: "/api/v1/service/{id}/",
   },
   courses: {
     get: "/api/v1/service/{service_id}/course/",

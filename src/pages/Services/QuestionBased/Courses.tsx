@@ -34,7 +34,7 @@ const defaultValues = {
 
 const Courses = () => {
   const [courseId, setCourseId] = useState("");
-  // const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const {
     isOpen: isModalOpen,
@@ -79,6 +79,7 @@ const Courses = () => {
         Cell: ({ row }: CellProps<{ name: string; id: string }>) => {
           const onEdit = () => {
             setCourseId(row.original?.id);
+            setEdit(true);
             onModalOpen();
           };
           // const onDelete = () => {
@@ -90,15 +91,15 @@ const Courses = () => {
               `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${serviceId}/${encodedName}/${row.original.id}`
             );
           };
-          // const onShowQues = () => {
-          //   console.log("here");
-          // };
+          const onShowQues = () => {
+            navigate(`${NAVIGATION_ROUTES.MODEL_SET}/${row.original?.id}`);
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
                 onEdit={onEdit}
                 onSetting={onSetting}
-                // onShowQues={onShowQues}
+                onShowQues={onShowQues}
                 // onDelete={onDelete}
               />
             </Stack>
@@ -123,7 +124,7 @@ const Courses = () => {
     const response = await createCourse(data);
     try {
       if (response.status === httpStatus.OK) {
-        // setEdit(false);
+        setEdit(false);
         setCourseId("");
         onModalClose();
       }
@@ -133,7 +134,6 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    // setEdit(course ? true : false);
     if (course) {
       reset({
         ...defaultValues,
@@ -170,7 +170,7 @@ const Courses = () => {
         closeModal={onModalClose}
         resetButttonText={"Cancel"}
         submitHandler={handleSubmit(onSubmitHandler)}
-        submitButtonText={"Add"}
+        submitButtonText={edit ? "Update" : "Add"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={6}>
           <GridItem>

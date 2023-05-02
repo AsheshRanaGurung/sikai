@@ -1,9 +1,8 @@
-import { Divider, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import Switch from "@sikaai/components/switch";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -14,18 +13,6 @@ const ModelSet = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
-  const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
-
-  const toggleSwitch = () => {
-    onStatusOpen();
-    if (isStatusOpen) {
-      onStatusClose();
-    }
-  };
   const { register, handleSubmit } = useForm();
 
   const onSubmitHandler = (data: any, e: any) => {
@@ -70,24 +57,6 @@ const ModelSet = () => {
         submitButtonText={"Create"}
         submitHandler={handleSubmit(onSubmitHandler)}
       >
-        <Switch
-          value={isStatusOpen}
-          label={"Negative Marking"}
-          toggleSwitch={toggleSwitch}
-        />
-        {isStatusOpen && (
-          <>
-            <FormControl
-              control="input"
-              label={"Enter Deduction number"}
-              name={"deductionNumber"}
-              placeholder={"deduction number"}
-              register={register}
-            />
-
-            <Divider />
-          </>
-        )}
         <FormControl
           control="input"
           label={"Model Question Set Name"}
