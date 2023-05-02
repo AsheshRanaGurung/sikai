@@ -77,6 +77,7 @@ const Courses = () => {
       {
         Header: "Action",
         Cell: ({ row }: CellProps<{ name: string; id: string }>) => {
+          const encodedName = encodeURIComponent(row.original?.name);
           const onEdit = () => {
             setCourseId(row.original?.id);
             setEdit(true);
@@ -86,13 +87,14 @@ const Courses = () => {
           //   console.log("here");
           // };
           const onSetting = () => {
-            const encodedName = encodeURIComponent(row.original?.name);
             navigate(
               `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${serviceId}/${encodedName}/${row.original.id}`
             );
           };
           const onShowQues = () => {
-            navigate(`${NAVIGATION_ROUTES.MODEL_SET}/${row.original?.id}`);
+            navigate(
+              `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedName}/${row.original?.id}`
+            );
           };
           return (
             <Stack alignItems={"flex-start"}>
@@ -153,7 +155,7 @@ const Courses = () => {
         items={[
           {
             name: decodedService || "",
-            route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+            route: `${NAVIGATION_ROUTES.SERVICES}`,
           },
         ]}
       />

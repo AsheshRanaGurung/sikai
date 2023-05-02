@@ -131,7 +131,7 @@ const Subjects = () => {
               control="input"
               size="lg"
               register={register}
-              name="link"
+              name="name"
               placeholder={"Service Name"}
               label={"Service Name"}
             />
@@ -139,7 +139,7 @@ const Subjects = () => {
               control="input"
               size="lg"
               register={register}
-              name="link"
+              name="description"
               placeholder={"Description"}
               label={"Description"}
             />

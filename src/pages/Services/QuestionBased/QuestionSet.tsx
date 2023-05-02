@@ -136,18 +136,6 @@ const QuestionSet = () => {
         />
 
         <DataTable
-          // data={[
-          //   {
-          //     questionSet: "1234",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          //   {
-          //     questionSet: "1234",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          // ]}
           data={tableData || []}
           loading={isFetching}
           columns={columns}

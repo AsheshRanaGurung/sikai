@@ -1,10 +1,13 @@
 import { useDisclosure } from "@chakra-ui/react";
+import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const ModelSet = () => {
   const {
@@ -14,6 +17,16 @@ const ModelSet = () => {
   } = useDisclosure();
 
   const { register, handleSubmit } = useForm();
+
+  const {
+    service = "",
+    serviceId = "",
+    course = "",
+    courseId = "",
+  } = useParams();
+
+  const encodedService = encodeURIComponent(service);
+  const encodedCourse = encodeURIComponent(course);
 
   const onSubmitHandler = (data: any, e: any) => {
     e.preventDefault();
@@ -42,6 +55,23 @@ const ModelSet = () => {
   );
   return (
     <>
+      <BreadCrumb
+        title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
+        items={[
+          {
+            name: service,
+            route: `${NAVIGATION_ROUTES.SERVICES}`,
+          },
+          {
+            name: course,
+            route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+          },
+          {
+            name: "Model Set Questions",
+            route: `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
+          },
+        ]}
+      />
       <DataTable
         columns={columns}
         data={[]}

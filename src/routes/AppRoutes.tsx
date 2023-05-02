@@ -108,7 +108,7 @@ const routes = [
     ),
   },
   {
-    path: `${NAVIGATION_ROUTES.MODEL_SET}/:id`,
+    path: `${NAVIGATION_ROUTES.MODEL_SET}/:service/:serviceId/:course/:courseId`,
     element: (
       <Layout>
         <ModelSet />
