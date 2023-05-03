@@ -6,7 +6,6 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import {
@@ -28,13 +27,21 @@ const QuestionSet = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
-  const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isStatusOpen,
+  //   onOpen: onStatusOpen,
+  //   onClose: onStatusClose,
+  // } = useDisclosure();
 
-  const { id, service = "", course = "", subject = "" } = useParams();
+  const {
+    service = "",
+    serviceId = "",
+    course = "",
+    courseId = "",
+    subject = "",
+    subjectId = "",
+  } = useParams();
+
   const encodedService = encodeURIComponent(service);
   const encodedCourse = encodeURIComponent(course);
 
@@ -45,19 +52,19 @@ const QuestionSet = () => {
         accessor: "name",
       },
 
-      {
-        Header: "Status",
-        Cell: () => {
-          const toggleSwitch = () => {
-            if (isStatusOpen) {
-              onStatusClose();
-            } else {
-              onStatusOpen();
-            }
-          };
-          return <Switch value={false} toggleSwitch={toggleSwitch} />;
-        },
-      },
+      // {
+      //   Header: "Status",
+      //   Cell: () => {
+      //     const toggleSwitch = () => {
+      //       if (isStatusOpen) {
+      //         onStatusClose();
+      //       } else {
+      //         onStatusOpen();
+      //       }
+      //     };
+      //     return <Switch value={false} toggleSwitch={toggleSwitch} />;
+      //   },
+      // },
       {
         Header: "Upload Date",
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
@@ -94,13 +101,13 @@ const QuestionSet = () => {
 
   // React queries
   const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
-  const { data: tableData = [], isLoading } = useGetQuestionSet();
+  const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
   // React queries end
 
   const onSubmitHandler = async (questionSetDetails: any) => {
     const response = await createQuestionSet({
       ...questionSetDetails,
-      subject_id: id,
+      subject_id: subjectId,
     });
     if (response.status === httpStatus.OK) {
       toastSuccess("Question set created successful");
@@ -115,34 +122,22 @@ const QuestionSet = () => {
           items={[
             {
               name: service,
-              route: `${NAVIGATION_ROUTES.SERVICES}`,
+              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
             },
             {
               name: course,
-              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}`,
+              route: `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
             },
             {
               name: subject,
-              route: `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${encodedCourse}`,
+              route: "",
             },
           ]}
         />
 
         <DataTable
-          // data={[
-          //   {
-          //     questionSet: "1234",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          //   {
-          //     questionSet: "1234",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          // ]}
           data={tableData || []}
-          loading={isLoading}
+          loading={isFetching}
           columns={columns}
           btnText={"Create question Set"}
           onAction={onModalOpen}
