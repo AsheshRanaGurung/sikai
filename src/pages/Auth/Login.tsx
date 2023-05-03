@@ -116,7 +116,7 @@ const Login = () => {
 
                 <Button
                   type="submit"
-                  variant="primary"
+                  variant="primaryLarge"
                   size="lg_fit"
                   isLoading={isLoading}
                 >

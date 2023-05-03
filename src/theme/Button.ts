@@ -19,6 +19,16 @@ const primary = defineStyle({
   _hover: {
     background: sikaai_colors.secondary,
     color: sikaai_colors.primary,
+    // border: "1px !important",
+  },
+});
+
+const primaryLarge = defineStyle({
+  ...primary,
+  _hover: {
+    background: sikaai_colors.secondary,
+    color: sikaai_colors.primary,
+    border: "1px !important",
   },
 });
 
@@ -67,6 +77,7 @@ const round = defineStyle({
 export const buttonTheme = defineStyleConfig({
   variants: {
     primary,
+    primaryLarge,
     reset,
     primaryOutline,
     secondary,

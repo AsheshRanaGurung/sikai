@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import httpStatus from "http-status";
 import TokenService from "./service-token";
 
 type RequestData = Record<string, any>;
@@ -12,7 +13,7 @@ const THREE_MINUTES = 3 * 60 * 1000;
 
 export const baseURL = import.meta.env.VITE_APP_BACKEND_API;
 
-// const refreshTokenURL = "/api/v1/users/token/refresh/";
+const refreshTokenURL = "/api/v1/users/token/refresh/";
 
 const baseConfig = (disableAuth?: boolean): AxiosRequestConfig<RequestData> => {
   const token = TokenService.getToken()?.access_token;
@@ -81,32 +82,32 @@ const httpClient = {
     }),
 };
 
-// axios.interceptors.response.use(
-//   response => response,
-//   async error => {
-//     if (error?.config?.url !== "/") {
-//       if (error.response.status === httpStatus.UNAUTHORIZED) {
-//         try {
-//           const refreshToken = TokenService.getToken()?.refresh_token;
-//           const response = await httpClient.get<{ data: { access: string } }>(
-//             refreshTokenURL,
-//             {
-//               refresh: refreshToken,
-//             }
-//           );
-//           const tokens = {
-//             access_token: response.data.data.access,
-//             refresh_token: refreshToken,
-//           };
-//           TokenService.setToken(tokens);
-//         } catch (_error) {
-//           TokenService.clearToken();
-//           return Promise.reject(_error);
-//         }
-//       }
-//     }
-//     return Promise.reject(error.response);
-//   }
-// );
+axios.interceptors.response.use(
+  response => response,
+  async error => {
+    if (error?.config?.url !== "/") {
+      if (error.response.status === httpStatus.UNAUTHORIZED) {
+        try {
+          const refreshToken = TokenService.getToken()?.refresh_token || "";
+          const response = await httpClient.post<{ data: { access: string } }>(
+            refreshTokenURL,
+            {
+              refresh: refreshToken,
+            }
+          );
+          const tokens = {
+            access_token: response.data.data.access,
+            refresh_token: refreshToken,
+          };
+          TokenService.setToken(tokens);
+        } catch (_error) {
+          TokenService.clearToken();
+          return Promise.reject(_error);
+        }
+      }
+    }
+    return Promise.reject(error.response);
+  }
+);
 
 export { defaultSikaaiResponse, httpClient };

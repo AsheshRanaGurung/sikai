@@ -29,6 +29,13 @@ export const api = {
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
   },
+  advertisement: {
+    get: "/api/v1/advertisement/advertise/",
+    post: "/api/v1/advertisement/advertise/",
+    getById: "/api/v1/advertisement/get/{id}/",
+    patch: "/api/v1/advertisement/update/{id}/",
+    delete: "/api/v1/advertisement/delete/{id}/",
+  },
 };
 
 export interface SikaaiResponse<T = unknown> {

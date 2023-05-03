@@ -6,6 +6,7 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useGetAdvertisement } from "@sikaai/service/sikaai-advertisement";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -55,6 +56,10 @@ const AdvanceAd = () => {
     []
   );
 
+  // react queries
+  const { data: tableData, isFetching } = useGetAdvertisement();
+  // react queries end
+
   return (
     <>
       <div>
@@ -72,21 +77,23 @@ const AdvanceAd = () => {
         />
 
         <DataTable
-          data={[
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-            {
-              advertisementBanner: "1234",
-              advertisementLink: "link",
-              status: "true",
-              uploadDate: "123",
-            },
-          ]}
+          // data={[
+          //   {
+          //     advertisementBanner: "1234",
+          //     advertisementLink: "link",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          //   {
+          //     advertisementBanner: "1234",
+          //     advertisementLink: "link",
+          //     status: "true",
+          //     uploadDate: "123",
+          //   },
+          // ]}
+          data={tableData || []}
           columns={columns}
+          loading={isFetching}
           btnText={"Add New Advertisement"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
