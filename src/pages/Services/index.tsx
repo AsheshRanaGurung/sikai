@@ -65,7 +65,7 @@ const Services = () => {
       //   },
       // },
       {
-        Header: "Upload Date",
+        Header: "Created Date",
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
           const date = row.original?.created_at.substring(0, 10);
           return date;

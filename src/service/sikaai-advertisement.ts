@@ -19,6 +19,9 @@ export interface IAdvertisementResponse extends IAdvertisementReq {
 const getAdvertisement = () => {
   return httpClient.get<SikaaiResponse<IAdvertisementResponse[]>>(
     api.advertisement.get
+    // ,{
+    //     page_name: "2"
+    // }
   );
 };
 

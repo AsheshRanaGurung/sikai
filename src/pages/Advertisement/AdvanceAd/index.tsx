@@ -22,20 +22,20 @@ const AdvanceAd = () => {
     () => [
       {
         Header: "Advertisement Banner",
-        accessor: "advertisementBanner",
+        accessor: "banner",
       },
       {
         Header: "Advertisement Link",
-        accessor: "advertisementLink",
+        accessor: "ad_link",
       },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "Upload Date",
-        accessor: "uploadDate",
-      },
+      // {
+      //   Header: "Status",
+      //   accessor: "status",
+      // },
+      // {
+      //   Header: "Upload Date",
+      //   accessor: "uploadDate",
+      // },
       {
         Header: "Action",
         Cell: () => {

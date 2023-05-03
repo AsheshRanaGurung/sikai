@@ -58,7 +58,7 @@ const Sidebar = ({
       ],
     },
     {
-      name: "FAQ",
+      name: "FAQ'S",
       to: NAVIGATION_ROUTES.FAQ,
       icon: <MessageQuestionIcon />,
       visible: true,
