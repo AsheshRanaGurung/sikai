@@ -54,7 +54,7 @@ const options_line = {
     },
     title: {
       display: true,
-      text: "MONTHLY CUSTOMER ONBOARD",
+      text: "MONTHLY STUDENT ONBOARD",
     },
   },
 };
@@ -65,7 +65,7 @@ const data_line = {
   datasets: [
     {
       fill: true,
-      label: "Dataset",
+      label: "Student",
       data: labels.map(() => faker.datatype.number({ min: 0, max: 5000 })),
       borderColor: sikaai_colors.primary,
       backgroundColor: "rgba(207, 202, 255, 1)",

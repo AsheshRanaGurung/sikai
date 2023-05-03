@@ -34,16 +34,14 @@ const useGetForm = ({ id }: { id: string }) => {
   });
 };
 
-const getFormById =
-  ({ id }: { id: string }) =>
-  () => {
-    return httpClient.get<SikaaiResponse<IFormResponse[]>>(
-      api.form.getById.replace("{id}", id)
-    );
-  };
+const getFormById = ({ id }: { id: string }) => () => {
+  return httpClient.get<SikaaiResponse<IFormResponse[]>>(
+    api.form.getById.replace("{id}", id)
+  );
+};
 
 const useGetFormById = ({ id }: { id: string }) => {
-  return useQuery([api.form.get, id], getFormById({ id }), {
+  return useQuery([api.form.get, id],getFormById({ id }), {
     enabled: !!id,
     select: ({ data }) => data.data,
     onError: (e: any) => {

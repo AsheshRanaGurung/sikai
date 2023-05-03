@@ -18,6 +18,13 @@ export const api = {
   subjects_set: {
     get: "/api/v1/assessment/subject-set/",
   },
+  forum: {
+    get: "/api/v1/forum/",
+    getById: "/api/v1/forum/{id}",
+  },
+  comment: {
+    get: "/api/v1/forum/{forum_id}/comment/",
+  },
 };
 
 export interface SikaaiResponse<T = unknown> {

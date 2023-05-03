@@ -5,18 +5,50 @@ import {
   Image,
   Input,
   Select,
-  Switch,
   Text,
 } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
+import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useGetComment, useGetForumById } from "@sikaai/service/sikaai-forum";
 import { sikaai_colors } from "@sikaai/theme/color";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 const ForumAnswer = () => {
+  //for date change
+  function timeAgo(dateString: Date) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+
+    if (seconds < 60) {
+      return `${seconds} seconds ago`;
+    } else if (seconds < 3600) {
+      const minutes = Math.floor(seconds / 60);
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    } else if (seconds < 86400) {
+      const hours = Math.floor(seconds / 3600);
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    } else {
+      const days = Math.floor(seconds / 86400);
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+    }
+  }
+  //end of date function
+  const { id: forumId = "" } = useParams();
+  const { data = [] } = useGetForumById({ id: forumId });
+  const { data: dataComment = [] } = useGetComment({ id: forumId });
+  const [toggle, setToggle] = useState(false);
+
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
   return (
     <>
       <BreadCrumb
-        title={{ name: "Forum", route: `${NAVIGATION_ROUTES.FORM}` }}
+        title={{ name: "Forum", route: `${NAVIGATION_ROUTES.FORUM}` }}
         items={[
           {
             name: `Answer`,
@@ -30,30 +62,24 @@ const ForumAnswer = () => {
           <Image
             borderRadius="full"
             boxSize="36px"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4HWZUxsf5n832kg8v768mpz3uIy2UDzIRTADmhqD6Xg&s"
-            alt="Dan Abramov"
+            src={data[0]?.question_image}
+            alt="profile"
           />
 
-          <Text>
-            m rem aperiam, eaque ipsa quae ab illo inventore veritatis...m rem
-            aperiam, eaque ipsa quae ab illo inventore veritatis...m rem
-            aperiam, eaque ipsa quae ab illo inventore veritatis...m rem
-            aperiam, eaque ipsa q?
-          </Text>
+          <Text>{data[0]?.question_text}</Text>
         </Flex>
         <Box marginLeft={45}>
           <Flex gap={3}>
-            <Text color={"blue"}>Christina Shrestha</Text>
-            <Text color={sikaai_colors.gray_text}>10 minutes</Text>
+            <Text color={"blue"}>{data[0]?.created_by}</Text>
+            <Text color={sikaai_colors.gray_text}>
+              {timeAgo(data[0]?.created_at)}
+            </Text>
           </Flex>
         </Box>
         <Flex mt={3} gap={3} direction={"column"}>
           <Text color={sikaai_colors.primary_dark}>Your Answer</Text>
           <Input placeholder="write your answer" />
-          <Flex gap={2} alignItems={"center"}>
-            <Text>Pin</Text>
-            <Switch />
-          </Flex>
+          <Switch value={toggle} label={"Pin"} toggleSwitch={handleToggle} />
           <Input type={"file"} />
           <Button>Post</Button>
         </Flex>
@@ -67,7 +93,7 @@ const ForumAnswer = () => {
       >
         <Flex justifyContent={"space-between"}>
           <Text fontWeight={"bold"} color={sikaai_colors.primary}>
-            Comment
+            Comments
           </Text>
           <Select width={"140px"} size={"xs"} color={sikaai_colors.primary}>
             <option>Most Recent</option>
@@ -75,32 +101,27 @@ const ForumAnswer = () => {
           </Select>
         </Flex>
         <Box>
-          <Flex gap={2}>
-            <Image
-              borderRadius="full"
-              boxSize="36px"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4HWZUxsf5n832kg8v768mpz3uIy2UDzIRTADmhqD6Xg&s"
-              alt="Dan Abramov"
-            />
-            <Box>
-              <Text>Admin</Text>
-              <Text fontSize={"xs"}>1 min ago</Text>
-            </Box>
-          </Flex>
-          <Box borderBottom={"1px solid gray"} ml={10}>
-            <Text>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi
-              perspiciatis perferendis amet in commodi eveniet, itaque incidunt
-              corrupti ea enim aliquam dignissimos fugiat ad reiciendis expedita
-              fugit suscipit sint ipsam! Dolores non facilis magni voluptate
-              ipsam nostrum, eius, mollitia natus, ratione voluptates voluptas
-              iure cum cupiditate sunt praesentium adipisci sapiente quibusdam
-              officiis magnam laudantium inventore ad suscipit itaque repellat?
-              Odio. Quia nam sit ipsam! Necessitatibus aut recusandae eveniet
-              modi enim ipsa et sed ut quos, magni a omnis nostrum sequi porro
-              minima laboriosam tempora.
-            </Text>
-          </Box>
+          {dataComment?.map(({ item }: any) => {
+            return (
+              <>
+                <Flex gap={5} marginTop={8}>
+                  <Image
+                    borderRadius="full"
+                    boxSize="36px"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4HWZUxsf5n832kg8v768mpz3uIy2UDzIRTADmhqD6Xg&s"
+                    alt="Dan Abramov"
+                  />
+                  <Box>
+                    <Text>{dataComment[0]?.created_by}</Text>
+                    <Text>{timeAgo(dataComment[0]?.created_at)}</Text>
+                  </Box>
+                </Flex>
+                <Box borderBottom={"1px solid gray"} ml={14}>
+                  <Text mb={5}>{dataComment[0]?.text_content}</Text>
+                </Box>
+              </>
+            );
+          })}
         </Box>
       </Box>
     </>
