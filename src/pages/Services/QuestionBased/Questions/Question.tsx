@@ -17,17 +17,58 @@ import { sikaai_colors } from "@sikaai/theme/color";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubQuestion from "./subQuestion";
+import { useCreateQuestion } from "@sikaai/service/sikaai-question";
+
+// const defaultValues = {
+//   question_text: "",
+//   // question_image: "",
+//   subject_question_set_id: null as number | null,
+//   answer_text1: "",
+//   answer_text2: "",
+//   answer_text3: "",
+//   answer_text4: "",
+//   answer: "",
+//   description: "",
+//   // image: "",
+// };
 
 function MyComponent() {
   const { register, handleSubmit } = useForm();
   const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
 
+  const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
+
   const toggleSwitch = () => {
     onStatusOpen();
   };
 
-  const onSubmitHandler = (data: any) => {
-    console.log(data);
+  const onSubmitHandler = async (questionDetails: any) => {
+    const requestBody = {
+      question_text: questionDetails?.question_text,
+      subject_question_set_id: questionDetails?.subject_question_set_id ?? 0,
+      options: [
+        {
+          answer_text: questionDetails?.answer_text1,
+          is_correct: questionDetails?.answer === "A" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text2,
+          is_correct: questionDetails?.answer === "B" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text3,
+          is_correct: questionDetails?.answer === "C" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text4,
+          is_correct: questionDetails?.answer === "D" ? true : false,
+        },
+      ],
+      solution: {
+        description: questionDetails?.description,
+      },
+    };
+    createQuestion(requestBody);
   };
 
   return (
@@ -91,7 +132,7 @@ function MyComponent() {
                     <FormControl
                       control="input"
                       register={register}
-                      name={`question`}
+                      name={`question_text`}
                       placeholder="question"
                     />
                   </Box>
@@ -109,13 +150,13 @@ function MyComponent() {
                         <FormControl
                           control="input"
                           register={register}
-                          name={`option1`}
+                          name={`answer_text1`}
                           placeholder="option 1"
                         />
                         <FormControl
                           control="input"
                           register={register}
-                          name={`option2`}
+                          name={`answer_text2`}
                           placeholder="option 2"
                         />
                       </Flex>
@@ -123,13 +164,13 @@ function MyComponent() {
                         <FormControl
                           control="input"
                           register={register}
-                          name={`option3`}
+                          name={`answer_text3`}
                           placeholder="option 3"
                         />
                         <FormControl
                           control="input"
                           register={register}
-                          name={`option4`}
+                          name={`answer_text4`}
                           placeholder="option 4"
                         />
                       </Flex>
@@ -184,11 +225,13 @@ function MyComponent() {
                     <FormControl
                       control="input"
                       register={register}
-                      name={`solution`}
+                      name={"description"}
                       placeholder="solution"
                     />
                   </Box>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit" isLoading={isLoading}>
+                    Save
+                  </Button>
                 </>
               )}
             </Flex>

@@ -11,16 +11,62 @@ import {
   Text,
 } from "@chakra-ui/react";
 import FormControl from "@sikaai/components/form/FormControl";
+import { useCreateQuestion } from "@sikaai/service/sikaai-question";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-function MyComponent({ key }: { key: number }) {
+// const defaultValues = {
+//   question_text: "",
+//   // question_image: "",
+//   subject_question_set_id: null as number | null,
+//   answer_text1: "",
+//   answer_text2: "",
+//   answer_text3: "",
+//   answer_text4: "",
+//   answer: "",
+//   description: "",
+//   parent_content: "",
+//   // image: "",
+// };
+
+const MyComponent = ({ index }: { index: number }) => {
+  const [parentId, setParentId] = useState<number | null>(null);
+  const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
   const [formDisabled, setFormDisabled] = useState(false);
   const { register, handleSubmit } = useForm();
   const onSubmitHandler = async (questionDetails: any) => {
     setFormDisabled(true);
-    console.log(questionDetails, "sub");
+    const requestBody = {
+      question_text: questionDetails?.question_text,
+      subject_question_set_id: questionDetails?.subject_question_set_id ?? 0,
+      options: [
+        {
+          answer_text: questionDetails?.answer_text1,
+          is_correct: questionDetails?.answer === "A" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text2,
+          is_correct: questionDetails?.answer === "B" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text3,
+          is_correct: questionDetails?.answer === "C" ? true : false,
+        },
+        {
+          answer_text: questionDetails?.answer_text4,
+          is_correct: questionDetails?.answer === "D" ? true : false,
+        },
+      ],
+      solution: {
+        description: questionDetails?.description,
+      },
+    };
+    createQuestion(
+      parentId ? { ...requestBody, parent_id: parentId } : requestBody
+    ).then((data: any) => {
+      setParentId(data?.parent_id);
+    });
     // response has an id
     // save that id
     // append that id in the request body
@@ -30,7 +76,7 @@ function MyComponent({ key }: { key: number }) {
   return (
     <>
       <Accordion defaultIndex={[0]} allowToggle>
-        <form onSubmit={handleSubmit(onSubmitHandler)}>
+        <form>
           <AccordionItem>
             <h2>
               <AccordionButton
@@ -48,7 +94,7 @@ function MyComponent({ key }: { key: number }) {
                   fontSize={"16px"}
                   //   color={sikaai_colors.primary}
                 >
-                  {`Sub Question ${key}`}
+                  {`Sub Question ${index}`}
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
@@ -59,7 +105,7 @@ function MyComponent({ key }: { key: number }) {
                 <FormControl
                   control="input"
                   register={register}
-                  name={`description`}
+                  name={`parent_content`}
                   placeholder="description"
                   disabled={formDisabled}
                 />
@@ -75,7 +121,7 @@ function MyComponent({ key }: { key: number }) {
                   <FormControl
                     control="input"
                     register={register}
-                    name={`question`}
+                    name={`question_text`}
                     placeholder="question"
                     disabled={formDisabled}
                   />
@@ -94,14 +140,14 @@ function MyComponent({ key }: { key: number }) {
                       <FormControl
                         control="input"
                         register={register}
-                        name={`option1`}
+                        name={`answer_text1`}
                         placeholder="option 1"
                         disabled={formDisabled}
                       />
                       <FormControl
                         control="input"
                         register={register}
-                        name={`option2`}
+                        name={`answer_text2`}
                         placeholder="option 2"
                         disabled={formDisabled}
                       />
@@ -111,14 +157,14 @@ function MyComponent({ key }: { key: number }) {
                         disabled={formDisabled}
                         control="input"
                         register={register}
-                        name={`option3`}
+                        name={`answer_text3`}
                         placeholder="option 3"
                       />
                       <FormControl
                         disabled={formDisabled}
                         control="input"
                         register={register}
-                        name={`option4`}
+                        name={`answer_text4`}
                         placeholder="option 4"
                       />
                     </Flex>
@@ -176,12 +222,16 @@ function MyComponent({ key }: { key: number }) {
                     disabled={formDisabled}
                     control="input"
                     register={register}
-                    name={`solution`}
+                    name={`description`}
                     placeholder="solution"
                   />
                 </Box>
 
-                <Button type="submit" onClick={handleSubmit(onSubmitHandler)}>
+                <Button
+                  isLoading={isLoading}
+                  type="submit"
+                  onClick={handleSubmit(onSubmitHandler)}
+                >
                   Save
                 </Button>
               </Flex>
@@ -191,7 +241,7 @@ function MyComponent({ key }: { key: number }) {
       </Accordion>
     </>
   );
-}
+};
 
 function SubQuestion() {
   const [clickCount, setClickCount] = useState(0);
@@ -200,9 +250,9 @@ function SubQuestion() {
     setClickCount(clickCount + 1);
   };
 
-  const myComponents = Array.from({ length: clickCount }, (_, i) => (
-    <MyComponent key={i} />
-  ));
+  const myComponents = Array.from({ length: clickCount }, (_, i) => {
+    return <MyComponent key={i} index={i + 1} />;
+  });
 
   return (
     <Box borderRadius={"8px"}>
