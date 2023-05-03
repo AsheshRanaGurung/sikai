@@ -5,13 +5,16 @@ import { sikaai_colors } from "@sikaai/theme/color";
 import { RightArrowIcon } from "../../assets/svgs";
 
 const NavItem = ({ name, to, child, icon, isCollapse, visible }: INavItem) => {
+  //make a generic component
+  const match = location.pathname.match(/services/g);
+
   const activeParent = child?.some(item => item.to === location.pathname);
 
   const [active, setActive] = useState(false);
   const [showDropdown, setShowDropdown] = useState(activeParent);
 
   useEffect(() => {
-    setActive(!child && to === location.pathname);
+    setActive((!child && to === location.pathname) || to === `/${match?.[0]}`);
   }, [location.pathname]);
 
   return (

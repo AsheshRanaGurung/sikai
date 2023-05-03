@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 interface IBreadCrumb {
   items: { name: string; route: string }[];
   goBack?: string;
-  title: string;
+  title: { name: string; route: string };
 }
 
 export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
@@ -37,16 +37,19 @@ export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
                   fontWeight={700}
                   color={sikaai_colors.black}
                   fontSize={"32px"}
+                  onClick={() => navigate(title.route)}
                 >
-                  {title}
+                  {title.name}
                 </Text>
-                <Divider
-                  orientation="vertical"
-                  borderColor={sikaai_colors.black}
-                  height={"30px"}
-                  mx={2}
-                  borderWidth="1px"
-                />
+                {items.length != 0 && (
+                  <Divider
+                    orientation="vertical"
+                    borderColor={sikaai_colors.black}
+                    height={"30px"}
+                    mx={2}
+                    borderWidth="1px"
+                  />
+                )}
               </Flex>
             </BreadcrumbLink>
           </BreadcrumbItem>

@@ -7,6 +7,7 @@ import Filter from "@sikaai/components/common/table/filter";
 import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 
 const FAQ = () => {
   const columns = useMemo(
@@ -54,7 +55,13 @@ const FAQ = () => {
   } = useDisclosure();
   return (
     <>
-      <BreadCrumb items={[]} title="Frequently Asked Question" />
+      <BreadCrumb
+        items={[]}
+        title={{
+          name: "Frequently Asked Question",
+          route: `${NAVIGATION_ROUTES.FAQ}`,
+        }}
+      />
       <DataTable
         data={[
           {

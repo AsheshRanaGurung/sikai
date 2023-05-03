@@ -1,11 +1,13 @@
-import { Divider, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
+import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import Switch from "@sikaai/components/switch";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const ModelSet = () => {
   const {
@@ -14,19 +16,17 @@ const ModelSet = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
-  const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
-
-  const toggleSwitch = () => {
-    onStatusOpen();
-    if (isStatusOpen) {
-      onStatusClose();
-    }
-  };
   const { register, handleSubmit } = useForm();
+
+  const {
+    service = "",
+    serviceId = "",
+    course = "",
+    courseId = "",
+  } = useParams();
+
+  const encodedService = encodeURIComponent(service);
+  const encodedCourse = encodeURIComponent(course);
 
   const onSubmitHandler = (data: any, e: any) => {
     e.preventDefault();
@@ -55,6 +55,23 @@ const ModelSet = () => {
   );
   return (
     <>
+      <BreadCrumb
+        title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
+        items={[
+          {
+            name: service,
+            route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+          },
+          {
+            name: course,
+            route: `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
+          },
+          {
+            name: "Model Set Questions",
+            route: "",
+          },
+        ]}
+      />
       <DataTable
         columns={columns}
         data={[]}
@@ -70,24 +87,6 @@ const ModelSet = () => {
         submitButtonText={"Create"}
         submitHandler={handleSubmit(onSubmitHandler)}
       >
-        <Switch
-          value={isStatusOpen}
-          label={"Negative Marking"}
-          toggleSwitch={toggleSwitch}
-        />
-        {isStatusOpen && (
-          <>
-            <FormControl
-              control="input"
-              label={"Enter Deduction number"}
-              name={"deductionNumber"}
-              placeholder={"deduction number"}
-              register={register}
-            />
-
-            <Divider />
-          </>
-        )}
         <FormControl
           control="input"
           label={"Model Question Set Name"}

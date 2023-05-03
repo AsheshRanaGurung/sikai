@@ -4,19 +4,23 @@ export const api = {
   },
   service: {
     get: "/api/v1/service/",
+    getById: "/api/v1/service/{id}/",
+    patch: "/api/v1/service/{id}/",
   },
   courses: {
-    get: "/api/v1/service/course/",
+    get: "/api/v1/service/{service_id}/course/",
+    getById: "/api/v1/service/course/{id}/",
+    patch: "/api/v1/service/course/{id}/",
   },
   form: {
     get: "/api/v1/service/{service_id}/service-form/",
     getById: "/api/v1/service/service-form/{id}/",
   },
   subjects: {
-    get: "/api/v1/service/subject/",
+    get: "/api/v1/service/course/{course_id}/subject/",
   },
   subjects_set: {
-    get: "/api/v1/assessment/subject-set/",
+    get: "/api/v1/assessment/subject/{subject_id}/subject-set/",
   },
 };
 

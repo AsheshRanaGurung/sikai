@@ -36,7 +36,10 @@ const PremiumAd = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Advertisement"}
+          title={{
+            name: "Advertisement",
+            route: `${NAVIGATION_ROUTES.ADVERTISEMENT}`,
+          }}
           items={[
             {
               name: `Premium Ads`,

@@ -36,7 +36,10 @@ const BasicAd = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Advertisement"}
+          title={{
+            name: "Advertisement",
+            route: `${NAVIGATION_ROUTES.ADVERTISEMENT}`,
+          }}
           items={[
             {
               name: `Basic Ads`,

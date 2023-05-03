@@ -12,13 +12,16 @@ export interface ISubjectsResponse {
   created_at: string;
 }
 
-const getSubjects = () => {
-  return httpClient.get<SikaaiResponse<ISubjectsResponse[]>>(api.subjects.get);
+const getSubjects = (id: string) => () => {
+  return httpClient.get<SikaaiResponse<ISubjectsResponse[]>>(
+    api.subjects.get.replace("{course_id}", id)
+  );
 };
 
-const useGetSubjects = () => {
-  return useQuery([api.subjects.get], getSubjects, {
+const useGetSubjects = (id: string) => {
+  return useQuery([api.subjects.get, id], getSubjects(id), {
     select: ({ data }) => data.data,
+    enabled: !!id,
     onError: (error: any) => {
       toastFail(error.response?.data.message || "");
     },

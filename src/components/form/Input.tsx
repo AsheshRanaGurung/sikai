@@ -27,6 +27,7 @@ const Input = ({
   endIcons,
   onIconClick,
   required,
+  color,
   ...rest
 }: IInput) => {
   return (
@@ -36,7 +37,12 @@ const Input = ({
       isDisabled={isDisabled}
     >
       {label && (
-        <FormLabel htmlFor={name} fontWeight={600} fontSize={"18px"}>
+        <FormLabel
+          htmlFor={name}
+          fontWeight={600}
+          fontSize={"18px"}
+          color={color ? color : ""}
+        >
           {label}
           {required && (
             <span style={{ color: sikaai_colors.black }}>&nbsp;*</span>
@@ -100,5 +106,6 @@ export interface IInput<TFieldValues extends FieldValues = FieldValues>
   onIconClick?: () => void;
   required?: boolean;
   labelDisabled?: string;
+  color?: string;
 }
 export default Input;

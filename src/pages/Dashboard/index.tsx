@@ -105,7 +105,7 @@ const data_doghnut = {
 const Dashboard = () => {
   return (
     <>
-      <BreadCrumb items={[]} title={"Dashboard"} />
+      <BreadCrumb items={[]} title={{ name: "Dashboard", route: "/" }} />
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
           <Flex padding={4} gap={4}>

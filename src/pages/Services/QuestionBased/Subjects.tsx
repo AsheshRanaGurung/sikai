@@ -5,12 +5,11 @@ import DataTable from "@sikaai/components/common/table";
 import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
-import Switch from "@sikaai/components/switch";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetSubjects } from "@sikaai/service/sikaai-subjects";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
 const Subjects = () => {
@@ -22,14 +21,23 @@ const Subjects = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
+  // const {
+  //   isOpen: isStatusOpen,
+  //   onOpen: onStatusOpen,
+  //   onClose: onStatusClose,
+  // } = useDisclosure();
+
   const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
+    service = "",
+    course = "",
+    serviceId = "",
+    courseId = "",
+  } = useParams();
+  const encodedService = encodeURIComponent(service);
+  const encodedCourse = encodeURIComponent(course);
 
   // react queries
-  const { data: tableData = [], isLoading } = useGetSubjects();
+  const { data: tableData = [], isFetching } = useGetSubjects(courseId);
   // react queries end
 
   const columns = useMemo(
@@ -38,19 +46,19 @@ const Subjects = () => {
         Header: "Section",
         accessor: "name",
       },
-      {
-        Header: "Status",
-        Cell: () => {
-          const toggleSwitch = () => {
-            if (isStatusOpen) {
-              onStatusClose();
-            } else {
-              onStatusOpen();
-            }
-          };
-          return <Switch value={false} toggleSwitch={toggleSwitch} />;
-        },
-      },
+      // {
+      //   Header: "Status",
+      //   Cell: () => {
+      //     const toggleSwitch = () => {
+      //       if (isStatusOpen) {
+      //         onStatusClose();
+      //       } else {
+      //         onStatusOpen();
+      //       }
+      //     };
+      //     return <Switch value={false} toggleSwitch={toggleSwitch} />;
+      //   },
+      // },
       {
         Header: "Created Date",
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
@@ -60,12 +68,15 @@ const Subjects = () => {
       },
       {
         Header: "Action",
-        Cell: ({ row }: CellProps<{ id: string }>) => {
+        Cell: ({ row }: CellProps<{ id: string; name: string }>) => {
           // const onEdit = () => {
           //   onModalOpen();
           // };
           const onShowQues = () => {
-            navigate(`${NAVIGATION_ROUTES.QUESTION_SET}/${row.original?.id}`);
+            const encodedName = encodeURIComponent(row.original?.name);
+            navigate(
+              `${NAVIGATION_ROUTES.QUESTION_SET}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}/${encodedName}/${row.original?.id}`
+            );
           };
           // const onDelete = () => {
           //   console.log("here");
@@ -89,18 +100,23 @@ const Subjects = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Services"}
+          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
           items={[
-            { name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` },
-            { name: "Course", route: `${NAVIGATION_ROUTES.COURSES}` },
-            { name: "Subject", route: `${NAVIGATION_ROUTES.SUBJECTS}` },
+            {
+              name: service,
+              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+            },
+            {
+              name: course,
+              route: "",
+            },
           ]}
         />
 
         <DataTable
           data={tableData || []}
           columns={columns}
-          loading={isLoading}
+          loading={isFetching}
           btnText={"Create new section"}
           onAction={onModalOpen}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
@@ -118,7 +134,7 @@ const Subjects = () => {
               control="input"
               size="lg"
               register={register}
-              name="link"
+              name="name"
               placeholder={"Service Name"}
               label={"Service Name"}
             />
@@ -126,7 +142,7 @@ const Subjects = () => {
               control="input"
               size="lg"
               register={register}
-              name="link"
+              name="description"
               placeholder={"Description"}
               label={"Description"}
             />

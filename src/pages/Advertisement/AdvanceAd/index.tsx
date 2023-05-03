@@ -59,7 +59,10 @@ const AdvanceAd = () => {
     <>
       <div>
         <BreadCrumb
-          title={"Advertisement"}
+          title={{
+            name: "Advertisement",
+            route: `${NAVIGATION_ROUTES.ADVERTISEMENT}`,
+          }}
           items={[
             {
               name: `Advance Ads`,
