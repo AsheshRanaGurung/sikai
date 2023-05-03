@@ -137,7 +137,9 @@ const Dashboard = () => {
       {
         Header: "Action",
         Cell: () => {
-          const onView = () => {};
+          const onView = () => {
+            console.log("here");
+          };
 
           const onDelete = () => {
             console.log("here");

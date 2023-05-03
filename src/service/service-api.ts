@@ -36,6 +36,10 @@ export const api = {
     patch: "/api/v1/advertisement/update/{id}/",
     delete: "/api/v1/advertisement/delete/{id}/",
   },
+  question: {
+    get: "/api/v1/assessment/question/",
+    post: "/api/v1/assessment/question/",
+  },
 };
 
 export interface SikaaiResponse<T = unknown> {
