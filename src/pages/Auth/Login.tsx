@@ -14,20 +14,33 @@ import { LoginDetails, useLoginMutation } from "@sikaai/service/sikaai-auth";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useNavigate } from "react-router-dom";
 import httpStatus from "http-status";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const defaultValues: LoginDetails = {
   email: "",
   password: "",
 };
 
+const schema = yup.object().shape({
+  email: yup.string().required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
+
 const Login = () => {
   const navigate = useNavigate();
   const { isOpen: isVisible, onToggle: onToggleVisibility } = useDisclosure();
   const { mutateAsync: initLogin, isLoading } = useLoginMutation();
 
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     mode: "onBlur",
     defaultValues: defaultValues,
+    resolver: yupResolver(schema),
   });
 
   const onSubmitHandler = async (loginDetails: LoginDetails) => {
@@ -87,7 +100,7 @@ const Login = () => {
                   placeholder={"Email"}
                   label="Enter Your Email"
                   name="email"
-                  // error={t(errors?.email?.message ?? "")}
+                  error={errors?.email?.message ?? ""}
                 />
                 <FormControl
                   control="password"
@@ -98,7 +111,7 @@ const Login = () => {
                   name="password"
                   placeholder={"Password"}
                   label="Enter your Password"
-                  // error={t(errors?.password?.message ?? "")}
+                  error={errors?.password?.message ?? ""}
                 />
 
                 <Button

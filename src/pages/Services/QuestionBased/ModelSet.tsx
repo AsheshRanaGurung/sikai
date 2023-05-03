@@ -60,15 +60,15 @@ const ModelSet = () => {
         items={[
           {
             name: service,
-            route: `${NAVIGATION_ROUTES.SERVICES}`,
-          },
-          {
-            name: course,
             route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
           },
           {
-            name: "Model Set Questions",
+            name: course,
             route: `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
+          },
+          {
+            name: "Model Set Questions",
+            route: "",
           },
         ]}
       />

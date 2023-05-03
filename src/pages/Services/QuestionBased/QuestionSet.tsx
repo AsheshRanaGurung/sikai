@@ -101,7 +101,7 @@ const QuestionSet = () => {
 
   // React queries
   const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
-  const { data: tableData = [], isFetching } = useGetQuestionSet();
+  const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
   // React queries end
 
   const onSubmitHandler = async (questionSetDetails: any) => {
@@ -122,15 +122,15 @@ const QuestionSet = () => {
           items={[
             {
               name: service,
-              route: `${NAVIGATION_ROUTES.SERVICES}`,
-            },
-            {
-              name: course,
               route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
             },
             {
-              name: subject,
+              name: course,
               route: `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
+            },
+            {
+              name: subject,
+              route: "",
             },
           ]}
         />

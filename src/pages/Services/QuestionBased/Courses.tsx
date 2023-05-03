@@ -155,7 +155,7 @@ const Courses = () => {
         items={[
           {
             name: decodedService || "",
-            route: `${NAVIGATION_ROUTES.SERVICES}`,
+            route: "",
           },
         ]}
       />

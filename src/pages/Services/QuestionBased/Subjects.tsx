@@ -102,10 +102,13 @@ const Subjects = () => {
         <BreadCrumb
           title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
           items={[
-            { name: service, route: `${NAVIGATION_ROUTES.SERVICES}` },
+            {
+              name: service,
+              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+            },
             {
               name: course,
-              route: `${NAVIGATION_ROUTES.COURSES}/${encodedService}/${serviceId}`,
+              route: "",
             },
           ]}
         />

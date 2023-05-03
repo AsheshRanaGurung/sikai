@@ -12,13 +12,13 @@ export interface IQuestionSetRes extends IQuestionSetReq {
   id: number;
 }
 
-const getQuestionSet = () => {
+const getQuestionSet = (id: string) => () => {
   return httpClient.get<SikaaiResponse<IQuestionSetRes[]>>(
-    api.subjects_set.get
+    api.subjects_set.get.replace("{subject_id}", id)
   );
 };
-const useGetQuestionSet = () => {
-  return useQuery([api.subjects_set.get], getQuestionSet, {
+const useGetQuestionSet = (id: string) => {
+  return useQuery([api.subjects_set.get, id], getQuestionSet(id), {
     select: ({ data }) => data.data,
     onError: (e: any) => {
       toastFail(e.response?.data.message || "");

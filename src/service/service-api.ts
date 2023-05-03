@@ -20,7 +20,7 @@ export const api = {
     get: "/api/v1/service/course/{course_id}/subject/",
   },
   subjects_set: {
-    get: "/api/v1/assessment/subject-set/",
+    get: "/api/v1/assessment/subject/{subject_id}/subject-set/",
   },
 };
 
