@@ -132,7 +132,7 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.FORUM_ANSWER,
+    path: `${NAVIGATION_ROUTES.FORUM_ANSWER}/:id`,
     element: (
       <Layout>
         <Forum_answer />
