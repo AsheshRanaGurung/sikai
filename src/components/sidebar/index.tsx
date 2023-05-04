@@ -11,7 +11,6 @@ import {
   LogoutIcon,
   MessageQuestionIcon,
   ServiceIcon,
-  SettingsIcon,
 } from "@sikaai/assets/svgs";
 
 const Sidebar = ({
@@ -69,12 +68,7 @@ const Sidebar = ({
       icon: <DocumentTextIcon />,
       visible: true,
     },
-    {
-      name: "Settings",
-      to: NAVIGATION_ROUTES.SETTINGS,
-      icon: <SettingsIcon />,
-      visible: true,
-    },
+
     {
       name: "Logout",
       to: NAVIGATION_ROUTES.LOGIN,

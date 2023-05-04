@@ -31,6 +31,7 @@ export const api = {
   },
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
+    post: "/api/v1/forum/{forum_id}/comment/",
   },
   advertisement: {
     get: "/api/v1/advertisement/advertise/",

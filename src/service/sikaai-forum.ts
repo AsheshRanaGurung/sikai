@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
 import { toastFail } from "./service-toast";
@@ -15,11 +15,13 @@ export interface IForumResponse {
   is_locked: boolean;
 }
 export interface IForumComment {
-  id: number;
+  id: string;
   text_content: string;
   image_content: any;
   created_by: string;
   created_at: Date;
+  is_admin: boolean;
+  is_pinned_comment: boolean;
 }
 
 const getForum = () => {
@@ -44,7 +46,7 @@ const getForumById = ({ id }: { id: string }) => {
 const useGetForumById = ({ id }: { id: string }) => {
   return useQuery([api.forum.getById, id], () => getForumById({ id }), {
     enabled: !!id,
-    select: ({ data }) => data.data,
+    select: ({ data }) => data.data[0],
     onError: (e: any) => {
       toastFail(e.response.data.error[0].name || "failed to Access data");
     },
@@ -67,4 +69,23 @@ const useGetComment = ({ id }: { id: string }) => {
   });
 };
 
-export { useGetForum, useGetForumById, useGetComment };
+const createComment = (commentDetails: IForumComment) => {
+  return httpClient.post(
+    api.comment.post.replace("{forum_id}", commentDetails.id),
+    commentDetails
+  );
+};
+
+const useCreateComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.comment.get);
+    },
+    onError: (e: any) => {
+      toastFail(e.response.dataerror[0].name || "Comment failed");
+    },
+  });
+};
+
+export { useGetForum, useGetForumById, useGetComment, useCreateComment };

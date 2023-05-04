@@ -157,7 +157,7 @@ const Services = () => {
           columns={columns}
           // btnText={"Create new service"}
           onAction={onModalOpen}
-          filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm

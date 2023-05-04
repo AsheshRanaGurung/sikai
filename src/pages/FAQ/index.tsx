@@ -80,7 +80,7 @@ const FAQ = () => {
         columns={columns}
         btnText={"Create FAQs"}
         onAction={onModalOpen}
-        filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+        //filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
       />
 
       <ModalForm

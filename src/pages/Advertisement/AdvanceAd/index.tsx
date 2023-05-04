@@ -96,7 +96,7 @@ const AdvanceAd = () => {
           loading={isFetching}
           btnText={"Add New Advertisement"}
           onAction={onModalOpen}
-          filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm

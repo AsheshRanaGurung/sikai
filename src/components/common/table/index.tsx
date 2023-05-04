@@ -66,6 +66,8 @@ const styleTableWithRightBorder = {
     paddingY: 4,
     paddingX: 2,
     textTransform: "capitalize",
+    // TODO: make this dynamic
+    maxW: "200px",
   },
   "& tr": {
     "&:nth-of-type(even)": {
@@ -78,6 +80,7 @@ const styleTableWithRightBorder = {
     boxShadow: "none",
     paddingY: 4,
     paddingX: 2,
+    maxW: "200px",
   },
 };
 
