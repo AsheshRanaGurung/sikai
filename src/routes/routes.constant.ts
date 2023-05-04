@@ -13,6 +13,7 @@ export const NAVIGATION_ROUTES = {
   ADVANCE_AD: "/advance-ad",
   COURSES: "/services/course",
   FORM: "/services/form",
+  NON_QUESTIONNAIRE: "/services/non-questionnaire",
   SUBJECTS: "/services/subjects",
   QUESTION_SET: "/services/question-set",
   MODEL_SET: "/services/model-set",

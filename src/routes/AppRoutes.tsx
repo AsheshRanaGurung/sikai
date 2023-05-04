@@ -1,4 +1,4 @@
-import { useRoutes } from "react-router-dom";
+import { useNavigate, useRoutes } from "react-router-dom";
 import { NAVIGATION_ROUTES } from "./routes.constant";
 import Login from "@sikaai/pages/Auth/Login";
 import Layout from "@sikaai/components/layouts/Layout";
@@ -17,6 +17,13 @@ import Dashboard from "@sikaai/pages/Dashboard";
 import FormBased from "@sikaai/pages/Services/FormBased";
 import Forum from "@sikaai/pages/Forum";
 import Forum_answer from "@sikaai/pages/ForumAnswer";
+import {
+  useAuthentication,
+  useLogoutMutation,
+} from "@sikaai/service/sikaai-auth";
+import { useEffect } from "react";
+import Spinner from "@sikaai/components/spinner";
+import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 
 const routes = [
   {
@@ -100,7 +107,15 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.CREATE_QUESTION_SET,
+    path: `${NAVIGATION_ROUTES.NON_QUESTIONNAIRE}/:service/:id`,
+    element: (
+      <Layout>
+        <NonQuestionnaire />
+      </Layout>
+    ),
+  },
+  {
+    path: `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/:id`,
     element: (
       <Layout>
         <Question />
@@ -146,6 +161,19 @@ const routes = [
 ];
 
 const AppRoutes = () => {
+  const { data: isAuthenticated, isFetching } = useAuthentication();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (typeof isAuthenticated === "boolean" && !isAuthenticated) {
+      useLogoutMutation();
+      navigate(NAVIGATION_ROUTES.LOGIN);
+    }
+  }, [isAuthenticated]);
+
+  if (isFetching) {
+    return <Spinner />;
+  }
+
   return useRoutes(routes);
 };
 
