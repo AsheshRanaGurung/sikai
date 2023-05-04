@@ -102,7 +102,7 @@ const FormBased = () => {
           data={tableData || []}
           loading={tableDataLoading}
           columns={columns}
-          filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm

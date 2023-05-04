@@ -53,7 +53,7 @@ const BasicAd = () => {
           columns={columns}
           btnText={"Add New Advertisement"}
           onAction={onOpen}
-          filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 
         <ModalForm

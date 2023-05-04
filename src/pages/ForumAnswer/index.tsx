@@ -1,18 +1,16 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  Input,
-  Select,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Select, Text } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
-import Switch from "@sikaai/components/switch";
+import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { useGetComment, useGetForumById } from "@sikaai/service/sikaai-forum";
+import { toastSuccess } from "@sikaai/service/service-toast";
+import {
+  useCreateComment,
+  useGetComment,
+  useGetForumById,
+} from "@sikaai/service/sikaai-forum";
 import { sikaai_colors } from "@sikaai/theme/color";
-import { useState } from "react";
+import httpStatus from "http-status";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 const ForumAnswer = () => {
@@ -36,13 +34,20 @@ const ForumAnswer = () => {
     }
   }
   //end of date function
+  const { control, register, handleSubmit } = useForm();
+  const { mutateAsync: createComment } = useCreateComment();
   const { id: forumId = "" } = useParams();
-  const { data = [] } = useGetForumById({ id: forumId });
-  const { data: dataComments = [] } = useGetComment({ id: forumId });
-  const [toggle, setToggle] = useState(false);
+  const { data: dataForum } = useGetForumById({ id: forumId });
+  const { data: dataComments } = useGetComment({ id: forumId });
 
-  const handleToggle = () => {
-    setToggle(!toggle);
+  const onSubmitHandler = async (commentDetails: any) => {
+    const response = await createComment({
+      ...commentDetails,
+      id: forumId,
+    });
+    if (response.status === httpStatus.CREATED) {
+      toastSuccess("Comment created ");
+    }
   };
 
   return (
@@ -62,26 +67,37 @@ const ForumAnswer = () => {
           <Image
             borderRadius="full"
             boxSize="36px"
-            src={data[0]?.question_image}
+            // src={dataForum?.question_image}
+            src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
             alt="profile"
           />
 
-          <Text>{data[0]?.question_text}</Text>
+          <Text>{dataForum?.question_text}</Text>
         </Flex>
         <Box marginLeft={45}>
           <Flex gap={3}>
-            <Text color={"blue"}>{data[0]?.created_by}</Text>
+            <Text color={"blue"}>{dataForum?.created_by}</Text>
             <Text color={sikaai_colors.gray_text}>
-              {timeAgo(data[0]?.created_at)}
+              {dataForum && timeAgo(dataForum?.created_at)}
             </Text>
           </Flex>
         </Box>
         <Flex mt={3} gap={3} direction={"column"}>
-          <Text color={sikaai_colors.primary_dark}>Your Answer</Text>
-          <Input placeholder="write your answer" />
-          <Switch value={toggle} label={"Pin"} toggleSwitch={handleToggle} />
-          <Input type={"file"} />
-          <Button>Post</Button>
+          <FormControl
+            control="input"
+            size="lg"
+            register={register}
+            name="text_content"
+            placeholder="Write your answer"
+            label={"Your answer"}
+          />
+          <FormControl
+            control="file"
+            size="lg"
+            register={register}
+            name="image"
+          />
+          <Button onClick={handleSubmit(onSubmitHandler)}>Post</Button>
         </Flex>
       </Box>
 
@@ -101,23 +117,24 @@ const ForumAnswer = () => {
           </Select>
         </Flex>
         <Box>
-          {dataComments?.map(({ dataComment }: any) => {
+          {dataComments?.map(dataComment => {
             return (
               <>
                 <Flex gap={5} marginTop={8}>
                   <Image
                     borderRadius="full"
                     boxSize="36px"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4HWZUxsf5n832kg8v768mpz3uIy2UDzIRTADmhqD6Xg&s"
-                    alt="Dan Abramov"
+                    // src={dataComment?.image_content}
+                    src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+                    alt="profile"
                   />
                   <Box>
-                    <Text>{dataComment[0]?.created_by}</Text>
-                    <Text>{timeAgo(dataComment[0]?.created_at)}</Text>
+                    <Text>{dataComment?.created_by}</Text>
+                    <Text>{timeAgo(dataComment?.created_at)}</Text>
                   </Box>
                 </Flex>
                 <Box borderBottom={"1px solid gray"} ml={14}>
-                  <Text mb={5}>{dataComment[0]?.text_content}</Text>
+                  <Text mb={5}>{dataComment?.text_content}</Text>
                 </Box>
               </>
             );

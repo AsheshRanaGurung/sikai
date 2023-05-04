@@ -31,7 +31,8 @@ export const ForumQuestion = ({ item }: any) => {
         <Image
           borderRadius="full"
           boxSize="36px"
-          src={item.question_image}
+          // src={item.question_image}
+          src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
           alt="profile_img"
         />
 

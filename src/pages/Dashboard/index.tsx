@@ -1,10 +1,10 @@
 import { Box, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import {
-  ActiveTeacher,
+  ActiveTeacherIcon,
   ActiveUsersIcon,
   TotalAddIcon,
   TotalQuesCreatedIcon,
-  TotalReplies,
+  TotalRepliesIcon,
 } from "@sikaai/assets/svgs";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import { sikaai_colors } from "@sikaai/theme/color";
@@ -137,16 +137,12 @@ const Dashboard = () => {
       {
         Header: "Action",
         Cell: () => {
-          const onView = () => {
-            console.log("here");
-          };
-
           const onDelete = () => {
             console.log("here");
           };
           return (
             <Stack alignItems={"flex-start"}>
-              <TableActions onView={onView} onDelete={onDelete} />
+              <TableActions onDelete={onDelete} />
             </Stack>
           );
         },
@@ -177,7 +173,7 @@ const Dashboard = () => {
         </GridItem>
         <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
           <Flex padding={4} gap={4}>
-            <ActiveTeacher />
+            <ActiveTeacherIcon />
             <Box>
               <Text fontWeight={500} fontSize={"16px"}>
                 Active teachers
@@ -228,7 +224,7 @@ const Dashboard = () => {
         </GridItem>
         <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
           <Flex padding={4} gap={4}>
-            <TotalReplies />
+            <TotalRepliesIcon />
             <Box>
               <Text fontWeight={500} fontSize={"16px"}>
                 Pending Forum Replies
@@ -272,25 +268,30 @@ const Dashboard = () => {
         </Grid>
       </Box>
 
-      <DataTable
-        data={[
-          {
-            fullName: "Arya Stark",
-            email: "email@email.com",
-            address: "America",
-            phoneNumber: "93239235124",
-            college: "ABC college",
-          },
-          {
-            fullName: "Arya Stark",
-            email: "email@email.com",
-            address: "America",
-            phoneNumber: "93239235124",
-            college: "ABC college",
-          },
-        ]}
-        columns={columns}
-      />
+      <Box background={sikaai_colors.white} borderRadius={12} p={4}>
+        <Text fontWeight={"bold"} color={sikaai_colors.gray_text}>
+          Recent Student Onboard
+        </Text>
+        <DataTable
+          data={[
+            {
+              fullName: "Arya Stark",
+              email: "email@email.com",
+              address: "America",
+              phoneNumber: "93239235124",
+              college: "ABC college",
+            },
+            {
+              fullName: "Arya Stark",
+              email: "email@email.com",
+              address: "America",
+              phoneNumber: "93239235124",
+              college: "ABC college",
+            },
+          ]}
+          columns={columns}
+        />
+      </Box>
     </>
   );
 };
