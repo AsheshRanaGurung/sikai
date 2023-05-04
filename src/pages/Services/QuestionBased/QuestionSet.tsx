@@ -74,12 +74,14 @@ const QuestionSet = () => {
       },
       {
         Header: "Action",
-        Cell: () => {
+        Cell: ({ row }: CellProps<{ id: string }>) => {
           // const onEdit = () => {
           //   onModalOpen();
           // };
           const onShowQues = () => {
-            navigate(NAVIGATION_ROUTES.CREATE_QUESTION_SET);
+            navigate(
+              `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${row.original?.id}`
+            );
           };
           // const onDelete = () => {
           //   console.log("here");
@@ -103,6 +105,8 @@ const QuestionSet = () => {
   const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
   const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
   // React queries end
+
+  console.log(subjectId);
 
   const onSubmitHandler = async (questionSetDetails: any) => {
     const response = await createQuestionSet({

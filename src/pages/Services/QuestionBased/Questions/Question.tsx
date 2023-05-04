@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubQuestion from "./subQuestion";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
+import { useParams } from "react-router-dom";
 
 // const defaultValues = {
 //   question_text: "",
@@ -36,6 +37,8 @@ function MyComponent() {
   const { register, handleSubmit } = useForm();
   const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
 
+  const { id: questionSetId = "" } = useParams();
+
   const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
 
   const toggleSwitch = () => {
@@ -45,7 +48,7 @@ function MyComponent() {
   const onSubmitHandler = async (questionDetails: any) => {
     const requestBody = {
       question_text: questionDetails?.question_text,
-      subject_question_set_id: questionDetails?.subject_question_set_id ?? 0,
+      subject_question_set_id: +questionSetId ?? 0,
       options: [
         {
           answer_text: questionDetails?.answer_text1,

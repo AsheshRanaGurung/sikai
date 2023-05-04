@@ -4,7 +4,7 @@ import { httpClient } from "./service-axois";
 import { toastFail } from "./service-toast";
 
 export interface IQuestionSetReq {
-  subject_id: number;
+  subject_id: string;
   name: string;
 }
 
@@ -48,7 +48,10 @@ const useGetQuestionSet = (id: string) => {
 };
 
 const createQuestionSet = (questionSetDetails: IQuestionSetReq) => {
-  return httpClient.post(api.subjects_set.get, questionSetDetails);
+  return httpClient.post(
+    api.subjects_set.get.replace("{subject_id}", questionSetDetails.subject_id),
+    questionSetDetails
+  );
 };
 
 const useCreateQuestionSet = () => {
