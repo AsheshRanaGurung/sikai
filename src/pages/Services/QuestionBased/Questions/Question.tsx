@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import SubQuestion from "./subQuestion";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
 import { useParams } from "react-router-dom";
+import { toastSuccess } from "@sikaai/service/service-toast";
+import httpStatus from "http-status";
 
 // const defaultValues = {
 //   question_text: "",
@@ -71,7 +73,10 @@ function MyComponent() {
         description: questionDetails?.description,
       },
     };
-    createQuestion(requestBody);
+    const response = await createQuestion(requestBody);
+    if (response.status === httpStatus.CREATED) {
+      toastSuccess("Question set created successful");
+    }
   };
 
   return (

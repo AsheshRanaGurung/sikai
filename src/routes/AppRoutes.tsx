@@ -106,7 +106,7 @@ const routes = [
     ),
   },
   {
-    path: NAVIGATION_ROUTES.CREATE_QUESTION_SET,
+    path: `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/:id`,
     element: (
       <Layout>
         <Question />

@@ -18,8 +18,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
+const defaultValues = {
+  name: "",
+};
+
 const QuestionSet = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: defaultValues,
+  });
   const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
@@ -106,15 +112,15 @@ const QuestionSet = () => {
   const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
   // React queries end
 
-  console.log(subjectId);
-
-  const onSubmitHandler = async (questionSetDetails: any) => {
+  const onSubmitHandler = async (questionSetDetails: typeof defaultValues) => {
     const response = await createQuestionSet({
       ...questionSetDetails,
       subject_id: subjectId,
     });
-    if (response.status === httpStatus.OK) {
+    if (response.status === httpStatus.CREATED) {
       toastSuccess("Question set created successful");
+      onModalClose();
+      reset();
     }
   };
 
