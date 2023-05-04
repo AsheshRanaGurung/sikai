@@ -23,6 +23,7 @@ import {
 } from "@sikaai/service/sikaai-auth";
 import { useEffect } from "react";
 import Spinner from "@sikaai/components/spinner";
+import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 
 const routes = [
   {
@@ -102,6 +103,14 @@ const routes = [
     element: (
       <Layout>
         <FormBased />
+      </Layout>
+    ),
+  },
+  {
+    path: `${NAVIGATION_ROUTES.NON_QUESTIONNAIRE}/:service/:id`,
+    element: (
+      <Layout>
+        <NonQuestionnaire />
       </Layout>
     ),
   },
