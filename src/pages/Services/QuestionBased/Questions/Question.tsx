@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Flex,
+  Spacer,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -100,7 +101,7 @@ function MyComponent() {
                 fontSize={"16px"}
                 //   color={sikaai_colors.primary}
               >
-                Question 1
+                Question
                 {/* <button type="button" onClick={() => remove(index)}>
                         <TrashIcon />
                       </button> */}
@@ -155,31 +156,44 @@ function MyComponent() {
                     </Text>
                     <Flex gap={3} direction={"column"}>
                       <Flex gap={5}>
+                        {/* TODO: change margin top to something else */}
+                        <Text color={sikaai_colors.primary} mt={2}>
+                          A:
+                        </Text>
                         <FormControl
                           control="input"
                           register={register}
                           name={`answer_text1`}
-                          placeholder="option 1"
+                          placeholder="option A"
                         />
+                        <Text color={sikaai_colors.primary} mt={2}>
+                          B:
+                        </Text>
                         <FormControl
                           control="input"
                           register={register}
                           name={`answer_text2`}
-                          placeholder="option 2"
+                          placeholder="option B"
                         />
                       </Flex>
                       <Flex gap={5}>
+                        <Text color={sikaai_colors.primary} mt={2}>
+                          C:
+                        </Text>
                         <FormControl
                           control="input"
                           register={register}
                           name={`answer_text3`}
-                          placeholder="option 3"
+                          placeholder="option C"
                         />
+                        <Text color={sikaai_colors.primary} mt={2}>
+                          D:
+                        </Text>
                         <FormControl
                           control="input"
                           register={register}
                           name={`answer_text4`}
-                          placeholder="option 4"
+                          placeholder="option D"
                         />
                       </Flex>
                     </Flex>
@@ -258,19 +272,36 @@ function Question() {
   };
 
   const myComponents = Array.from({ length: clickCount }, (_, i) => (
-    <MyComponent key={i} />
+    // TODO: refactor this code
+    <Box borderRadius={"8px"} p={1} key={i}>
+      <MyComponent />
+    </Box>
   ));
 
   return (
-    <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
-      {myComponents}
-      <Flex gap={3} alignItems={"center"} mt={3}>
-        <Button variant={"round"} onClick={handleClick}>
-          <AddIcon />
-        </Button>
-        <Text>Add Question</Text>
-      </Flex>
-    </Box>
+    <Flex direction={"column"} gap={4}>
+      <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
+        {myComponents}
+      </Box>
+      <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
+        <Flex gap={3} alignItems={"center"}>
+          <Button variant={"round"} onClick={handleClick}>
+            <AddIcon />
+          </Button>
+          <Text>Add Question</Text>
+        </Flex>
+      </Box>
+
+      <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
+        <Flex>
+          <Spacer />
+          <Flex gap={2}>
+            <Button variant={"reset"}>Cancel</Button>
+            <Button>Finish</Button>
+          </Flex>
+        </Flex>
+      </Box>
+    </Flex>
   );
 }
 
