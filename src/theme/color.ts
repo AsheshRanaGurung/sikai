@@ -13,4 +13,5 @@ export const sikaai_colors = {
   reset_btn_txt: "#F56262",
   red: "red",
   gray_text: "#585858",
+  tooltip_gray: "#1E1B39",
 };
