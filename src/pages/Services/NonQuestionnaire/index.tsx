@@ -6,6 +6,7 @@ import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
+import { useGetServiceCourse } from "@sikaai/service/sikaai-services";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -81,7 +82,7 @@ const NonQuestionnaire = () => {
     () => [
       {
         Header: "Subjects",
-        accessor: "subjects",
+        accessor: "name",
       },
       {
         Header: "Description",
@@ -103,7 +104,7 @@ const NonQuestionnaire = () => {
           };
           return (
             <Stack alignItems={"flex-start"}>
-              <TableActions onView={onEdit} onDelete={onDelete} />
+              <TableActions onEdit={onEdit} onDelete={onDelete} />
             </Stack>
           );
         },
@@ -117,6 +118,8 @@ const NonQuestionnaire = () => {
     id: id,
   });
   const { data = [] } = useGetFormById({ id: modalId });
+  const { data: serviceCourse, isFetching: serviceCourseLoading } =
+    useGetServiceCourse({ serviceId: id });
   // React queries end
 
   return (
@@ -126,7 +129,7 @@ const NonQuestionnaire = () => {
         items={[
           {
             name: decodedService,
-            route: `${NAVIGATION_ROUTES.FORM}/${decodedService}/${id}`,
+            route: `${NAVIGATION_ROUTES.NON_QUESTIONNAIRE}/${decodedService}/${id}`,
           },
         ]}
       />
@@ -139,7 +142,11 @@ const NonQuestionnaire = () => {
         Subjects
       </Text>
       <Flex direction={"column"} gap={5}>
-        <DataTable data={[]} columns={subjectColumns} />
+        <DataTable
+          data={serviceCourse || []}
+          columns={subjectColumns}
+          loading={serviceCourseLoading}
+        />
         {/* <Box mt={5}> */}
         <DataTable
           data={tableData || []}
