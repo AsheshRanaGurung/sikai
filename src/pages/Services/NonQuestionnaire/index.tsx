@@ -1,4 +1,4 @@
-import { Stack, useDisclosure, Text, Flex, Box } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
@@ -7,27 +7,26 @@ import TableActions from "@sikaai/components/common/table/TableActions";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
 import { sikaai_colors } from "@sikaai/theme/color";
-// import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CellProps } from "react-table";
-// import { useForm } from "react-hook-form";
 
-const FormBased = () => {
+const NonQuestionnaire = () => {
   const { id = "", service = "" } = useParams();
 
   // For customized breadcrumb
   const decodedService = decodeURIComponent(service);
   //
 
-  // const { register } = useForm();
+  const [modalId, setModalId] = useState("");
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
 
-  const [modalId, setModalId] = useState("");
+  // TODO: this can be refactored
+  // TODO: sidebar can be refactored
   const columns = useMemo(
     () => [
       {
@@ -78,6 +77,41 @@ const FormBased = () => {
     []
   );
 
+  const subjectColumns = useMemo(
+    () => [
+      {
+        Header: "Subjects",
+        accessor: "subjects",
+      },
+      {
+        Header: "Description",
+        accessor: "description",
+      },
+      {
+        Header: "Link",
+        accessor: "link",
+      },
+      {
+        Header: "Action",
+        Cell: ({ row }: CellProps<{ id: string }>) => {
+          const onEdit = () => {
+            setModalId(row.original?.id);
+            onModalOpen();
+          };
+          const onDelete = () => {
+            console.log("here");
+          };
+          return (
+            <Stack alignItems={"flex-start"}>
+              <TableActions onView={onEdit} onDelete={onDelete} />
+            </Stack>
+          );
+        },
+      },
+    ],
+    []
+  );
+
   // React queries
   const { data: tableData = [], isLoading: tableDataLoading } = useGetForm({
     id: id,
@@ -87,23 +121,33 @@ const FormBased = () => {
 
   return (
     <>
-      <div>
-        <BreadCrumb
-          title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
-          items={[
-            {
-              name: decodedService,
-              route: `${NAVIGATION_ROUTES.FORM}/${decodedService}/${id}`,
-            },
-          ]}
-        />
-
+      <BreadCrumb
+        title={{ name: "Services", route: `${NAVIGATION_ROUTES.SERVICES}` }}
+        items={[
+          {
+            name: decodedService,
+            route: `${NAVIGATION_ROUTES.FORM}/${decodedService}/${id}`,
+          },
+        ]}
+      />
+      <Text
+        color={sikaai_colors.primary}
+        fontWeight={600}
+        fontSize={"16px"}
+        mb={3}
+      >
+        Subjects
+      </Text>
+      <Flex direction={"column"} gap={5}>
+        <DataTable data={[]} columns={subjectColumns} />
+        {/* <Box mt={5}> */}
         <DataTable
           data={tableData || []}
           loading={tableDataLoading}
           columns={columns}
           filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
+        {/* </Box> */}
 
         <ModalForm
           isModalOpen={isModalOpen}
@@ -155,9 +199,9 @@ const FormBased = () => {
             </Box>
           </>
         </ModalForm>
-      </div>
+      </Flex>
     </>
   );
 };
 
-export default FormBased;
+export default NonQuestionnaire;

@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { api } from "./service-api";
 import { httpClient } from "./service-axois";
 import { toastFail, toastSuccess } from "./service-toast";
-import TokenService, { TokenDetails } from "./service-token";
+import TokenService, { ITokenDetails, TokenDetails } from "./service-token";
 
 export interface LoginDetails {
   email: string;
@@ -11,6 +12,7 @@ export interface LoginDetails {
 }
 
 export const authTokenKey = "authToken";
+const authTokenDetails = "authTokenDetails";
 
 const initLogin = (loginData: LoginDetails) => {
   return httpClient.post<{ data: TokenDetails }>(api.user.login, loginData, {
@@ -42,41 +44,39 @@ const useLoginMutation = () => {
   });
 };
 
-// const logout = async () => {
-//   try {
-//     await httpClient.get(api.user.logout);
-//     return Promise.resolve(true);
-//   } catch (error) {
-//     if ((error as AxiosError).response?.status === httpStatus.UNAUTHORIZED) {
-//       return Promise.resolve(true);
-//     }
-//     return Promise.resolve(false);
-//   }
-// };
+/**
+ * Check if user is authenticated
+ * @returns boolean
+ */
 
-// const useLogoutMutation = () => {
-//   const navigate = useNavigate();
-//   const queryClient = useQueryClient();
-//   return useMutation(logout, {
-//     onMutate() {
-//       toastPromise(logout(), api.user.logout, "Logging out");
-//     },
-//     onSuccess() {
-//       navigate("/");
-//       queryClient.setQueryData(authTokenKey, () => false);
-//       TokenService.clearToken();
-//       queryClient.clear();
-//       queryClient.removeQueries();
-//     },
+const useLogoutMutation = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  navigate("/");
+  queryClient.setQueryData(authTokenKey, () => false);
+  TokenService.clearToken();
+  queryClient.clear();
+  queryClient.removeQueries();
+};
 
-//     onError: (error: AxiosError<{ error: string; message: string }>) => {
-//       toastFail(
-//         error.response?.data?.message ??
-//           error.response?.data?.error ??
-//           "Logout Failed!"
-//       );
-//     }
-//   });
-// };
+const checkAuthentication = () => {
+  if (TokenService.isAuthenticated()) {
+    return Promise.resolve(true);
+  }
+  return Promise.reject(false);
+};
 
-export { useLoginMutation };
+const useAuthentication = () => {
+  const queryClient = useQueryClient();
+
+  return useQuery(authTokenKey, checkAuthentication, {
+    onSuccess: () => {
+      const tokenDetails = TokenService.getTokenDetails();
+      if (tokenDetails) {
+        queryClient.setQueryData<ITokenDetails>(authTokenDetails, tokenDetails);
+      }
+    },
+  });
+};
+
+export { useLoginMutation, useAuthentication, useLogoutMutation };

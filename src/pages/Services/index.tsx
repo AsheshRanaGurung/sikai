@@ -90,9 +90,13 @@ const Services = () => {
               navigate(
                 `${NAVIGATION_ROUTES.COURSES}/${encodedName}/${row.original?.id}`
               );
-            } else {
+            } else if (row.original?.service_type === "2") {
               navigate(
                 `${NAVIGATION_ROUTES.FORM}/${encodedName}/${row.original?.id}`
+              );
+            } else {
+              navigate(
+                `${NAVIGATION_ROUTES.NON_QUESTIONNAIRE}/${encodedName}/${row.original?.id}`
               );
             }
           };
@@ -124,6 +128,7 @@ const Services = () => {
 
     if (response.status === httpStatus.OK) {
       onModalClose();
+      setUpdateId("");
       reset(defaultValues);
     }
   };
@@ -136,7 +141,7 @@ const Services = () => {
         description: service.description,
       });
     }
-  }, [service]);
+  }, [service, updateId]);
 
   return (
     <>
