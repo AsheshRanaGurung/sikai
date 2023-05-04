@@ -66,10 +66,6 @@ const ModelSet = () => {
             name: course,
             route: `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedCourse}/${courseId}`,
           },
-          {
-            name: "Model Set Questions",
-            route: "",
-          },
         ]}
       />
       <DataTable
