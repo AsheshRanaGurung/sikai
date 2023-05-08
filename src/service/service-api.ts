@@ -29,6 +29,9 @@ export const api = {
     get: "/api/v1/forum/",
     getById: "/api/v1/forum/{id}",
   },
+  about: {
+    fetch: "/api/v1/info/about-us/",
+  },
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
     post: "/api/v1/forum/{forum_id}/comment/",

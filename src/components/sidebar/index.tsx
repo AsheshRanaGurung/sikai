@@ -68,7 +68,12 @@ const Sidebar = ({
       icon: <DocumentTextIcon />,
       visible: true,
     },
-
+    {
+      name: "About Us",
+      to: NAVIGATION_ROUTES.ABOUT_US,
+      icon: <DocumentTextIcon />,
+      visible: true,
+    },
     {
       name: "Logout",
       to: NAVIGATION_ROUTES.LOGIN,
