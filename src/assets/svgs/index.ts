@@ -27,3 +27,4 @@ export { ReactComponent as QuestionIcon } from "./questionIcon.svg";
 export { ReactComponent as CommentIcon } from "./comments.svg";
 export { ReactComponent as ActiveTeacherIcon } from "./activeTeachersIcon.svg";
 export { ReactComponent as TotalRepliesIcon } from "./totalRepliesIcon.svg";
+export { ReactComponent as AddImageIcon } from "./addImageIcon.svg";

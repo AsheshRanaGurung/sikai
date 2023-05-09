@@ -34,7 +34,7 @@ const ForumAnswer = () => {
     }
   }
   //end of date function
-  const { control, register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
   const { mutateAsync: createComment } = useCreateComment();
   const { id: forumId = "" } = useParams();
   const { data: dataForum } = useGetForumById({ id: forumId });

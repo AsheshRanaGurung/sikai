@@ -2,7 +2,6 @@ import { useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
-import Filter from "@sikaai/components/common/table/filter";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useForm } from "react-hook-form";

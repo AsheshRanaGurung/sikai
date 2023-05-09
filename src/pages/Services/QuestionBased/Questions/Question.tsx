@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Flex,
+  FormLabel,
   Spacer,
   Text,
   useDisclosure,
@@ -22,6 +23,7 @@ import { useCreateQuestion } from "@sikaai/service/sikaai-question";
 import { useParams } from "react-router-dom";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
+import { AddImageIcon } from "@sikaai/assets/svgs";
 
 // const defaultValues = {
 //   question_text: "",
@@ -68,6 +70,7 @@ function MyComponent() {
         {
           answer_text: questionDetails?.answer_text4,
           is_correct: questionDetails?.answer === "D" ? true : false,
+          answer_image: questionDetails?.optionDImage,
         },
       ],
       solution: {
@@ -195,6 +198,22 @@ function MyComponent() {
                           name={`answer_text4`}
                           placeholder="option D"
                         />
+                        <FormLabel htmlFor="imageUpload">
+                          <AddImageIcon />
+                          {/* answer_text1 */}
+                          {/* <input
+                              type="file"
+                              id="imageUpload"
+                              style={{ display: "none", visibility: "hidden" }}
+                              onChange={handleChange}
+                            /> */}
+                          <FormControl
+                            control="file"
+                            register={register}
+                            name={"optionDImage"}
+                            placeholder={""}
+                          />
+                        </FormLabel>
                       </Flex>
                     </Flex>
                   </Box>

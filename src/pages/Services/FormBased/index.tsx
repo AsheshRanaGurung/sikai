@@ -2,16 +2,13 @@ import { Stack, useDisclosure, Text, Flex, Box } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
-import Filter from "@sikaai/components/common/table/filter";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
 import { sikaai_colors } from "@sikaai/theme/color";
-// import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CellProps } from "react-table";
-// import { useForm } from "react-hook-form";
 
 const FormBased = () => {
   const { id = "", service = "" } = useParams();

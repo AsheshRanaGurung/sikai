@@ -3,7 +3,6 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
-import Filter from "@sikaai/components/common/table/filter";
 import FormControl from "@sikaai/components/form/FormControl";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
