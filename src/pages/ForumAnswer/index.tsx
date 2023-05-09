@@ -67,8 +67,7 @@ const ForumAnswer = () => {
           <Image
             borderRadius="full"
             boxSize="36px"
-            // src={dataForum?.question_image}
-            src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+            src={dataForum?.profile_picture}
             alt="profile"
           />
 
@@ -76,7 +75,7 @@ const ForumAnswer = () => {
         </Flex>
         <Box marginLeft={45}>
           <Flex gap={3}>
-            <Text color={"blue"}>{dataForum?.created_by}</Text>
+            <Text color={"blue"}>{dataForum?.full_name}</Text>
             <Text color={sikaai_colors.gray_text}>
               {dataForum && timeAgo(dataForum?.created_at)}
             </Text>
@@ -124,12 +123,11 @@ const ForumAnswer = () => {
                   <Image
                     borderRadius="full"
                     boxSize="36px"
-                    // src={dataComment?.image_content}
-                    src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+                    src={dataComment?.profile_picture}
                     alt="profile"
                   />
                   <Box>
-                    <Text>{dataComment?.created_by}</Text>
+                    <Text>{dataComment?.full_name}</Text>
                     <Text>{timeAgo(dataComment?.created_at)}</Text>
                   </Box>
                 </Flex>

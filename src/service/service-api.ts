@@ -47,6 +47,13 @@ export const api = {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
   },
+  faq: {
+    get: "/api/v1/info/faq/",
+    post: "/api/v1/info/faq/",
+    delete: "/api/v1/info/faq/{id}/",
+    patch: "/api/v1/info/faq/{id}/",
+    getById: "/api/v1/info/faq/{id}/",
+  },
 };
 
 export interface SikaaiResponse<T = unknown> {

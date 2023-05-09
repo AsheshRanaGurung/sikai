@@ -158,7 +158,7 @@ const QuestionSet = () => {
           title={"Add question set"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
+          submitButtonText={"Create"}
           submitHandler={handleSubmit(onSubmitHandler)}
         >
           <FormControl

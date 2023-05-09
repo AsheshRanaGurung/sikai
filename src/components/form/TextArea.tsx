@@ -23,7 +23,7 @@ const TextArea = ({
   return (
     <FormControl isInvalid={!!error} isRequired={isRequired}>
       {label && (
-        <FormLabel htmlFor={name} fontWeight={400} fontSize={"14px"}>
+        <FormLabel htmlFor={name} fontWeight={600} fontSize={"18px"}>
           {label}
           {required && (
             <span style={{ color: sikaai_colors.red }}>&nbsp;*</span>

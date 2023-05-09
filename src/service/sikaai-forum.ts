@@ -13,6 +13,8 @@ export interface IForumResponse {
   question_image: string;
   is_deleted: boolean;
   is_locked: boolean;
+  full_name: string;
+  profile_picture: any;
 }
 export interface IForumComment {
   id: string;
@@ -22,6 +24,8 @@ export interface IForumComment {
   created_at: Date;
   is_admin: boolean;
   is_pinned_comment: boolean;
+  full_name: string;
+  profile_picture: any;
 }
 
 const getForum = () => {
