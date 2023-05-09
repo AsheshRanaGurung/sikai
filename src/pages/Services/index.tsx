@@ -164,7 +164,7 @@ const Services = () => {
           title={"Edit service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
-          submitButtonText={isUpdate ? "Upload" : "Add"}
+          submitButtonText={isUpdate ? "Update" : "Add"}
           submitHandler={handleSubmit(onSubmitHandler)}
         >
           {serviceLoading ? (
@@ -185,7 +185,7 @@ const Services = () => {
                 label={"Service Name"}
               />
               <FormControl
-                control="input"
+                control="textArea"
                 size="lg"
                 register={register}
                 name="description"

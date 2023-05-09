@@ -14,4 +14,5 @@ export const sikaai_colors = {
   red: "red",
   gray_text: "#585858",
   tooltip_gray: "#1E1B39",
+  accordion_bg: "#C5C9FD",
 };

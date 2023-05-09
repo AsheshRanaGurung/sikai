@@ -20,9 +20,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubQuestion from "./subQuestion";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { AddImageIcon } from "@sikaai/assets/svgs";
 
 // const defaultValues = {
@@ -285,6 +286,10 @@ function MyComponent() {
 
 function Question() {
   const [clickCount, setClickCount] = useState(0);
+  const navigate = useNavigate();
+  const routeChange = () => {
+    navigate(`${NAVIGATION_ROUTES.SERVICES}`);
+  };
 
   const handleClick = () => {
     setClickCount(clickCount + 1);
@@ -316,7 +321,7 @@ function Question() {
           <Spacer />
           <Flex gap={2}>
             <Button variant={"reset"}>Cancel</Button>
-            <Button>Finish</Button>
+            <Button onClick={routeChange}>Finish</Button>
           </Flex>
         </Flex>
       </Box>

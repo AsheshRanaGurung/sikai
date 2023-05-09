@@ -7,7 +7,21 @@ import { sikaai_colors } from "@sikaai/theme/color";
 
 const Forum = () => {
   //react queries
-  const { data: datae } = useGetForum();
+  // const { data: datae } = useGetForum();
+  const datae = [
+    {
+      id: 0,
+      question_text: "what is this",
+      question_image: "string",
+      code: "string",
+      created_by: 0,
+      created_at: "2023-05-08T11:04:23.388Z",
+      total_comments: "This is quest",
+      is_deleted: true,
+      is_locked: true,
+      is_active: true,
+    },
+  ];
 
   return (
     <>
