@@ -68,7 +68,7 @@ const options_line = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top" as const,
+      display: false,
     },
     title: {
       display: true,
@@ -82,7 +82,7 @@ const options_doghnut = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top" as const,
+      display: false,
     },
     title: {
       display: true,
@@ -105,6 +105,34 @@ const data_doghnut = {
     },
   ],
 };
+
+const cardsData = [
+  {
+    cardTitle: "Active Students",
+    cardNumber: 114,
+    cardIcons: <ActiveUsersIcon />,
+  },
+  {
+    cardTitle: "Active Teachers",
+    cardNumber: 114,
+    cardIcons: <ActiveTeacherIcon />,
+  },
+  {
+    cardTitle: "Total Questions Created",
+    cardNumber: 114,
+    cardIcons: <TotalQuesCreatedIcon />,
+  },
+  {
+    cardTitle: "Pending Forum Replies",
+    cardNumber: 114,
+    cardIcons: <TotalRepliesIcon />,
+  },
+  {
+    cardTitle: "Active Advertisements",
+    cardNumber: 114,
+    cardIcons: <TotalAddIcon />,
+  },
+];
 
 const Dashboard = () => {
   //columns name
@@ -154,91 +182,31 @@ const Dashboard = () => {
     <>
       <BreadCrumb items={[]} title={{ name: "Dashboard", route: "/" }} />
       <Grid templateColumns="repeat(5, 1fr)" gap={6}>
-        <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
-          <Flex padding={4} gap={4}>
-            <ActiveUsersIcon />
-            <Box>
-              <Text fontWeight={500} fontSize={"16px"}>
-                Active students
-              </Text>
-              <Text
-                fontWeight={700}
-                fontSize={"20px"}
-                color={sikaai_colors.primary_dark}
-              >
-                114
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-        <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
-          <Flex padding={4} gap={4}>
-            <ActiveTeacherIcon />
-            <Box>
-              <Text fontWeight={500} fontSize={"16px"}>
-                Active teachers
-              </Text>
-              <Text
-                fontWeight={700}
-                fontSize={"20px"}
-                color={sikaai_colors.primary_dark}
-              >
-                114
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-        <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
-          <Flex padding={4} gap={4}>
-            <TotalQuesCreatedIcon />
-            <Box>
-              <Text fontWeight={500} fontSize={"16px"}>
-                Total questions creation
-              </Text>
-              <Text
-                fontWeight={700}
-                fontSize={"20px"}
-                color={sikaai_colors.primary_dark}
-              >
-                114
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-        <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
-          <Flex padding={4} gap={4}>
-            <TotalAddIcon />
-            <Box>
-              <Text fontWeight={500} fontSize={"16px"}>
-                Total Advertisements
-              </Text>
-              <Text
-                fontWeight={700}
-                fontSize={"20px"}
-                color={sikaai_colors.primary_dark}
-              >
-                114
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-        <GridItem bg={sikaai_colors.white} borderRadius={"16px"}>
-          <Flex padding={4} gap={4}>
-            <TotalRepliesIcon />
-            <Box>
-              <Text fontWeight={500} fontSize={"16px"}>
-                Pending Forum Replies
-              </Text>
-              <Text
-                fontWeight={700}
-                fontSize={"20px"}
-                color={sikaai_colors.primary_dark}
-              >
-                114
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
+        {cardsData?.map(item => {
+          return (
+            <GridItem
+              key={item?.cardTitle}
+              bg={sikaai_colors.white}
+              borderRadius={"16px"}
+            >
+              <Flex padding={4} gap={4}>
+                {item?.cardIcons}
+                <Box>
+                  <Text fontWeight={500} fontSize={"16px"}>
+                    {item?.cardTitle}
+                  </Text>
+                  <Text
+                    fontWeight={700}
+                    fontSize={"20px"}
+                    color={sikaai_colors.primary_dark}
+                  >
+                    {item?.cardNumber}
+                  </Text>
+                </Box>
+              </Flex>
+            </GridItem>
+          );
+        })}
       </Grid>
       <Box mb={5}>
         <Grid templateColumns="repeat(1, 4fr 2fr)" gap={6} marginTop={"20px"}>
