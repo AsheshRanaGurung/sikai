@@ -16,6 +16,7 @@ import Question from "../pages/Services/QuestionBased/Questions/Question";
 import Dashboard from "@sikaai/pages/Dashboard";
 import FormBased from "@sikaai/pages/Services/FormBased";
 import Forum from "@sikaai/pages/Forum";
+import AboutUs from "@sikaai/pages/AboutUs";
 import Forum_answer from "@sikaai/pages/ForumAnswer";
 import {
   useAuthentication,
@@ -151,6 +152,14 @@ const routes = [
     element: (
       <Layout>
         <Forum_answer />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.ABOUT_US,
+    element: (
+      <Layout>
+        <AboutUs />
       </Layout>
     ),
   },
