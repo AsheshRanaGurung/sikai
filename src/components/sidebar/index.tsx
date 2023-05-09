@@ -11,6 +11,7 @@ import {
   DocumentTextIcon,
   LogoutIcon,
   MessageQuestionIcon,
+  RolesIcon,
   ServiceIcon,
 } from "@sikaai/assets/svgs";
 
@@ -67,6 +68,12 @@ const Sidebar = ({
       name: "Forum",
       to: NAVIGATION_ROUTES.FORUM,
       icon: <DocumentTextIcon />,
+      visible: true,
+    },
+    {
+      name: "Roles",
+      to: NAVIGATION_ROUTES.ROLES,
+      icon: <RolesIcon />,
       visible: true,
     },
     {

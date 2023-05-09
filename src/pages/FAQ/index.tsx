@@ -48,8 +48,6 @@ const FAQ = () => {
     defaultValues: initialValue,
   });
 
-  console.log("getvalues", getValues());
-
   const {
     isOpen,
     onOpen: onModalOpen,
@@ -69,7 +67,6 @@ const FAQ = () => {
 
   useEffect(() => {
     const editData = dataFaq?.find(item => item.id == editId);
-    console.log("editData", editData);
     reset({ ...editData });
   }, [editId]);
 
