@@ -25,6 +25,7 @@ import {
 import { useEffect } from "react";
 import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
+import Roles from "@sikaai/pages/roles";
 
 const routes = [
   {
@@ -152,6 +153,14 @@ const routes = [
     element: (
       <Layout>
         <Forum_answer />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.ROLES,
+    element: (
+      <Layout>
+        <Roles />
       </Layout>
     ),
   },

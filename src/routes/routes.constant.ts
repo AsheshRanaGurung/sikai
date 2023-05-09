@@ -21,5 +21,6 @@ export const NAVIGATION_ROUTES = {
   ABROAD_STUDIES: "/services/abroad-studies",
   BASIC_AD: "/basic-ad",
   SETTINGS: "/settings",
+  ROLES: "/roles",
   // LOGOUT: "./logout",
 };

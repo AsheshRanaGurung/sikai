@@ -31,3 +31,4 @@ export { ReactComponent as AddImageIcon } from "./addImageIcon.svg";
 export { ReactComponent as DocumentAltIcon } from "./document_alt.svg";
 export { ReactComponent as VideoAltIcon } from "./video_alt.svg";
 export { ReactComponent as ImagePlaceholder } from "./image_placeholder.svg";
+export { ReactComponent as RolesIcon } from "./rolesIcon.svg";
