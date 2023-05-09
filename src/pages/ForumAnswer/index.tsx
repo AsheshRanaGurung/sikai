@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Image, Select, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, Image, Select, Text } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
@@ -9,31 +9,12 @@ import {
   useGetForumById,
 } from "@sikaai/service/sikaai-forum";
 import { sikaai_colors } from "@sikaai/theme/color";
+import { timeAgo } from "@sikaai/utils/timeAgo";
 import httpStatus from "http-status";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-const ForumAnswer = () => {
-  //for date change
-  function timeAgo(dateString: Date) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((Number(now) - Number(date)) / 1000);
-
-    if (seconds < 60) {
-      return `${seconds} seconds ago`;
-    } else if (seconds < 3600) {
-      const minutes = Math.floor(seconds / 60);
-      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    } else if (seconds < 86400) {
-      const hours = Math.floor(seconds / 3600);
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    } else {
-      const days = Math.floor(seconds / 86400);
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    }
-  }
-  //end of date function
+const ForumAnswer2 = () => {
   const { register, handleSubmit } = useForm();
   const { mutateAsync: createComment } = useCreateComment();
   const { id: forumId = "" } = useParams();
@@ -57,39 +38,40 @@ const ForumAnswer = () => {
         items={[
           {
             name: `Answer`,
-            route: NAVIGATION_ROUTES.FORUM_ANSWER,
+            route: ``,
           },
         ]}
       />
 
       <Box backgroundColor={sikaai_colors.white} p={4} borderRadius={10}>
-        <Flex alignItems={"center"} gap={3}>
-          <Image
-            borderRadius="full"
-            boxSize="36px"
-            // src={dataForum?.question_image}
-            src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
-            alt="profile"
-          />
-
-          <Text>{dataForum?.question_text}</Text>
-        </Flex>
-        <Box marginLeft={45}>
-          <Flex gap={3}>
-            <Text color={"blue"}>{dataForum?.created_by}</Text>
-            <Text color={sikaai_colors.gray_text}>
-              {dataForum && timeAgo(dataForum?.created_at)}
-            </Text>
+        <Box backgroundColor={sikaai_colors.gray} p={4} borderRadius={10}>
+          <Flex alignItems={"center"} gap={3}>
+            <Image
+              borderRadius="full"
+              boxSize="36px"
+              // src={dataForum?.question_image}
+              src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+              alt="profile"
+            />
+            <Text>{dataForum?.question_text}</Text>
           </Flex>
+          <Box marginLeft={45}>
+            <Flex gap={3}>
+              <Text color={"blue"}>{dataForum?.full_name}</Text>
+              <Text color={sikaai_colors.gray_text}>
+                {dataForum && timeAgo(dataForum?.created_at)}
+              </Text>
+            </Flex>
+          </Box>
         </Box>
-        <Flex mt={3} gap={3} direction={"column"}>
+        <Flex mt={5} gap={3} direction={"column"}>
           <FormControl
             control="input"
             size="lg"
             register={register}
             name="text_content"
             placeholder="Write your answer"
-            label={"Your answer"}
+            label={"Write your answer..."}
           />
           <FormControl
             control="file"
@@ -120,7 +102,13 @@ const ForumAnswer = () => {
           {dataComments?.map(dataComment => {
             return (
               <>
-                <Flex gap={5} marginTop={8}>
+                <Grid
+                  templateColumns="max-content 1fr"
+                  gap={5}
+                  // bgColor={sikaai_colors.gray}
+                  m={4}
+                >
+                  {/* TODO: image little distored */}
                   <Image
                     borderRadius="full"
                     boxSize="36px"
@@ -128,14 +116,21 @@ const ForumAnswer = () => {
                     src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
                     alt="profile"
                   />
-                  <Box>
-                    <Text>{dataComment?.created_by}</Text>
-                    <Text>{timeAgo(dataComment?.created_at)}</Text>
+                  <Box bgColor={sikaai_colors.gray} borderRadius={"8px"} p={2}>
+                    <Flex gap={3}>
+                      <Text fontSize={"16px"} fontWeight={500}>
+                        {/* TODO: if not admin then dynamic data handle */}
+                        {(dataComment?.is_admin && "Admin") ||
+                          dataComment?.is_admin}
+                      </Text>
+                    </Flex>
+                    {/* TODO: color #737373 */}
+                    <Text fontSize={"12px"} fontWeight={400}>
+                      {timeAgo(dataComment?.created_at)}
+                    </Text>
+                    <Text mb={5}>{dataComment?.text_content}</Text>
                   </Box>
-                </Flex>
-                <Box borderBottom={"1px solid gray"} ml={14}>
-                  <Text mb={5}>{dataComment?.text_content}</Text>
-                </Box>
+                </Grid>
               </>
             );
           })}
@@ -145,4 +140,4 @@ const ForumAnswer = () => {
   );
 };
 
-export default ForumAnswer;
+export default ForumAnswer2;

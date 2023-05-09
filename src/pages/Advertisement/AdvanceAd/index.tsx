@@ -61,79 +61,78 @@ const AdvanceAd = () => {
 
   return (
     <>
-      <div>
-        <BreadCrumb
-          title={{
-            name: "Advertisement",
-            route: `${NAVIGATION_ROUTES.ADVERTISEMENT}`,
-          }}
-          items={[
-            {
-              name: `Advance Ads`,
-              route: NAVIGATION_ROUTES.PREMIUM_AD,
-            },
-          ]}
-        />
+      <BreadCrumb
+        title={{
+          name: "Advertisement",
+          route: `${NAVIGATION_ROUTES.ADVERTISEMENT}`,
+        }}
+        items={[
+          {
+            name: `Advance Ads`,
+            route: NAVIGATION_ROUTES.PREMIUM_AD,
+          },
+        ]}
+      />
 
-        <DataTable
-          // data={[
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          //   {
-          //     advertisementBanner: "1234",
-          //     advertisementLink: "link",
-          //     status: "true",
-          //     uploadDate: "123",
-          //   },
-          // ]}
-          data={tableData || []}
-          columns={columns}
-          loading={isFetching}
-          btnText={"Add New Advertisement"}
-          onAction={onModalOpen}
-          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
-        />
+      <DataTable
+        // data={[
+        //   {
+        //     advertisementBanner: "1234",
+        //     advertisementLink: "link",
+        //     status: "true",
+        //     uploadDate: "123",
+        //   },
+        //   {
+        //     advertisementBanner: "1234",
+        //     advertisementLink: "link",
+        //     status: "true",
+        //     uploadDate: "123",
+        //   },
+        // ]}
+        data={tableData || []}
+        columns={columns}
+        loading={isFetching}
+        btnText={"Add New Advertisement"}
+        onAction={onModalOpen}
+        // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+      />
 
-        <ModalForm
-          isModalOpen={isModalOpen}
-          title={"Upload Advertisement"}
-          closeModal={onModalClose}
-          resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
-        >
-          <>
-            <FormControl
-              control="file"
-              size="lg"
-              register={register}
-              name="image"
-              label={"Upload Image"}
-            />
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="link"
-              placeholder={"Enter Link"}
-              label={"Advertisement Link"}
-            />
-            <FormControl
-              control="select"
-              options={[]}
-              size="lg"
-              register={register}
-              name="advertisementPlacement"
-              placeholder={"Choose the placement of Advertisement"}
-              label={"Choose the placement of advertisement"}
-            />
-          </>
-        </ModalForm>
+      <ModalForm
+        isModalOpen={isModalOpen}
+        title={"Upload Advertisement"}
+        closeModal={onModalClose}
+        resetButttonText={"Cancel"}
+        submitButtonText={"Upload"}
+      >
+        <>
+          <FormControl
+            control="file"
+            size="lg"
+            register={register}
+            name="image"
+            label={"Upload Image"}
+          />
+          <FormControl
+            control="input"
+            size="lg"
+            register={register}
+            name="link"
+            placeholder={"Enter Link"}
+            label={"Advertisement Link"}
+          />
+          <FormControl
+            control="select"
+            options={[]}
+            size="lg"
+            register={register}
+            name="advertisementPlacement"
+            placeholder={"Choose the placement of Advertisement"}
+            label={"Choose the placement of advertisement"}
+          />
+        </>
+      </ModalForm>
 
-        {/* <ModalForm
+      {/* <ModalForm
           isModalOpen={isModalOpen}
           title={"Edit service"}
           closeModal={onModalClose}
@@ -142,7 +141,6 @@ const AdvanceAd = () => {
         >
 
         </ModalForm> */}
-      </div>
     </>
   );
 };

@@ -75,7 +75,7 @@ const Test = () => {
 
   const toggleSwitch = (index: string) => {
     onStatusOpen();
-    setSwitchIndex((prevArray) => [...prevArray, index]);
+    setSwitchIndex(prevArray => [...prevArray, index]);
   };
 
   return (
@@ -260,7 +260,7 @@ const Test = () => {
                               <h2>
                                 <AccordionButton
                                   _expanded={{
-                                    bg: sikaai_colors.sidebar_text,
+                                    bg: sikaai_colors.light_gray_text,
                                     color: sikaai_colors.black,
                                   }}
                                   borderRadius={"8px 8px 0 0"}

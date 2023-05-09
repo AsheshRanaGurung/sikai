@@ -35,7 +35,7 @@ export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
               <Flex alignItems={"center"}>
                 <Text
                   fontWeight={700}
-                  color={sikaai_colors.black}
+                  color={sikaai_colors.primary}
                   fontSize={"32px"}
                   onClick={() => navigate(title.route)}
                 >
@@ -63,7 +63,7 @@ export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
               {items.length - 1 !== i && (
                 <Icon
                   as={ChevronRightIcon}
-                  color={sikaai_colors.sidebar_text}
+                  color={sikaai_colors.light_gray_text}
                   fontSize="xl"
                   pb={0.5}
                   ml={2}

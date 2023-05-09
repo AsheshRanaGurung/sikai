@@ -49,6 +49,7 @@ export const api = {
   },
 };
 
+// /api/v1/assessment/course/{course_id}/model-set/
 export interface SikaaiResponse<T = unknown> {
   data: T;
   status: 0 | 1;

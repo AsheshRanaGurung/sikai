@@ -6,6 +6,8 @@ import { toastFail } from "./service-toast";
 export interface IForumResponse {
   id: number;
   created_by: number;
+  full_name: string;
+  total_comments: string;
   created_at: Date;
   title: string;
   tags: number[];

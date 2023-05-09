@@ -86,7 +86,7 @@ const Sidebar = ({
     <Box
       w={width}
       maxW={width}
-      color={sikaai_colors.sidebar_text}
+      color={sikaai_colors.light_gray_text}
       sx={{
         "&::-webkit-scrollbar": {
           width: "3px",

@@ -40,9 +40,9 @@ const Item = ({
         color={
           active
             ? isChild
-              ? sikaai_colors.sidebar_text
+              ? sikaai_colors.light_gray_text
               : sikaai_colors.white
-            : sikaai_colors.sidebar_text
+            : sikaai_colors.light_gray_text
         }
         sx={{
           "svg path": {
@@ -52,7 +52,9 @@ const Item = ({
           "&:hover": {
             transition: "all ease-in-out",
             textDecoration: "none",
-            color: isChild ? sikaai_colors.sidebar_text : sikaai_colors.white,
+            color: isChild
+              ? sikaai_colors.light_gray_text
+              : sikaai_colors.white,
             bgColor: isChild ? sikaai_colors.secondary : sikaai_colors.primary,
             "svg path": {
               transition: "all ease-in-out",

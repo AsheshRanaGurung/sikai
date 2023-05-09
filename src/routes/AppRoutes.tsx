@@ -17,7 +17,6 @@ import Dashboard from "@sikaai/pages/Dashboard";
 import FormBased from "@sikaai/pages/Services/FormBased";
 import Forum from "@sikaai/pages/Forum";
 import AboutUs from "@sikaai/pages/AboutUs";
-import Forum_answer from "@sikaai/pages/ForumAnswer";
 import {
   useAuthentication,
   useLogoutMutation,
@@ -25,6 +24,8 @@ import {
 import { useEffect } from "react";
 import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
+// import ForumAnswer from "@sikaai/pages/Forum/ForumAnswer";
+import ForumAnswer2 from "@sikaai/pages/ForumAnswer";
 
 const routes = [
   {
@@ -151,7 +152,8 @@ const routes = [
     path: `${NAVIGATION_ROUTES.FORUM_ANSWER}/:id`,
     element: (
       <Layout>
-        <Forum_answer />
+        {/* <ForumAnswer /> */}
+        <ForumAnswer2 />
       </Layout>
     ),
   },
