@@ -16,5 +16,6 @@ export const sikaai_colors = {
   gray: "#F8F8F8",
   light_gray: "#A0A0A0",
   gray_text: "#585858",
+  gray_text_subtext: "#737373",
   tooltip_gray: "#1E1B39",
 };

@@ -25,7 +25,7 @@ import { useEffect } from "react";
 import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 // import ForumAnswer from "@sikaai/pages/Forum/ForumAnswer";
-import ForumAnswer2 from "@sikaai/pages/ForumAnswer";
+import ForumAnswer2 from "@sikaai/pages/Forum/ForumAnswer";
 
 const routes = [
   {

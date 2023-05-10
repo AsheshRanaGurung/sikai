@@ -15,7 +15,8 @@ interface IModal {
   title: string;
   isModalOpen: boolean;
   closeModal: () => void;
-  modalSize?: "modal-xl" | "modal-md" | "modal-sm";
+  // TODO: modalSize to sm md xl 2xl 3xl
+  modalSize?: string;
   height?: string;
   overflowY?: "auto" | "visible";
   submitHandler?: () => void;
@@ -34,10 +35,17 @@ const ModalForm: FC<IModal> = ({
   resetButttonText,
   submitButtonText,
   handleSubmit,
+  modalSize,
 }) => {
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={closeModal} size={"3xl"}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        size={modalSize ? modalSize : "3xl"}
+        // {TODO: make this dynamic}
+        isCentered
+      >
         <ModalOverlay />
         <form onSubmit={submitHandler}>
           <ModalContent>

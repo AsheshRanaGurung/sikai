@@ -31,6 +31,8 @@ export { ReactComponent as TotalRepliesIcon } from "./totalRepliesIcon.svg";
 export { ReactComponent as AddImageIcon } from "./addImageIcon.svg";
 export { ReactComponent as DotIcon } from "./dotIcon.svg";
 export { ReactComponent as BlueTickIcon } from "./blueTickIcon.svg";
+export { ReactComponent as PinIcon } from "./pinIcon.svg";
+export { ReactComponent as ThreeDotsIcon } from "./threeDotsIcon.svg";
 export { ReactComponent as DocumentAltIcon } from "./document_alt.svg";
 export { ReactComponent as VideoAltIcon } from "./video_alt.svg";
 export { ReactComponent as ImagePlaceholder } from "./image_placeholder.svg";
