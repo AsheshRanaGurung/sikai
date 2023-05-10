@@ -126,7 +126,7 @@ const Subjects = () => {
           title={"Add service"}
           closeModal={onModalClose}
           resetButttonText={"Cancel"}
-          submitButtonText={"Upload"}
+          submitButtonText={"Create"}
         >
           <>
             <FormControl
@@ -138,7 +138,7 @@ const Subjects = () => {
               label={"Service Name"}
             />
             <FormControl
-              control="input"
+              control="textArea"
               size="lg"
               register={register}
               name="description"

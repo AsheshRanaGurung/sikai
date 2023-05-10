@@ -28,6 +28,7 @@ const Forum = () => {
   // react queries
   const { data: forum } = useGetForum();
   // react queries end
+
   return (
     <>
       <BreadCrumb

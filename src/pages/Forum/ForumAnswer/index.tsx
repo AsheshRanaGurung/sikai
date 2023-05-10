@@ -22,26 +22,56 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import {
   useCreateComment,
+  useDeleteComment,
   useGetComment,
+  useGetCommentById,
   useGetForumById,
+  useUpdateComment,
 } from "@sikaai/service/sikaai-forum";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { timeAgo } from "@sikaai/utils/timeAgo";
 import httpStatus from "http-status";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
+// TODO: use defaultValues
+const defaultValues = {
+  text_content: "",
+};
+
 const ForumAnswer2 = () => {
-  const { register, handleSubmit } = useForm();
-  const { mutateAsync: createComment } = useCreateComment();
+  const [commentId, setCommentId] = useState("");
+  const [deleteId, setDeleteId] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: defaultValues,
+  });
   const { id: forumId = "" } = useParams();
+
+  // react queries
+  const { mutateAsync: createComment } = useCreateComment();
   const { data: dataForum } = useGetForumById({ id: forumId });
   const { data: dataComments } = useGetComment({ id: forumId });
+  const { data: dataComment } = useGetCommentById({
+    forum_id: forumId,
+    id: commentId,
+  });
+  const { mutateAsync: updateComment } = useUpdateComment();
+  const { mutateAsync: deleteComment } = useDeleteComment();
+  // react queries end
 
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
     onClose: onModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onClose: onEditModalClose,
   } = useDisclosure();
 
   const {
@@ -51,14 +81,52 @@ const ForumAnswer2 = () => {
   } = useDisclosure();
 
   const onSubmitHandler = async (commentDetails: any) => {
-    const response = await createComment({
-      ...commentDetails,
-      id: forumId,
-    });
-    if (response.status === httpStatus.CREATED) {
-      toastSuccess("Comment created ");
+    if (isEdit) {
+      const response = await updateComment({
+        ...commentDetails,
+        forum_id: forumId,
+        id: commentId,
+      });
+      if (response.status === httpStatus.OK) {
+        // TODO: remove toast from here to service
+        setIsEdit(false);
+        setCommentId("");
+        onEditModalClose();
+        reset(defaultValues);
+        toastSuccess("Comment updated ");
+      }
+    } else {
+      const response = await createComment({
+        ...commentDetails,
+        id: forumId,
+      });
+      if (response.status === httpStatus.CREATED) {
+        // TODO: remove toast from here to service
+        reset(defaultValues);
+        toastSuccess("Comment created ");
+      }
     }
   };
+
+  const handleDelete = async () => {
+    console.log(deleteId, "ash");
+
+    const response = await deleteComment({ forum_id: forumId, id: deleteId });
+    try {
+      if (response.status === httpStatus.NO_CONTENT) {
+        onModalClose();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (isEdit) {
+      reset({ ...defaultValues, text_content: dataComment?.text_content });
+    }
+    // TODO: check if the dependency array content is correct or not
+  }, [commentId]);
 
   return (
     <>
@@ -102,12 +170,12 @@ const ForumAnswer2 = () => {
             placeholder="Write your answer"
             label={"Write your answer..."}
           />
-          <FormControl
+          {/* <FormControl
             control="file"
             size="lg"
             register={register}
-            name="image"
-          />
+            name="image_content"
+          /> */}
           <Button onClick={handleSubmit(onSubmitHandler)}>Post</Button>
         </Flex>
       </Box>
@@ -130,7 +198,7 @@ const ForumAnswer2 = () => {
         <Box>
           {dataComments?.map(dataComment => {
             return (
-              <>
+              <div key={dataComment?.id}>
                 <Grid
                   templateColumns="max-content 1fr"
                   gap={5}
@@ -145,14 +213,23 @@ const ForumAnswer2 = () => {
                     src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
                     alt="profile"
                   />
-                  <Box bgColor={sikaai_colors.gray} borderRadius={"8px"} p={2}>
-                    <Flex gap={3} justifyContent={"space-between"} p={2}>
-                      <Flex gap={5} justifyContent={"space-between"}>
-                        <Text fontSize={"16px"} fontWeight={500}>
-                          {/* TODO: if not admin then dynamic data handle */}
-                          {(dataComment?.is_admin && "Admin") ||
-                            dataComment?.is_admin}
-                        </Text>
+                  <Box bgColor={sikaai_colors.gray} borderRadius={"8px"} p={4}>
+                    <Flex justifyContent={"space-between"}>
+                      <Flex gap={5}>
+                        <Flex direction={"column"}>
+                          <Text fontSize={"16px"} fontWeight={500}>
+                            {/* TODO: if not admin then dynamic data handle */}
+                            {(dataComment?.is_admin && "Admin") ||
+                              dataComment?.is_admin}
+                          </Text>
+                          <Text
+                            fontSize={"12px"}
+                            fontWeight={400}
+                            color={sikaai_colors.gray_text_subtext}
+                          >
+                            {timeAgo(dataComment?.created_at)}
+                          </Text>
+                        </Flex>
                         {dataComment.is_pinned_comment && <PinIcon />}
                       </Flex>
                       <Box>
@@ -166,9 +243,16 @@ const ForumAnswer2 = () => {
                           <PopoverContent>
                             <PopoverArrow />
                             <PopoverCloseButton />
-                            {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
                             <PopoverBody>
-                              <Button variant={"ghost"} onClick={onModalOpen}>
+                              <Button
+                                variant={"ghost"}
+                                onClick={() => {
+                                  setCommentId(dataComment?.id);
+                                  setIsEdit(true);
+                                  onEditModalOpen();
+                                }}
+                                size={"lg"}
+                              >
                                 Edit
                               </Button>
                             </PopoverBody>
@@ -176,28 +260,29 @@ const ForumAnswer2 = () => {
                               <Button
                                 variant={"ghost"}
                                 onClick={onUnpinModalOpen}
+                                size={"lg"}
                               >
                                 Unpin
                               </Button>
                             </PopoverBody>
                             <PopoverBody>
-                              <Button variant={"ghost"} onClick={onModalOpen}>
+                              <Button
+                                variant={"ghost"}
+                                onClick={() => {
+                                  setDeleteId(dataComment?.id);
+                                  onModalOpen();
+                                }}
+                                size={"lg"}
+                              >
                                 Delete
                               </Button>
                             </PopoverBody>
                           </PopoverContent>
                         </Popover>
-                        {/*  */}
                       </Box>
                     </Flex>
-                    <Text
-                      fontSize={"12px"}
-                      fontWeight={400}
-                      color={sikaai_colors.gray_text_subtext}
-                    >
-                      {timeAgo(dataComment?.created_at)}
-                    </Text>
-                    <Text mb={5}>{dataComment?.text_content}</Text>
+
+                    <Text>{dataComment?.text_content}</Text>
                   </Box>
                 </Grid>
                 <ModalForm
@@ -206,24 +291,48 @@ const ForumAnswer2 = () => {
                   closeModal={onModalClose}
                   resetButttonText={"Close"}
                   submitButtonText={"Delete"}
+                  handleSubmit={() => handleDelete()}
                   modalSize={"sm"}
                 >
-                  <Text>Are you sure you want to delete?</Text>
+                  <Text>Are you sure you want to delete? {deleteId} </Text>
                 </ModalForm>
-                {/* TODO: make generic for unpin and delete */}
-                <ModalForm
-                  title={"Unpin"}
-                  isModalOpen={isUnpinModalOpen}
-                  closeModal={onUnpinModalClose}
-                  resetButttonText={"Close"}
-                  submitButtonText={"Unpin"}
-                  modalSize={"sm"}
-                >
-                  <Text>Are you sure you want to unpin the comment?</Text>
-                </ModalForm>
-              </>
+              </div>
             );
           })}
+
+          {/* TODO: make generic for unpin and delete */}
+          <ModalForm
+            title={"Unpin"}
+            isModalOpen={isUnpinModalOpen}
+            closeModal={onUnpinModalClose}
+            resetButttonText={"Close"}
+            submitButtonText={"Unpin"}
+            modalSize={"sm"}
+          >
+            <Text>Are you sure you want to unpin the comment?</Text>
+          </ModalForm>
+
+          {/* edit */}
+          <ModalForm
+            title={"Edit"}
+            isModalOpen={isEditModalOpen}
+            closeModal={onEditModalClose}
+            resetButttonText={"Close"}
+            submitButtonText={"Edit"}
+            submitHandler={handleSubmit(onSubmitHandler)}
+            // TODO: remove this comment
+            // modalSize={"sm"}
+          >
+            <FormControl
+              control="input"
+              size="lg"
+              register={register}
+              name="text_content"
+              placeholder="Write your answer"
+              label={"Write your answer..."}
+            />
+            {/* TODO: image upload */}
+          </ModalForm>
         </Box>
       </Box>
     </>

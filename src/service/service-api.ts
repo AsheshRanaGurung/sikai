@@ -35,6 +35,9 @@ export const api = {
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
     post: "/api/v1/forum/{forum_id}/comment/",
+    getById: "/api/v1/forum/{forum_id}/comment/{id}/",
+    patch: "/api/v1/forum/{forum_id}/comment/{id}/",
+    delete: "/api/v1/forum/{forum_id}/comment/{id}/",
   },
   advertisement: {
     get: "/api/v1/advertisement/advertise/",
@@ -46,6 +49,13 @@ export const api = {
   question: {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
+  },
+  faq: {
+    get: "/api/v1/info/faq/",
+    post: "/api/v1/info/faq/",
+    delete: "/api/v1/info/faq/{id}/",
+    patch: "/api/v1/info/faq/{id}/",
+    getById: "/api/v1/info/faq/{id}/",
   },
 };
 

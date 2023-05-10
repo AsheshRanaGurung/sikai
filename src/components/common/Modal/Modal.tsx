@@ -19,10 +19,10 @@ interface IModal {
   modalSize?: string;
   height?: string;
   overflowY?: "auto" | "visible";
-  submitHandler?: () => void;
   isLoading?: boolean;
   resetButttonText?: string;
   submitButtonText?: string;
+  submitHandler?: () => void;
   handleSubmit?: () => void;
 }
 const ModalForm: FC<IModal> = ({

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
-import { toastFail } from "./service-toast";
+import { toastFail, toastSuccess } from "./service-toast";
 
 export interface IForumResponse {
   id: number;
@@ -15,6 +15,7 @@ export interface IForumResponse {
   question_image: string;
   is_deleted: boolean;
   is_locked: boolean;
+  profile_picture: any;
 }
 export interface IForumComment {
   id: string;
@@ -24,6 +25,20 @@ export interface IForumComment {
   created_at: Date;
   is_admin: boolean;
   is_pinned_comment: boolean;
+  full_name: string;
+  profile_picture: any;
+}
+
+export interface IForumCommentUpdateReq {
+  text_content: string;
+  image_content?: any;
+  forum_id: string;
+  id: string;
+}
+
+export interface IForumCommentParams {
+  forum_id: string;
+  id: string;
 }
 
 const getForum = () => {
@@ -55,14 +70,14 @@ const useGetForumById = ({ id }: { id: string }) => {
   });
 };
 
-const getComment = ({ id }: { id: string }) => {
+const getComment = ({ forum_id }: { forum_id: string }) => {
   return httpClient.get<SikaaiResponse<IForumComment[]>>(
-    api.comment.get.replace("{forum_id}", id)
+    api.comment.get.replace("{forum_id}", forum_id)
   );
 };
 
 const useGetComment = ({ id }: { id: string }) => {
-  return useQuery([api.comment.get, id], () => getComment({ id }), {
+  return useQuery([api.comment.get, id], () => getComment({ forum_id: id }), {
     enabled: !!id,
     select: ({ data }) => data.data,
     onError: (e: any) => {
@@ -85,9 +100,84 @@ const useCreateComment = () => {
       queryClient.invalidateQueries(api.comment.get);
     },
     onError: (e: any) => {
-      toastFail(e.response.dataerror[0].name || "Comment failed");
+      toastFail(e.response.data.error[0].name || "Comment failed");
     },
   });
 };
 
-export { useGetForum, useGetForumById, useGetComment, useCreateComment };
+const getCommentById = ({ forum_id, id }: { forum_id: string; id: string }) => {
+  // TODO: use api.comment.replace
+  // but there are two things to be removed
+  return httpClient.get<SikaaiResponse<IForumComment[]>>(
+    `api/v1/forum/${forum_id}/comment/${id}/`
+  );
+};
+
+const useGetCommentById = ({
+  forum_id,
+  id,
+}: {
+  forum_id: string;
+  id: string;
+}) => {
+  return useQuery(
+    [api.comment.getById, id, forum_id],
+    () => getCommentById({ forum_id, id }),
+    {
+      enabled: !!id && !!forum_id,
+      select: ({ data }) => data?.data?.[0],
+      onError: (e: any) => {
+        toastFail(e.response.data.error[0].name || "Fetching Comment failed");
+      },
+    }
+  );
+};
+
+// TODO: IForumCommentReq create a new type with the optional filed being compulsary
+const updateComment = (commentDetails: IForumCommentUpdateReq) => {
+  return httpClient.patch(
+    api.comment.patch
+      .replace("{forum_id}", commentDetails.forum_id)
+      .replace("{id}", commentDetails.id),
+    commentDetails
+  );
+};
+const useUpdateComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.comment.get);
+    },
+    onError: () => {
+      toastFail("Failed updating comment");
+    },
+  });
+};
+
+const deleteComment = (forumCommentParams: IForumCommentParams) => {
+  return httpClient.delete(
+    api.comment.delete
+      .replace("{forum_id}", forumCommentParams.forum_id)
+      .replace("{id}", forumCommentParams.id)
+  );
+};
+
+const useDeleteComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.comment.get);
+      toastSuccess("Comment deleted successfuly");
+    },
+  });
+};
+
+export {
+  useGetForum,
+  useGetForumById,
+  useGetComment,
+  useCreateComment,
+  useGetCommentById,
+  useUpdateComment,
+  useDeleteComment,
+};

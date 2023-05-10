@@ -31,8 +31,7 @@ export const ForumQuestion = ({ item }: any) => {
         <Image
           borderRadius="full"
           boxSize="36px"
-          // src={item.question_image}
-          src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+          src={item.profile_picture}
           alt="profile_img"
         />
 
@@ -41,7 +40,7 @@ export const ForumQuestion = ({ item }: any) => {
       <Grid templateColumns="36px repeat(2, max-content)" gap={3}>
         <GridItem></GridItem>
         <GridItem>
-          <Text color={"blue"}>{item.created_by}</Text>
+          <Text color={"blue"}>{item.full_name}</Text>
         </GridItem>
         <GridItem>
           <Text color={sikaai_colors.gray_text}>10 minutes</Text>

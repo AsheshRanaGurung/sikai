@@ -224,7 +224,7 @@ const Courses = () => {
           placeholder={"course name"}
         />
         <FormControl
-          control="input"
+          control="textArea"
           type="text"
           name="description"
           register={register}

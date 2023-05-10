@@ -26,6 +26,7 @@ import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 // import ForumAnswer from "@sikaai/pages/Forum/ForumAnswer";
 import ForumAnswer2 from "@sikaai/pages/Forum/ForumAnswer";
+import Roles from "@sikaai/pages/roles";
 
 const routes = [
   {
@@ -154,6 +155,14 @@ const routes = [
       <Layout>
         {/* <ForumAnswer /> */}
         <ForumAnswer2 />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.ROLES,
+    element: (
+      <Layout>
+        <Roles />
       </Layout>
     ),
   },

@@ -18,4 +18,5 @@ export const sikaai_colors = {
   gray_text: "#585858",
   gray_text_subtext: "#737373",
   tooltip_gray: "#1E1B39",
+  accordion_bg: "#C5C9FD",
 };

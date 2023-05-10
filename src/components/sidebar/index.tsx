@@ -1,5 +1,6 @@
 import { Box, List, ListItem, Link } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+// import { FiInfo } from "react-icons/fi";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { sikaai_colors } from "@sikaai/theme/color";
 import NavItem from "./NavItem";
@@ -10,6 +11,7 @@ import {
   DocumentTextIcon,
   LogoutIcon,
   MessageQuestionIcon,
+  RolesIcon,
   ServiceIcon,
 } from "@sikaai/assets/svgs";
 
@@ -69,9 +71,15 @@ const Sidebar = ({
       visible: true,
     },
     {
+      name: "Roles",
+      to: NAVIGATION_ROUTES.ROLES,
+      icon: <RolesIcon />,
+      visible: true,
+    },
+    {
       name: "About Us",
       to: NAVIGATION_ROUTES.ABOUT_US,
-      icon: <DocumentTextIcon />,
+      // icon: <FiInfo style={{ fontSize: "20px" }} />,
       visible: true,
     },
     {
