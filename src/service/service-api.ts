@@ -30,7 +30,8 @@ export const api = {
     getById: "/api/v1/forum/{id}",
   },
   about: {
-    fetch: "/api/v1/info/about-us/",
+    fetch: "/api/v1/info/about-us-content/",
+    edit: "/api/v1/info/about-us-content/{id}/",
   },
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
