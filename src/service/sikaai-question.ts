@@ -20,7 +20,7 @@ export interface IQuestion {
 
 interface IOption {
   answer_text?: string;
-  answer_image?: string;
+  answer_image?: File | null;
   is_correct: boolean;
 }
 

@@ -8,7 +8,9 @@ import {
   Box,
   Button,
   Flex,
-  FormLabel,
+  Grid,
+  GridItem,
+  SimpleGrid,
   Spacer,
   Text,
   useDisclosure,
@@ -24,23 +26,28 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { AddImageIcon } from "@sikaai/assets/svgs";
 
-// const defaultValues = {
-//   question_text: "",
-//   // question_image: "",
-//   subject_question_set_id: null as number | null,
-//   answer_text1: "",
-//   answer_text2: "",
-//   answer_text3: "",
-//   answer_text4: "",
-//   answer: "",
-//   description: "",
-//   // image: "",
-// };
+const defaultValues = {
+  question_text: "",
+  // question_image: "",
+  subject_question_set_id: null as number | null,
+  answer_text1: "",
+  answer_text2: "",
+  answer_text3: "",
+  answer_text4: "",
+  optionAImage: null,
+  optionBImage: null,
+  optionCImage: null,
+  optionDImage: null,
+  answer: "",
+  description: "",
+  // image: "",
+};
 
 function MyComponent() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm({
+    defaultValues: defaultValues,
+  });
   const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
 
   const { id: questionSetId = "" } = useParams();
@@ -58,26 +65,31 @@ function MyComponent() {
       options: [
         {
           answer_text: questionDetails?.answer_text1,
+          answer_image: questionDetails?.optionAImage[0],
           is_correct: questionDetails?.answer === "A" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text2,
+          answer_image: questionDetails?.optionBImage[0],
           is_correct: questionDetails?.answer === "B" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text3,
+          answer_image: questionDetails?.optionCImage[0],
           is_correct: questionDetails?.answer === "C" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text4,
+          answer_image: questionDetails?.optionDImage[0],
           is_correct: questionDetails?.answer === "D" ? true : false,
-          answer_image: questionDetails?.optionDImage,
         },
       ],
       solution: {
         description: questionDetails?.description,
+        // answer_text: "hello",
       },
     };
+
     const response = await createQuestion(requestBody);
     if (response.status === httpStatus.CREATED) {
       toastSuccess("Question set created successful");
@@ -158,67 +170,117 @@ function MyComponent() {
                     >
                       Options
                     </Text>
-                    <Flex gap={3} direction={"column"}>
-                      <Flex gap={5}>
-                        {/* TODO: change margin top to something else */}
-                        <Text color={sikaai_colors.primary} mt={2}>
-                          A:
-                        </Text>
-                        <FormControl
-                          control="input"
-                          register={register}
-                          name={`answer_text1`}
-                          placeholder="option A"
-                        />
-                        <Text color={sikaai_colors.primary} mt={2}>
-                          B:
-                        </Text>
-                        <FormControl
-                          control="input"
-                          register={register}
-                          name={`answer_text2`}
-                          placeholder="option B"
-                        />
-                      </Flex>
-                      <Flex gap={5}>
-                        <Text color={sikaai_colors.primary} mt={2}>
-                          C:
-                        </Text>
-                        <FormControl
-                          control="input"
-                          register={register}
-                          name={`answer_text3`}
-                          placeholder="option C"
-                        />
-                        <Text color={sikaai_colors.primary} mt={2}>
-                          D:
-                        </Text>
-                        <FormControl
-                          control="input"
-                          register={register}
-                          name={`answer_text4`}
-                          placeholder="option D"
-                        />
-                        <FormLabel htmlFor="imageUpload">
-                          <AddImageIcon />
-                          {/* answer_text1 */}
-                          {/* <input
-                              type="file"
-                              id="imageUpload"
-                              style={{ display: "none", visibility: "hidden" }}
-                              onChange={handleChange}
-                            /> */}
+                    <SimpleGrid columns={2} spacing={5}>
+                      <Grid templateColumns="repeat(7, 1fr)" gap={6}>
+                        <GridItem colSpan={1}>
+                          <Text
+                            color={sikaai_colors.primary}
+                            mt={2}
+                            textAlign={"right"}
+                          >
+                            A:
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={4}>
                           <FormControl
+                            control="input"
+                            register={register}
+                            name={`answer_text1`}
+                            placeholder="option A"
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            width="250px"
+                            control="file"
+                            register={register}
+                            name={"optionAImage"}
+                          />
+                        </GridItem>
+                      </Grid>
+                      <Grid templateColumns="repeat(7, 1fr)" gap={6}>
+                        <GridItem colSpan={1}>
+                          <Text
+                            color={sikaai_colors.primary}
+                            mt={2}
+                            textAlign={"right"}
+                          >
+                            B:
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <FormControl
+                            control="input"
+                            register={register}
+                            name={`answer_text2`}
+                            placeholder="option B"
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            width="250px"
+                            control="file"
+                            register={register}
+                            name={"optionBImage"}
+                          />
+                        </GridItem>
+                      </Grid>
+                      <Grid templateColumns="repeat(7, 1fr)" gap={6}>
+                        <GridItem colSpan={1}>
+                          <Text
+                            color={sikaai_colors.primary}
+                            mt={2}
+                            textAlign={"right"}
+                          >
+                            C:
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <FormControl
+                            control="input"
+                            register={register}
+                            name={`answer_text3`}
+                            placeholder="option C"
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            width="250px"
+                            control="file"
+                            register={register}
+                            name={"optionCImage"}
+                          />
+                        </GridItem>
+                      </Grid>
+                      <Grid templateColumns="repeat(7, 1fr)" gap={6}>
+                        <GridItem colSpan={1}>
+                          <Text
+                            color={sikaai_colors.primary}
+                            mt={2}
+                            textAlign={"right"}
+                          >
+                            D:
+                          </Text>
+                        </GridItem>
+                        <GridItem colSpan={4}>
+                          <FormControl
+                            control="input"
+                            register={register}
+                            name={`answer_text4`}
+                            placeholder="option D"
+                          />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            width="250px"
                             control="file"
                             register={register}
                             name={"optionDImage"}
-                            placeholder={""}
                           />
-                        </FormLabel>
-                      </Flex>
-                    </Flex>
+                        </GridItem>
+                      </Grid>
+                    </SimpleGrid>
                   </Box>
-
                   <Box>
                     <Flex gap={6}>
                       <Text
