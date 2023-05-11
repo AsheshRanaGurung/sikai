@@ -80,6 +80,7 @@ const ForumAnswer2 = () => {
     onClose: onUnpinModalClose,
   } = useDisclosure();
 
+  // TODO: remove this any
   const onSubmitHandler = async (commentDetails: any) => {
     if (isEdit) {
       const response = await updateComment({
@@ -109,8 +110,6 @@ const ForumAnswer2 = () => {
   };
 
   const handleDelete = async () => {
-    console.log(deleteId, "ash");
-
     const response = await deleteComment({ forum_id: forumId, id: deleteId });
     try {
       if (response.status === httpStatus.NO_CONTENT) {
@@ -285,56 +284,58 @@ const ForumAnswer2 = () => {
                     <Text>{dataComment?.text_content}</Text>
                   </Box>
                 </Grid>
-                <ModalForm
-                  title={"Delete"}
-                  isModalOpen={isModalOpen}
-                  closeModal={onModalClose}
-                  resetButttonText={"Close"}
-                  submitButtonText={"Delete"}
-                  handleSubmit={() => handleDelete()}
-                  modalSize={"sm"}
-                >
-                  <Text>Are you sure you want to delete? {deleteId} </Text>
-                </ModalForm>
               </div>
             );
           })}
-
-          {/* TODO: make generic for unpin and delete */}
-          <ModalForm
-            title={"Unpin"}
-            isModalOpen={isUnpinModalOpen}
-            closeModal={onUnpinModalClose}
-            resetButttonText={"Close"}
-            submitButtonText={"Unpin"}
-            modalSize={"sm"}
-          >
-            <Text>Are you sure you want to unpin the comment?</Text>
-          </ModalForm>
-
-          {/* edit */}
-          <ModalForm
-            title={"Edit"}
-            isModalOpen={isEditModalOpen}
-            closeModal={onEditModalClose}
-            resetButttonText={"Close"}
-            submitButtonText={"Edit"}
-            submitHandler={handleSubmit(onSubmitHandler)}
-            // TODO: remove this comment
-            // modalSize={"sm"}
-          >
-            <FormControl
-              control="input"
-              size="lg"
-              register={register}
-              name="text_content"
-              placeholder="Write your answer"
-              label={"Write your answer..."}
-            />
-            {/* TODO: image upload */}
-          </ModalForm>
         </Box>
       </Box>
+
+      {/* TODO: make generic for unpin and delete */}
+      <ModalForm
+        title={"Unpin"}
+        isModalOpen={isUnpinModalOpen}
+        closeModal={onUnpinModalClose}
+        resetButttonText={"Close"}
+        submitButtonText={"Unpin"}
+        modalSize={"sm"}
+      >
+        <Text>Are you sure you want to unpin the comment?</Text>
+      </ModalForm>
+
+      {/* edit */}
+      <ModalForm
+        title={"Edit"}
+        isModalOpen={isEditModalOpen}
+        closeModal={onEditModalClose}
+        resetButttonText={"Close"}
+        submitButtonText={"Edit"}
+        submitHandler={handleSubmit(onSubmitHandler)}
+        // TODO: remove this comment
+        // modalSize={"sm"}
+      >
+        <FormControl
+          control="input"
+          size="lg"
+          register={register}
+          name="text_content"
+          placeholder="Write your answer"
+          label={"Write your answer..."}
+        />
+        {/* TODO: image upload */}
+      </ModalForm>
+
+      {/* delete */}
+      <ModalForm
+        title={"Delete"}
+        isModalOpen={isModalOpen}
+        closeModal={onModalClose}
+        resetButttonText={"Close"}
+        submitButtonText={"Delete"}
+        handleSubmit={() => handleDelete()}
+        modalSize={"sm"}
+      >
+        <Text>Are you sure you want to delete?</Text>
+      </ModalForm>
     </>
   );
 };

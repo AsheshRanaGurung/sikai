@@ -79,7 +79,6 @@ const useUpdateServices = () => {
 
 // course = subject in UI
 const getServiceCourse = (serviceId: string) => {
-  console.log("i was here");
   return httpClient.get<SikaaiResponse<ICourseResponse[]>>(
     api.service.course.get.replace("{service_id}", serviceId)
   );
