@@ -4,17 +4,69 @@ import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import DropzoneComponent from "@sikaai/components/form/DropzoneComponent/DropzoneComponent";
+import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { IAboutUs, useFetchAboutUs } from "@sikaai/service/service-aboutUs";
-import { useState } from "react";
+import {
+  IAboutUs,
+  useEditAboutUs,
+  useFetchAboutUs,
+} from "@sikaai/service/service-aboutUs";
+import { toastSuccess } from "@sikaai/service/service-toast";
+import httpStatus from "http-status";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Cell } from "react-table";
 
+const initialValue = {
+  heading: "",
+  sub_heading: "",
+  description: "",
+};
+
 const AboutUs = () => {
+  const [editId, setEditId] = useState("");
   const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
 
-  const { data: aboutUsData } = useFetchAboutUs();
+  const { data: aboutUsData = [] } = useFetchAboutUs();
+  const { mutateAsync: editAboutUs, isLoading: isUpdating } = useEditAboutUs();
 
   const { onOpen, isOpen, onClose } = useDisclosure();
+
+  const { register, reset, handleSubmit } = useForm({
+    defaultValues: initialValue,
+  });
+
+  const onCloseHandler = () => {
+    onClose();
+    reset(initialValue);
+  };
+
+  const onSubmitHandler = async (data: typeof initialValue) => {
+    try {
+      const editAboutUsResponse = await editAboutUs({ ...data, id: editId });
+
+      if (editAboutUsResponse?.status == httpStatus.OK) {
+        toastSuccess("Updated successfuly");
+        onCloseHandler();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (editId) {
+      const findEditData = aboutUsData?.find(
+        item => item.id.toString() == editId
+      );
+
+      reset({
+        heading: findEditData?.heading,
+        sub_heading: findEditData?.sub_heading,
+        description: findEditData?.description,
+      });
+    }
+  }, [editId]);
 
   const columns = [
     {
@@ -23,19 +75,32 @@ const AboutUs = () => {
         return <Text>{cell.row.index + 1}</Text>;
       },
     },
-    { Header: "Content", accessor: "content" },
+    {
+      Header: "Created Date",
+      Cell: (cell: Cell<IAboutUs>) => {
+        return <Text>{cell.row.original.created_at.slice(0, 10)}</Text>;
+      },
+    },
+    { Header: "Heading", accessor: "heading" },
+    {
+      Header: "Sub-heading",
+      accessor: "sub_heading",
+    },
+    {
+      Header: "Description",
+      accessor: "description",
+    },
     {
       Header: "Action",
-      Cell: () => {
+      Cell: (cell: Cell<IAboutUs>) => {
         const onEdit = () => {
+          setEditId(cell.row.original.id?.toString());
           onOpen();
         };
-        const onDelete = () => {
-          console.log("here");
-        };
+
         return (
           <Stack alignItems={"flex-start"}>
-            <TableActions onEdit={onEdit} onDelete={onDelete} />
+            <TableActions onEdit={onEdit} />
           </Stack>
         );
       },
@@ -65,11 +130,41 @@ const AboutUs = () => {
       <DataTable data={aboutUsData ?? []} columns={columns} />
       <ModalForm
         isModalOpen={isOpen}
-        title={"Add About Us"}
-        closeModal={onClose}
+        title={"Edit About Us"}
+        closeModal={onCloseHandler}
         resetButttonText={"Cancel"}
         submitButtonText={"Update"}
-      ></ModalForm>
+        submitHandler={handleSubmit(onSubmitHandler)}
+        isLoading={isUpdating}
+      >
+        <FormControl
+          control="input"
+          size="lg"
+          register={register}
+          name="heading"
+          placeholder={"Enter Heading"}
+          label={"Heading"}
+          isRequired
+        />
+        <FormControl
+          control="input"
+          size="lg"
+          register={register}
+          name="sub_heading"
+          placeholder={"Enter Sub Heading"}
+          label={"Sub Heading"}
+          isRequired
+        />
+        <FormControl
+          control="textArea"
+          size="lg"
+          register={register}
+          name="description"
+          placeholder={"Type Description"}
+          label={"Answer"}
+          isRequired
+        />
+      </ModalForm>
     </>
   );
 };
