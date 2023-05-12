@@ -1,4 +1,4 @@
-import { Box, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import DataTable from "@sikaai/components/common/table";
@@ -10,6 +10,7 @@ import {
   IAboutUs,
   useEditAboutUs,
   useFetchAboutUs,
+  useSaveVideo,
 } from "@sikaai/service/service-aboutUs";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
@@ -26,9 +27,11 @@ const initialValue = {
 const AboutUs = () => {
   const [editId, setEditId] = useState("");
   const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   const { data: aboutUsData = [] } = useFetchAboutUs();
   const { mutateAsync: editAboutUs, isLoading: isUpdating } = useEditAboutUs();
+  const { mutateAsync: mutateVideo } = useSaveVideo();
 
   const { onOpen, isOpen, onClose } = useDisclosure();
 
@@ -67,6 +70,13 @@ const AboutUs = () => {
       });
     }
   }, [editId]);
+
+  useEffect(() => {
+    if (acceptedFiles) {
+      const intoFile = new File([acceptedFiles[0]], "video");
+      setFile(intoFile);
+    }
+  }, [acceptedFiles]);
 
   const columns = [
     {
@@ -107,7 +117,18 @@ const AboutUs = () => {
     },
   ];
 
-  console.log("acceptedFiles", acceptedFiles);
+  const onVideUpload = async () => {
+    try {
+      const saveVideoResponse = await mutateVideo({ video: file });
+      if (saveVideoResponse?.status == httpStatus.OK) {
+        toastSuccess("video saved");
+        setAcceptedFiles([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {" "}
@@ -127,6 +148,9 @@ const AboutUs = () => {
           }}
         />
       </Box>
+      <Button width={"100%"} onClick={onVideUpload} marginY={5}>
+        Upload Video
+      </Button>
       <DataTable data={aboutUsData ?? []} columns={columns} />
       <ModalForm
         isModalOpen={isOpen}
