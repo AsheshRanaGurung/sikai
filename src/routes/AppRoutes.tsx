@@ -26,6 +26,7 @@ import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 import ForumAnswer from "@sikaai/pages/Forum/ForumComment";
 import Roles from "@sikaai/pages/roles";
+import ContactUs from "@sikaai/pages/ContactUs";
 
 const routes = [
   {
@@ -169,6 +170,14 @@ const routes = [
     element: (
       <Layout>
         <AboutUs />
+      </Layout>
+    ),
+  },
+  {
+    path: NAVIGATION_ROUTES.CONTACT_US,
+    element: (
+      <Layout>
+        <ContactUs />
       </Layout>
     ),
   },

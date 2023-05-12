@@ -63,6 +63,15 @@ export const api = {
     patch: "/api/v1/info/faq/{id}/",
     getById: "/api/v1/info/faq/{id}/",
   },
+  map: {
+    get: "api/v1/info/map-location/",
+    post: "api/v1/info/map-location/",
+  },
+  contact: {
+    get: "api/v1/info/contact-us/",
+    patch: "api/v1/info/contact-us/{id}/",
+    getById: "api/v1/info/contact-us/{id}/",
+  },
 };
 
 // /api/v1/assessment/course/{course_id}/model-set/
