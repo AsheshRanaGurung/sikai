@@ -22,5 +22,6 @@ export const NAVIGATION_ROUTES = {
   BASIC_AD: "/basic-ad",
   SETTINGS: "/settings",
   ROLES: "/roles",
+  CONTACT_US: "/contact",
   // LOGOUT: "./logout",
 };

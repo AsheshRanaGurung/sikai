@@ -44,7 +44,7 @@ const FAQ = () => {
   const [delId, setDelId] = useState<number>();
   const [isEdit, setIsEdit] = useState(false);
 
-  const { register, handleSubmit, reset, getValues } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialValue,
   });
 
