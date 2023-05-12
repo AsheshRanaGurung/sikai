@@ -6,6 +6,7 @@ import { sikaai_colors } from "@sikaai/theme/color";
 import NavItem from "./NavItem";
 import { images } from "@sikaai/assets/images";
 import {
+  AboutUsIcon,
   AdvertisementIcon,
   ContactIcon,
   DashboardIcon,
@@ -80,7 +81,7 @@ const Sidebar = ({
     {
       name: "About Us",
       to: NAVIGATION_ROUTES.ABOUT_US,
-      // icon: <FiInfo style={{ fontSize: "20px" }} />,
+      icon: <AboutUsIcon />,
       visible: true,
     },
     {

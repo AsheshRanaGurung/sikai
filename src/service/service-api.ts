@@ -64,6 +64,12 @@ export const api = {
     patch: "/api/v1/info/faq/{id}/",
     getById: "/api/v1/info/faq/{id}/",
   },
+  dashboard: {
+    get: "api/v1/dashboard/recent-registered-students/",
+    card: {
+      get: "api/v1/dashboard/",
+    }
+  },
   map: {
     get: "api/v1/info/map-location/",
     post: "api/v1/info/map-location/",

@@ -25,9 +25,8 @@ const useGetMapLocation = () => {
       return data?.data;
     },
     onError: (e: any) => {
-      toastFail(e.response?.data.message || "");
+      toastFail(e.response?.data.message || "Couldn't load map");
     },
-    onSuccess: () => console?.log("log it"),
   });
 };
 
@@ -55,7 +54,7 @@ const useGetContact = () => {
   return useQuery([api.contact.get], getContact, {
     select: ({ data }) => data.data,
     onError: (error: any) => {
-      toastFail(error.response?.data.message || "");
+      toastFail(error.response?.data.message || "Couldn't fetch contact data");
     },
   });
 };

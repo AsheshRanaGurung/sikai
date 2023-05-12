@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import {
   ActiveTeacherIcon,
   ActiveUsersIcon,
@@ -24,7 +24,10 @@ import { Line, Doughnut } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 import DataTable from "@sikaai/components/common/table";
 import { useMemo } from "react";
-import TableActions from "@sikaai/components/common/table/TableActions";
+import {
+  useGetDashboardCard,
+  useGetStudent,
+} from "@sikaai/service/service-dashboard";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,106 +39,117 @@ ChartJS.register(
   Legend,
   ArcElement
 );
-
-const labels = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "DEC",
-];
-
-//data for line graph
-const data_line = {
-  labels,
-  datasets: [
-    {
-      fill: true,
-      label: "Student",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 5000 })),
-      borderColor: sikaai_colors.primary,
-      backgroundColor: "rgba(207, 202, 255, 1)",
-    },
-  ],
-};
-// options for line graph
-const options_line = {
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: true,
-      text: "MONTHLY CUSTOMER ONBOARD",
-    },
-  },
-};
-
-// options for doghnut graph
-const options_doghnut = {
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: true,
-      text: "ADVERTISEMENT STATISTICS",
-    },
-  },
-};
-//data for doghnut
-const data_doghnut = {
-  labels: ["Premium", "Advanced", "Basic"],
-  datasets: [
-    {
-      label: "Adertisement Percent",
-      data: [50, 20, 30],
-      backgroundColor: [
-        "rgba(251, 166, 57, 1)",
-        "rgba(88, 95, 205, 1)",
-        "rgba(232, 232, 232, 1)",
-      ],
-    },
-  ],
-};
-
-const cardsData = [
-  {
-    cardTitle: "Active Students",
-    cardNumber: 114,
-    cardIcons: <ActiveUsersIcon />,
-  },
-  {
-    cardTitle: "Active Teachers",
-    cardNumber: 114,
-    cardIcons: <ActiveTeacherIcon />,
-  },
-  {
-    cardTitle: "Total Questions Created",
-    cardNumber: 114,
-    cardIcons: <TotalQuesCreatedIcon />,
-  },
-  {
-    cardTitle: "Pending Forum Replies",
-    cardNumber: 114,
-    cardIcons: <TotalRepliesIcon />,
-  },
-  {
-    cardTitle: "Active Advertisements",
-    cardNumber: 114,
-    cardIcons: <TotalAddIcon />,
-  },
-];
-
 const Dashboard = () => {
-  //columns name
+  //react query
+  const { data: studentDetails = [], isFetching } = useGetStudent();
+  const { data: dashboardCardData } = useGetDashboardCard();
+  console.log("dashboardCardData", dashboardCardData);
+  // react query end
+
+  const labels = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "DEC",
+  ];
+
+  //data for line graph
+  const data_line = {
+    labels,
+    datasets: [
+      {
+        fill: true,
+        label: "Student",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 5000 })),
+        borderColor: sikaai_colors.primary,
+        backgroundColor: "rgba(207, 202, 255, 1)",
+      },
+    ],
+  };
+  // options for line graph
+  const options_line = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "MONTHLY CUSTOMER ONBOARD",
+      },
+    },
+  };
+
+  // options for doghnut graph
+  const options_doghnut = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "ADVERTISEMENT STATISTICS",
+      },
+    },
+  };
+  //data for doghnut
+  const data_doghnut = {
+    labels: ["Premium", "Advanced", "Basic"],
+    datasets: [
+      {
+        label: "Adertisement Percent",
+        data: [
+          dashboardCardData?.premium_advertisements,
+          dashboardCardData?.advance_advertisements,
+          dashboardCardData?.basic_advertisements,
+        ],
+        backgroundColor: [
+          "rgba(251, 166, 57, 1)",
+          "rgba(88, 95, 205, 1)",
+          "rgba(232, 232, 232, 1)",
+        ],
+      },
+    ],
+  };
+
+  const cardsData = useMemo(
+    () => [
+      {
+        cardTitle: "Active Students",
+        cardNumber: dashboardCardData?.active_students || 0,
+        cardIcons: <ActiveUsersIcon />,
+      },
+      // {
+      //   cardTitle: "Active Teachers",
+      //   cardNumber: 114,
+      //   cardIcons: <ActiveTeacherIcon />,
+      // },
+      {
+        cardTitle: "Total Questions Created",
+        cardNumber: dashboardCardData?.total_questions || 0,
+        cardIcons: <TotalQuesCreatedIcon />,
+      },
+      {
+        cardTitle: "Pending Forum Replies",
+        cardNumber: dashboardCardData?.pending_forum_replies || 0,
+        cardIcons: <TotalRepliesIcon />,
+      },
+      {
+        cardTitle: "Active Advertisements",
+        cardNumber: dashboardCardData?.active_advertisements || 0,
+        cardIcons: <TotalAddIcon />,
+      },
+    ],
+    [dashboardCardData]
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -162,19 +176,6 @@ const Dashboard = () => {
         Header: "Date",
         accessor: "date",
       },
-      {
-        Header: "Action",
-        Cell: () => {
-          const onDelete = () => {
-            console.log("here");
-          };
-          return (
-            <Stack alignItems={"flex-start"}>
-              <TableActions onDelete={onDelete} />
-            </Stack>
-          );
-        },
-      },
     ],
     []
   );
@@ -200,7 +201,10 @@ const Dashboard = () => {
                     fontSize={"20px"}
                     color={sikaai_colors.primary_dark}
                   >
-                    {item?.cardNumber}
+                    <>
+                      {/* {console.log(item?.cardNumber, "hjklhfd")} */}
+                      {item?.cardNumber}
+                    </>
                   </Text>
                 </Box>
               </Flex>
@@ -241,23 +245,9 @@ const Dashboard = () => {
           Recent Student Onboard
         </Text>
         <DataTable
-          data={[
-            {
-              fullName: "Arya Stark",
-              email: "email@email.com",
-              address: "America",
-              phoneNumber: "93239235124",
-              college: "ABC college",
-            },
-            {
-              fullName: "Arya Stark",
-              email: "email@email.com",
-              address: "America",
-              phoneNumber: "93239235124",
-              college: "ABC college",
-            },
-          ]}
+          data={studentDetails}
           columns={columns}
+          loading={isFetching}
         />
       </Box>
     </>
