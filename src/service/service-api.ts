@@ -22,8 +22,13 @@ export const api = {
   subjects: {
     get: "/api/v1/service/course/{course_id}/subject/",
   },
+  // TODO: get and post has similar api name
   subjects_set: {
     get: "/api/v1/assessment/subject/{subject_id}/subject-set/",
+    post: "/api/v1/assessment/subject/{subject_id}/subject-set/",
+    getById: "/api/v1/assessment/subject/subject-set/{id}/",
+    patch: "/api/v1/assessment/subject/subject-set/{id}/",
+    delete: "/api/v1/assessment/subject/subject-set/{id}/",
   },
   forum: {
     get: "/api/v1/forum/",

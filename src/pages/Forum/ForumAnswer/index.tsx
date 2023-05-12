@@ -19,7 +19,6 @@ import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { toastSuccess } from "@sikaai/service/service-toast";
 import {
   useCreateComment,
   useDeleteComment,
@@ -35,7 +34,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-// TODO: use defaultValues
 const defaultValues = {
   text_content: "",
 };
@@ -80,8 +78,7 @@ const ForumAnswer2 = () => {
     onClose: onUnpinModalClose,
   } = useDisclosure();
 
-  // TODO: remove this any
-  const onSubmitHandler = async (commentDetails: any) => {
+  const onSubmitHandler = async (commentDetails: typeof defaultValues) => {
     if (isEdit) {
       const response = await updateComment({
         ...commentDetails,
@@ -89,12 +86,10 @@ const ForumAnswer2 = () => {
         id: commentId,
       });
       if (response.status === httpStatus.OK) {
-        // TODO: remove toast from here to service
         setIsEdit(false);
         setCommentId("");
         onEditModalClose();
         reset(defaultValues);
-        toastSuccess("Comment updated ");
       }
     } else {
       const response = await createComment({
@@ -102,9 +97,7 @@ const ForumAnswer2 = () => {
         id: forumId,
       });
       if (response.status === httpStatus.CREATED) {
-        // TODO: remove toast from here to service
         reset(defaultValues);
-        toastSuccess("Comment created ");
       }
     }
   };
@@ -124,8 +117,7 @@ const ForumAnswer2 = () => {
     if (isEdit) {
       reset({ ...defaultValues, text_content: dataComment?.text_content });
     }
-    // TODO: check if the dependency array content is correct or not
-  }, [commentId]);
+  }, [dataComment]);
 
   return (
     <>

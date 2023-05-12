@@ -16,7 +16,7 @@ const Subjects = () => {
   const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
-    onOpen: onModalOpen,
+    // onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
 
@@ -116,8 +116,8 @@ const Subjects = () => {
           data={tableData || []}
           columns={columns}
           loading={isFetching}
-          btnText={"Create new section"}
-          onAction={onModalOpen}
+          // btnText={"Create new section"}
+          // onAction={onModalOpen}
           // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
         />
 

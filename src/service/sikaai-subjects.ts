@@ -22,8 +22,8 @@ const useGetSubjects = (id: string) => {
   return useQuery([api.subjects.get, id], getSubjects(id), {
     select: ({ data }) => data.data,
     enabled: !!id,
-    onError: (error: any) => {
-      toastFail(error.response?.data.message || "");
+    onError: () => {
+      toastFail("Failed to fetch subjects");
     },
   });
 };

@@ -1,12 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
-import { toastFail } from "./service-toast";
-
-export interface IQuestionSetReq {
-  subject_id: string;
-  name: string;
-}
+import { toastFail, toastSuccess } from "./service-toast";
 
 export interface IQuestion {
   parent_id?: number;
@@ -29,8 +24,19 @@ interface ISolution {
   image?: string;
 }
 
+export interface IQuestionSetReq {
+  subject_id: string;
+  name: string;
+}
+
 export interface IQuestionSetRes extends IQuestionSetReq {
   id: number;
+}
+
+export interface IQuestionSetUpdateReq {
+  id: string;
+  name: string;
+  is_active?: boolean;
 }
 
 const getQuestionSet = (id: string) => () => {
@@ -38,18 +44,22 @@ const getQuestionSet = (id: string) => () => {
     api.subjects_set.get.replace("{subject_id}", id)
   );
 };
+
 const useGetQuestionSet = (id: string) => {
   return useQuery([api.subjects_set.get, id], getQuestionSet(id), {
     select: ({ data }) => data.data,
-    onError: (e: any) => {
-      toastFail(e.response?.data.message || "");
+    onError: () => {
+      toastFail("Failed to fetch Question set");
     },
   });
 };
 
 const createQuestionSet = (questionSetDetails: IQuestionSetReq) => {
   return httpClient.post(
-    api.subjects_set.get.replace("{subject_id}", questionSetDetails.subject_id),
+    api.subjects_set.post.replace(
+      "{subject_id}",
+      questionSetDetails.subject_id
+    ),
     questionSetDetails
   );
 };
@@ -60,10 +70,8 @@ const useCreateQuestionSet = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
     },
-    onError: (e: any) => {
-      toastFail(
-        e.response.data.errors[0].name || "Question set creation failed"
-      );
+    onError: () => {
+      toastFail("Question set creation failed");
     },
   });
 };
@@ -75,8 +83,8 @@ const getQuestion = () => {
 const useGetQuestion = () => {
   return useQuery(api.question.get, getQuestion, {
     select: ({ data }) => data.data,
-    onError: (e: any) => {
-      toastFail(e.response?.data.message || "");
+    onError: () => {
+      toastFail("Failed to fetch Question");
     },
   });
 };
@@ -91,8 +99,66 @@ const useCreateQuestion = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
     },
-    onError: (e: any) => {
-      toastFail(e.response.data.errors[0].name || "Question creation failed");
+    onError: () => {
+      toastFail("Question creation failed");
+    },
+  });
+};
+
+const getQuestionSetById = ({ id }: { id: string }) => {
+  return httpClient.get<SikaaiResponse<IQuestionSetRes[]>>(
+    api.subjects_set.getById.replace("{id}", id)
+  );
+};
+
+const useGetQuestionSetById = ({ id }: { id: string }) => {
+  return useQuery(
+    [api.subjects_set.getById, id],
+    () => getQuestionSetById({ id }),
+    {
+      enabled: !!id,
+      select: ({ data }) => data?.data[0],
+      onError: () => {
+        toastFail("Couldnot fetch question set");
+      },
+    }
+  );
+};
+
+const updateQuestionSet = (questionSetDetails: IQuestionSetUpdateReq) => {
+  return httpClient.patch(
+    api.subjects_set.patch.replace("{id}", questionSetDetails.id),
+    questionSetDetails
+  );
+};
+
+const useUpdateQuestionSet = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateQuestionSet, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.subjects_set.get);
+      queryClient.invalidateQueries(api.subjects_set.getById);
+      toastSuccess("Question set updated successfuly");
+    },
+    onError: () => {
+      toastFail("Couldnot update Question set");
+    },
+  });
+};
+
+const deleteQuestionSet = ({ id }: { id: string }) => {
+  return httpClient.delete(api.subjects_set.delete.replace("{id}", id));
+};
+
+const useDeleteQuestionSet = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteQuestionSet, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.subjects_set.get);
+      toastFail("Question set deleted successfuly");
+    },
+    onError: () => {
+      toastFail("Couldnot delete Question Set");
     },
   });
 };
@@ -102,4 +168,7 @@ export {
   useCreateQuestionSet,
   useCreateQuestion,
   useGetQuestion,
+  useGetQuestionSetById,
+  useUpdateQuestionSet,
+  useDeleteQuestionSet,
 };

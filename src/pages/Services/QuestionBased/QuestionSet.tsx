@@ -9,10 +9,13 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import {
   useCreateQuestionSet,
+  useDeleteQuestionSet,
   useGetQuestionSet,
+  useGetQuestionSetById,
+  useUpdateQuestionSet,
 } from "@sikaai/service/sikaai-question";
 import httpStatus from "http-status";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
@@ -22,10 +25,15 @@ const defaultValues = {
 };
 
 const QuestionSet = () => {
+  const [isEdit, setEdit] = useState(false);
+  const [questionSetId, setQuestionSetId] = useState("");
+
   const { register, handleSubmit, reset } = useForm({
     defaultValues: defaultValues,
   });
+
   const navigate = useNavigate();
+
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -49,6 +57,14 @@ const QuestionSet = () => {
 
   const encodedService = encodeURIComponent(service);
   const encodedCourse = encodeURIComponent(course);
+
+  // React queries
+  const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
+  const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
+  const { data: questionSet } = useGetQuestionSetById({ id: questionSetId });
+  const { mutateAsync: updateQuestionSet } = useUpdateQuestionSet();
+  const { mutateAsync: deleteQuestionSet } = useDeleteQuestionSet();
+  // React queries end
 
   const columns = useMemo(
     () => [
@@ -80,23 +96,25 @@ const QuestionSet = () => {
       {
         Header: "Action",
         Cell: ({ row }: CellProps<{ id: string }>) => {
-          // const onEdit = () => {
-          //   onModalOpen();
-          // };
+          const onEdit = () => {
+            setEdit(true);
+            setQuestionSetId(row?.original?.id);
+            onModalOpen();
+          };
           const onShowQues = () => {
             navigate(
               `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${row.original?.id}`
             );
           };
-          // const onDelete = () => {
-          //   console.log("here");
-          // };
+          const onDelete = () => {
+            deleteQuestionSet({ id: row?.original?.id });
+          };
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
-                // onEdit={onEdit}
+                onEdit={onEdit}
                 onShowQues={onShowQues}
-                // onDelete={onDelete}
+                onDelete={onDelete}
               />
             </Stack>
           );
@@ -106,22 +124,37 @@ const QuestionSet = () => {
     []
   );
 
-  // React queries
-  const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
-  const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
-  // React queries end
-
   const onSubmitHandler = async (questionSetDetails: typeof defaultValues) => {
-    const response = await createQuestionSet({
-      ...questionSetDetails,
-      subject_id: subjectId,
-    });
-    if (response.status === httpStatus.CREATED) {
-      toastSuccess("Question set created successful");
-      onModalClose();
-      reset();
+    if (isEdit) {
+      const response = await updateQuestionSet({
+        ...questionSetDetails,
+        id: questionSetId,
+      });
+      if (response.status === httpStatus.OK) {
+        reset(defaultValues);
+        setEdit(false);
+        setQuestionSetId("");
+        onModalClose();
+        toastSuccess("Question set updated successfuly");
+      }
+    } else {
+      const response = await createQuestionSet({
+        ...questionSetDetails,
+        subject_id: subjectId,
+      });
+      if (response.status === httpStatus.OK) {
+        reset(defaultValues);
+        onModalClose();
+        toastSuccess("Question set created successfuly");
+      }
     }
   };
+
+  useEffect(() => {
+    if (isEdit && !!questionSetId) {
+      reset({ ...defaultValues, name: questionSet?.name });
+    }
+  }, [questionSet]);
 
   return (
     <>

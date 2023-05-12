@@ -58,7 +58,6 @@ export function getPager(
   return totalPageArray;
 }
 
-// TODO: change table UI
 const styleTableWithRightBorder = {
   "& th": {
     boxShadow: "none",

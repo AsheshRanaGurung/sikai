@@ -89,14 +89,15 @@ axios.interceptors.response.use(
       if (error.response.status === httpStatus.UNAUTHORIZED) {
         try {
           const refreshToken = TokenService.getToken()?.refresh_token || "";
-          const response = await httpClient.post<{ data: { access: string } }>(
-            refreshTokenURL,
-            {
-              refresh: refreshToken,
-            }
-          );
+          const response = await httpClient.post<{
+            data: { access: string }[];
+          }>(refreshTokenURL, {
+            refresh: refreshToken,
+          });
+          console.log("hfdksjfs", response?.data?.data);
           const tokens = {
-            access_token: response.data.data.access,
+            // TODO: data is handled as array, define this properly
+            access_token: response?.data?.data?.[0]?.access,
             refresh_token: refreshToken,
           };
           TokenService.setToken(tokens);

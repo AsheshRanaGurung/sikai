@@ -29,14 +29,19 @@ export interface IForumComment {
   profile_picture: any;
 }
 
-export interface IForumCommentUpdateReq {
-  text_content: string;
-  image_content?: any;
-  forum_id: string;
+// To create comment
+export interface IForumCommentReq {
   id: string;
+  text_content: string;
 }
 
-export interface IForumCommentParams {
+export interface IForumCommentUpdateReq extends IForumCommentReq {
+  id: string;
+  forum_id: string;
+  text_content: string;
+}
+
+export interface IForumCommentDelParams {
   forum_id: string;
   id: string;
 }
@@ -86,7 +91,7 @@ const useGetComment = ({ id }: { id: string }) => {
   });
 };
 
-const createComment = (commentDetails: IForumComment) => {
+const createComment = (commentDetails: IForumCommentReq) => {
   return httpClient.post(
     api.comment.post.replace("{forum_id}", commentDetails.id),
     commentDetails
@@ -98,6 +103,7 @@ const useCreateComment = () => {
   return useMutation(createComment, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.comment.get);
+      toastSuccess("Comment created sucessfuly");
     },
     onError: (e: any) => {
       toastFail(e.response.data.error[0].name || "Comment failed");
@@ -106,10 +112,8 @@ const useCreateComment = () => {
 };
 
 const getCommentById = ({ forum_id, id }: { forum_id: string; id: string }) => {
-  // TODO: use api.comment.replace
-  // but there are two things to be removed
   return httpClient.get<SikaaiResponse<IForumComment[]>>(
-    `api/v1/forum/${forum_id}/comment/${id}/`
+    api.comment.getById.replace("{id}", id).replace("{forum_id}", forum_id)
   );
 };
 
@@ -133,7 +137,6 @@ const useGetCommentById = ({
   );
 };
 
-// TODO: IForumCommentReq create a new type with the optional filed being compulsary
 const updateComment = (commentDetails: IForumCommentUpdateReq) => {
   return httpClient.patch(
     api.comment.patch
@@ -147,6 +150,8 @@ const useUpdateComment = () => {
   return useMutation(updateComment, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.comment.get);
+      queryClient.invalidateQueries(api.comment.getById);
+      toastSuccess("Comment updated successfuly");
     },
     onError: () => {
       toastFail("Failed updating comment");
@@ -154,7 +159,7 @@ const useUpdateComment = () => {
   });
 };
 
-const deleteComment = (forumCommentParams: IForumCommentParams) => {
+const deleteComment = (forumCommentParams: IForumCommentDelParams) => {
   return httpClient.delete(
     api.comment.delete
       .replace("{forum_id}", forumCommentParams.forum_id)

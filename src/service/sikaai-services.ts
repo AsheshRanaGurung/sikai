@@ -35,8 +35,8 @@ const getServices = () => {
 const useGetServices = () => {
   return useQuery([api.service.get], getServices, {
     select: ({ data }) => data.data,
-    onError: (error: any) => {
-      toastFail(error.response?.data.message || "");
+    onError: () => {
+      toastFail("Failed to fetch services");
     },
   });
 };
