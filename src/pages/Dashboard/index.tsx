@@ -1,6 +1,5 @@
 import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import {
-  ActiveTeacherIcon,
   ActiveUsersIcon,
   TotalAddIcon,
   TotalQuesCreatedIcon,
