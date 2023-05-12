@@ -13,17 +13,26 @@ export interface ICourseResponse {
 export interface ICourseResById {
   name: string;
   description: string;
-  course_info: CourseInfo;
+  course_info: ICourseInfo;
 }
 
-export interface ICourseReqById extends ICourseResById {
+type ICourseInfoById = Omit<ICourseInfo, "time_limit_in_seconds">;
+
+export interface ICourseReqById {
+  // export interface ICourseReqById extends ICourseResById {
+  //   id: string;
+  // }
+  name: string;
+  description: string;
+  course_info: ICourseInfoById;
   id: string;
 }
 
-export interface CourseInfo {
+export interface ICourseInfo {
   deduction_mark: string;
   time_limit: string;
   total_questions: number;
+  time_limit_in_seconds: string;
 }
 
 const getCourse = (id: string) => () => {
@@ -69,6 +78,7 @@ const useUpdateCourse = () => {
   return useMutation(updateCourse, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.courses.get);
+      queryClient.invalidateQueries(api.courses.getById);
       toastSuccess("Course updated successfuly!");
     },
     onError: () => {

@@ -29,7 +29,7 @@ const defaultValues = {
   description: "",
   totalQuestions: 0,
   negativeMarking: "",
-  timer: "",
+  timer: 0,
 };
 
 const Courses = () => {
@@ -115,17 +115,18 @@ const Courses = () => {
   const onSubmitHandler = async (courseDetails: typeof defaultValues) => {
     const data = {
       id: courseId,
-      name: courseDetails.courseName,
-      description: courseDetails.description,
+      name: courseDetails?.courseName,
+      description: courseDetails?.description,
       course_info: {
-        deduction_mark: courseDetails.negativeMarking,
-        time_limit: courseDetails.timer,
-        total_questions: courseDetails.totalQuestions,
+        deduction_mark: courseDetails?.negativeMarking,
+        // TODO: check backend request body
+        time_limit: courseDetails?.timer.toString(),
+        total_questions: courseDetails?.totalQuestions,
       },
     };
     const response = await createCourse(data);
     try {
-      if (response.status === httpStatus.OK) {
+      if (response?.status === httpStatus.OK) {
         setEdit(false);
         setCourseId("");
         onModalClose();
@@ -143,7 +144,7 @@ const Courses = () => {
         description: course?.description,
         totalQuestions: course?.course_info?.total_questions,
         negativeMarking: course?.course_info?.deduction_mark,
-        timer: course?.course_info?.time_limit,
+        timer: +course?.course_info?.time_limit_in_seconds / 60,
       });
     }
   }, [course]);
@@ -169,7 +170,9 @@ const Courses = () => {
       <ModalForm
         title={"Edit new course"}
         isModalOpen={isModalOpen}
-        closeModal={onModalClose}
+        closeModal={() => {
+          onModalClose();
+        }}
         resetButttonText={"Cancel"}
         submitHandler={handleSubmit(onSubmitHandler)}
         submitButtonText={edit ? "Update" : "Add"}
@@ -191,6 +194,7 @@ const Courses = () => {
               control="input"
               type="number"
               name="negativeMarking"
+              steps={0.1}
               register={register}
               label={"Negative Marking"}
               placeholder={"negative marking"}

@@ -32,7 +32,7 @@ export const api = {
   },
   forum: {
     get: "/api/v1/forum/",
-    getById: "/api/v1/forum/{id}",
+    getById: "/api/v1/forum/{id}/",
   },
   about: {
     fetch: "/api/v1/info/about-us-content/",
@@ -75,7 +75,6 @@ export const api = {
   },
 };
 
-// /api/v1/assessment/course/{course_id}/model-set/
 export interface SikaaiResponse<T = unknown> {
   data: T;
   status: 0 | 1;

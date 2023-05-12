@@ -28,6 +28,7 @@ const Input = ({
   onIconClick,
   required,
   color,
+  steps,
   ...rest
 }: IInput) => {
   return (
@@ -74,6 +75,7 @@ const Input = ({
         <ChakraInput
           id={name}
           type={type}
+          step={steps ? steps : 0.1}
           _placeholder={{ fontSize: "16px" }}
           {...register(name, rules)}
           {...rest}
@@ -107,5 +109,6 @@ export interface IInput<TFieldValues extends FieldValues = FieldValues>
   required?: boolean;
   labelDisabled?: string;
   color?: string;
+  steps?: number;
 }
 export default Input;

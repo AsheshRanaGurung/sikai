@@ -10,7 +10,6 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
-  Select,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -111,8 +110,8 @@ const ForumComment = () => {
   };
 
   const handleDelete = async () => {
-    const response = await deleteComment({ forum_id: forumId, id: deleteId });
     try {
+      const response = await deleteComment({ forum_id: forumId, id: deleteId });
       if (response.status === httpStatus.NO_CONTENT) {
         onModalClose();
       }
@@ -196,10 +195,10 @@ const ForumComment = () => {
           <Text fontWeight={"bold"} color={sikaai_colors.primary}>
             Comments
           </Text>
-          <Select width={"140px"} size={"xs"} color={sikaai_colors.primary}>
+          {/* <Select width={"140px"} size={"xs"} color={sikaai_colors.primary}>
             <option>Most Recent</option>
             <option>All Comment</option>
-          </Select>
+          </Select> */}
         </Flex>
         <Box>
           {dataComments?.map(dataComment => {
@@ -347,7 +346,7 @@ const ForumComment = () => {
         closeModal={onModalClose}
         resetButttonText={"Close"}
         submitButtonText={"Delete"}
-        handleSubmit={() => handleDelete()}
+        submitHandler={handleDelete}
         modalSize={"sm"}
       >
         <Text>Are you sure you want to delete?</Text>

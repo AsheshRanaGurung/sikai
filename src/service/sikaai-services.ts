@@ -17,12 +17,12 @@ export interface ICourseResponse {
   name: string;
   description: string;
   service: number;
-  course_info: CourseInfo;
+  course_info: ICourseInfo;
   is_active: boolean;
   created_at: string;
 }
 
-export interface CourseInfo {
+export interface ICourseInfo {
   deduction_mark: string;
   time_limit: string;
   total_questions: number;
