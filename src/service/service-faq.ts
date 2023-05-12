@@ -33,7 +33,7 @@ const useGetFaq = () => {
   return useQuery(api.faq.get, getFaq, {
     select: ({ data }) => data.data,
     onError: (e: any) => {
-      toastFail(e.response?.data.message || "");
+      toastFail(e.response?.data.message || "Couldn't fetch FAQ");
     },
   });
 };
@@ -51,7 +51,7 @@ const useDelFaq = () => {
       queryClient.invalidateQueries(api.faq.get);
     },
     onError: (e: any) => {
-      toastFail(e.response?.data.message || "");
+      toastFail(e.response?.data.message || "Couldn't delete FAQ");
     },
   });
 };
