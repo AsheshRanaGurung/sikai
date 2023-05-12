@@ -19,14 +19,14 @@ import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { useGetForumById } from "@sikaai/service/sikaai-forum";
 import {
   useCreateComment,
-  useDeleteComment,
   useGetComment,
   useGetCommentById,
-  useGetForumById,
   useUpdateComment,
-} from "@sikaai/service/sikaai-forum";
+  useDeleteComment,
+} from "@sikaai/service/sikaai-forumComment";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { timeAgo } from "@sikaai/utils/timeAgo";
 import httpStatus from "http-status";
@@ -36,12 +36,14 @@ import { useParams } from "react-router-dom";
 
 const defaultValues = {
   text_content: "",
+  is_pinned_comment: true,
 };
 
-const ForumAnswer2 = () => {
+const ForumComment = () => {
   const [commentId, setCommentId] = useState("");
   const [deleteId, setDeleteId] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const [isPin, setIsPin] = useState(false);
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: defaultValues,
@@ -79,22 +81,28 @@ const ForumAnswer2 = () => {
   } = useDisclosure();
 
   const onSubmitHandler = async (commentDetails: typeof defaultValues) => {
-    if (isEdit) {
+    if (isEdit || isPin) {
       const response = await updateComment({
         ...commentDetails,
         forum_id: forumId,
         id: commentId,
+        is_pinned_comment: isPin
+          ? !commentDetails.is_pinned_comment
+          : commentDetails.is_pinned_comment,
       });
       if (response.status === httpStatus.OK) {
         setIsEdit(false);
+        setIsPin(false);
         setCommentId("");
         onEditModalClose();
+        onUnpinModalClose();
         reset(defaultValues);
       }
     } else {
       const response = await createComment({
         ...commentDetails,
         id: forumId,
+        is_pinned_comment: true,
       });
       if (response.status === httpStatus.CREATED) {
         reset(defaultValues);
@@ -114,10 +122,17 @@ const ForumAnswer2 = () => {
   };
 
   useEffect(() => {
-    if (isEdit) {
-      reset({ ...defaultValues, text_content: dataComment?.text_content });
+    if (isEdit || isPin) {
+      reset({
+        ...defaultValues,
+        text_content: dataComment?.text_content,
+        is_pinned_comment: dataComment?.is_pinned_comment,
+      });
     }
-  }, [dataComment]);
+    // TODO: check param and implement in another places too
+    // if isEdit value changes then the data is refetched
+    // if isEdit is not kept then unpin doesnot work
+  }, [dataComment, isEdit, isPin]);
 
   return (
     <>
@@ -250,10 +265,16 @@ const ForumAnswer2 = () => {
                             <PopoverBody>
                               <Button
                                 variant={"ghost"}
-                                onClick={onUnpinModalOpen}
+                                onClick={() => {
+                                  setCommentId(dataComment?.id);
+                                  setIsPin(true);
+                                  onUnpinModalOpen();
+                                }}
                                 size={"lg"}
                               >
-                                Unpin
+                                {dataComment?.is_pinned_comment
+                                  ? "Unpin"
+                                  : "Pin"}
                               </Button>
                             </PopoverBody>
                             <PopoverBody>
@@ -284,14 +305,17 @@ const ForumAnswer2 = () => {
 
       {/* TODO: make generic for unpin and delete */}
       <ModalForm
-        title={"Unpin"}
+        title={dataComment?.is_pinned_comment ? "Unpin" : "Pin"}
         isModalOpen={isUnpinModalOpen}
         closeModal={onUnpinModalClose}
         resetButttonText={"Close"}
-        submitButtonText={"Unpin"}
+        submitButtonText={dataComment?.is_pinned_comment ? "Unpin" : "Pin"}
+        submitHandler={handleSubmit(onSubmitHandler)}
         modalSize={"sm"}
       >
-        <Text>Are you sure you want to unpin the comment?</Text>
+        <Text>{`Are you sure you want to ${
+          dataComment?.is_pinned_comment ? "Unpin" : "Pin"
+        } the comment?`}</Text>
       </ModalForm>
 
       {/* edit */}
@@ -332,4 +356,4 @@ const ForumAnswer2 = () => {
   );
 };
 
-export default ForumAnswer2;
+export default ForumComment;

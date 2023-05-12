@@ -94,7 +94,6 @@ axios.interceptors.response.use(
           }>(refreshTokenURL, {
             refresh: refreshToken,
           });
-          console.log("hfdksjfs", response?.data?.data);
           const tokens = {
             // TODO: data is handled as array, define this properly
             access_token: response?.data?.data?.[0]?.access,

@@ -10,7 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import {
-  BlueTickIcon,
   DotIcon,
   DoubleCommentIcon,
   RightArrowIcon,
@@ -41,9 +40,10 @@ const Forum = () => {
       {/* TODO: change colorscheme to primary */}
       <Tabs variant="soft-rounded" colorScheme="blue">
         <TabList>
+          {/* TODO: discussion with design */}
           <Tab>Recent</Tab>
-          <Tab>Popular</Tab>
-          <Tab>Pending Reply</Tab>
+          {/* <Tab>Popular</Tab>
+          <Tab>Pending Reply</Tab> */}
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -93,16 +93,18 @@ const Forum = () => {
                       </Flex>
                     </Box>
                     <Spacer />
-                    <BlueTickIcon />
+                    {/* TODO: when role === admin replied to comment blue tick */}
+                    {/* backend api waiting */}
+                    {/* <BlueTickIcon /> */}
                     <RightArrowIcon />
                   </Flex>
                 );
               })}
             </Box>
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <p>two!</p>
-          </TabPanel>
+          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </>

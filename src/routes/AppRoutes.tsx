@@ -24,8 +24,7 @@ import {
 import { useEffect } from "react";
 import Spinner from "@sikaai/components/spinner";
 import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
-// import ForumAnswer from "@sikaai/pages/Forum/ForumAnswer";
-import ForumAnswer2 from "@sikaai/pages/Forum/ForumAnswer";
+import ForumAnswer from "@sikaai/pages/Forum/ForumComment";
 import Roles from "@sikaai/pages/roles";
 
 const routes = [
@@ -153,8 +152,7 @@ const routes = [
     path: `${NAVIGATION_ROUTES.FORUM_ANSWER}/:id`,
     element: (
       <Layout>
-        {/* <ForumAnswer /> */}
-        <ForumAnswer2 />
+        <ForumAnswer />
       </Layout>
     ),
   },
