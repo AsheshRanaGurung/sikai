@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { SikaaiResponse, api } from "./service-api";
 import { httpClient } from "./service-axois";
+import { toFormData } from "@sikaai/utils/form-data";
 import { toastFail } from "./service-toast";
 
 export interface IAboutUs {
@@ -9,6 +10,10 @@ export interface IAboutUs {
   sub_heading?: string;
   description: string;
   created_at: string;
+}
+
+export interface IAboutUsMedia {
+  video: File | undefined;
 }
 
 export type IEditAboutUs = Omit<IAboutUs, "created_at">;
@@ -46,4 +51,17 @@ const useEditAboutUs = () => {
   });
 };
 
-export { useFetchAboutUs, useEditAboutUs };
+const saveMedia = (video: IAboutUsMedia) => {
+  return httpClient.post(api.about.saveVideo, toFormData(video));
+};
+
+const useSaveVideo = () => {
+  const clientQuery = useQueryClient();
+  return useMutation(saveMedia, {
+    onSuccess: () => {
+      clientQuery.invalidateQueries(api.about.fetch);
+    },
+  });
+};
+
+export { useFetchAboutUs, useEditAboutUs, useSaveVideo };

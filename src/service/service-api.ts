@@ -37,6 +37,7 @@ export const api = {
   about: {
     fetch: "/api/v1/info/about-us-content/",
     edit: "/api/v1/info/about-us-content/{id}/",
+    saveVideo: "/api/v1/info/about-us-media/",
   },
   comment: {
     get: "/api/v1/forum/{forum_id}/comment/",
