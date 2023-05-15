@@ -79,7 +79,9 @@ const FormBased = () => {
   const { data: tableData = [], isLoading: tableDataLoading } = useGetForm({
     id: id,
   });
-  const { data = [] } = useGetFormById({ id: modalId });
+  const { data, isFetching: isFetchingFormDetails } = useGetFormById({
+    id: modalId,
+  });
   // React queries end
 
   return (
@@ -103,6 +105,8 @@ const FormBased = () => {
         />
 
         <ModalForm
+          // TODO: change this to default values
+          isLoading={isFetchingFormDetails}
           isModalOpen={isModalOpen}
           title={"User Details"}
           closeModal={onModalClose}
@@ -131,24 +135,24 @@ const FormBased = () => {
               </Box>
               <Box>
                 <Text fontSize={"16px"} mb={2}>
-                  {data[0]?.full_name}
+                  {data?.full_name}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  {data[0]?.email}
+                  {data?.email}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  {data[0]?.address}
+                  {data?.address}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  {data[0]?.phone_number}
+                  {data?.phone_number}
                 </Text>
                 <Text fontSize={"16px"} mb={2}>
-                  {data[0]?.college}
+                  {data?.college}
                 </Text>
               </Box>
             </Flex>
             <Box border="1px" borderColor={sikaai_colors.gray} p={2}>
-              <Text fontSize={"16px"}>{data[0]?.content}</Text>
+              <Text fontSize={"16px"}>{data?.content}</Text>
             </Box>
           </>
         </ModalForm>

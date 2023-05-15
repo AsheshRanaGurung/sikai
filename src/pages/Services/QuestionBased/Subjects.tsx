@@ -12,7 +12,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
 const Subjects = () => {
-  const { register } = useForm();
+  const {
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
   const {
     isOpen: isModalOpen,
@@ -124,7 +128,10 @@ const Subjects = () => {
         <ModalForm
           isModalOpen={isModalOpen}
           title={"Add service"}
-          closeModal={onModalClose}
+          closeModal={() => {
+            reset();
+            onModalClose();
+          }}
           resetButttonText={"Cancel"}
           submitButtonText={"Create"}
         >
@@ -136,6 +143,7 @@ const Subjects = () => {
               name="name"
               placeholder={"Service Name"}
               label={"Service Name"}
+              error={errors?.name?.message ?? ""}
             />
             <FormControl
               control="textArea"
@@ -144,6 +152,7 @@ const Subjects = () => {
               name="description"
               placeholder={"Description"}
               label={"Description"}
+              error={errors?.description?.message ?? ""}
             />
           </>
         </ModalForm>

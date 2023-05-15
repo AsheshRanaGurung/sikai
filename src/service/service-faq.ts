@@ -18,6 +18,7 @@ const useCreateFaq = () => {
   return useMutation(createFaq, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.faq.get);
+      toastSuccess("Faq created");
     },
     onError: (e: any) => {
       toastFail(e?.response?.data?.error[0]?.name || "Faq creation failed");

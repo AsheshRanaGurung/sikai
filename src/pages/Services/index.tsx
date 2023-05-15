@@ -1,9 +1,10 @@
-import { Skeleton, Stack, useDisclosure } from "@chakra-ui/react";
+import { Stack, useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import Skeleton from "@sikaai/components/skeleton";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import {
   useGetServiceById,
@@ -15,16 +16,30 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { CellProps } from "react-table";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const defaultValues = {
   name: "",
   description: "",
 };
 
+const validationSchema = Yup.object({
+  name: Yup.string().required("This field is required"),
+  description: Yup.string().required("This field is required"),
+});
+
 const Services = () => {
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultValues,
+    resolver: yupResolver(validationSchema),
   });
+
   const [isUpdate, setIsUpdate] = useState(false);
   const [updateId, setUpdateId] = useState("");
   const navigate = useNavigate();
@@ -117,7 +132,8 @@ const Services = () => {
   // React queries
   const { data: tableData = [], isFetching: tableDataFetching } =
     useGetServices();
-  const { mutateAsync: updateService } = useUpdateServices();
+  const { mutateAsync: updateService, isLoading: isUpdatingService } =
+    useUpdateServices();
   const { data: service, isFetching: serviceLoading } =
     useGetServiceById(updateId);
   // React queries end
@@ -128,6 +144,7 @@ const Services = () => {
     if (response?.status === httpStatus.OK) {
       onModalClose();
       setUpdateId("");
+      setIsUpdate(false);
       reset(defaultValues);
     }
   };
@@ -140,7 +157,7 @@ const Services = () => {
         description: service.description,
       });
     }
-  }, [service, updateId]);
+  }, [service, updateId, isUpdate]);
 
   return (
     <>
@@ -160,20 +177,20 @@ const Services = () => {
         />
 
         <ModalForm
+          isLoading={isUpdatingService}
           isModalOpen={isModalOpen}
           title={"Edit service"}
-          closeModal={onModalClose}
+          closeModal={() => {
+            setIsUpdate(false);
+            reset(defaultValues);
+            onModalClose();
+          }}
           resetButttonText={"Cancel"}
           submitButtonText={isUpdate ? "Update" : "Add"}
           submitHandler={handleSubmit(onSubmitHandler)}
         >
           {serviceLoading ? (
-            <Stack>
-              <Skeleton height="20px" />
-              <Skeleton height="40px" />
-              <Skeleton height="20px" />
-              <Skeleton height="40px" />
-            </Stack>
+            <Skeleton count={4} height={"40px"} />
           ) : (
             <>
               <FormControl
@@ -183,6 +200,7 @@ const Services = () => {
                 name="name"
                 placeholder={"Service Name"}
                 label={"Service Name"}
+                error={errors?.name?.message || ""}
               />
               <FormControl
                 control="textArea"
@@ -191,6 +209,7 @@ const Services = () => {
                 name="description"
                 placeholder={"Description"}
                 label={"Description"}
+                error={errors?.description?.message || ""}
               />
             </>
           )}

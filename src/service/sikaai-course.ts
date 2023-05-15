@@ -19,6 +19,7 @@ export interface ICourseResById {
 type ICourseInfoById = Omit<ICourseInfo, "time_limit_in_seconds">;
 
 export interface ICourseReqById {
+  // TODO: type vs interface
   // export interface ICourseReqById extends ICourseResById {
   //   id: string;
   // }

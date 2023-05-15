@@ -45,7 +45,7 @@ const getFormById =
 const useGetFormById = ({ id }: { id: string }) => {
   return useQuery([api.form.get, id], getFormById({ id }), {
     enabled: !!id,
-    select: ({ data }) => data.data,
+    select: ({ data }) => data?.data?.[0],
     onError: (e: any) => {
       toastFail(e.response.data.errors[0].name || "Failed to  access data");
     },

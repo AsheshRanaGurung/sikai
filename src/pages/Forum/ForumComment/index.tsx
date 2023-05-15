@@ -32,33 +32,48 @@ import httpStatus from "http-status";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const defaultValues = {
   text_content: "",
   is_pinned_comment: true,
 };
 
+const validationSchema = Yup.object({
+  text_content: Yup.string().required("Please enter your answer first"),
+});
+
 const ForumComment = () => {
   const [commentId, setCommentId] = useState("");
   const [deleteId, setDeleteId] = useState("");
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setEdit] = useState(false);
   const [isPin, setIsPin] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultValues,
+    resolver: yupResolver(validationSchema),
   });
   const { id: forumId = "" } = useParams();
 
   // react queries
-  const { mutateAsync: createComment } = useCreateComment();
+  const { mutateAsync: createComment, isLoading: isCreatingComment } =
+    useCreateComment();
   const { data: dataForum } = useGetForumById({ id: forumId });
   const { data: dataComments } = useGetComment({ id: forumId });
   const { data: dataComment } = useGetCommentById({
     forum_id: forumId,
     id: commentId,
   });
-  const { mutateAsync: updateComment } = useUpdateComment();
-  const { mutateAsync: deleteComment } = useDeleteComment();
+  const { mutateAsync: updateComment, isLoading: isUpdatingComment } =
+    useUpdateComment();
+  const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
+    useDeleteComment();
   // react queries end
 
   const {
@@ -90,7 +105,7 @@ const ForumComment = () => {
           : commentDetails.is_pinned_comment,
       });
       if (response.status === httpStatus.OK) {
-        setIsEdit(false);
+        setEdit(false);
         setIsPin(false);
         setCommentId("");
         onEditModalClose();
@@ -145,35 +160,36 @@ const ForumComment = () => {
         ]}
       />
 
-      <Box backgroundColor={sikaai_colors.white} p={4} borderRadius={10}>
-        <Box backgroundColor={sikaai_colors.gray} p={4} borderRadius={10}>
-          <Flex alignItems={"center"} gap={3}>
-            <Image
-              borderRadius="full"
-              boxSize="36px"
-              // src={dataForum?.question_image}
-              src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
-              alt="profile"
-            />
-            <Text>{dataForum?.question_text}</Text>
+      <Box backgroundColor={sikaai_colors.gray} p={4} borderRadius={10} mb={2}>
+        <Flex alignItems={"center"} gap={3}>
+          <Image
+            borderRadius="full"
+            boxSize="36px"
+            // src={dataForum?.question_image}
+            src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
+            alt="profile"
+          />
+          <Text>{dataForum?.question_text}</Text>
+        </Flex>
+        <Box marginLeft={45}>
+          <Flex gap={3}>
+            <Text color={"blue"}>{dataForum?.full_name}</Text>
+            <Text color={sikaai_colors.gray_text}>
+              {dataForum && timeAgo(dataForum?.created_at)}
+            </Text>
           </Flex>
-          <Box marginLeft={45}>
-            <Flex gap={3}>
-              <Text color={"blue"}>{dataForum?.full_name}</Text>
-              <Text color={sikaai_colors.gray_text}>
-                {dataForum && timeAgo(dataForum?.created_at)}
-              </Text>
-            </Flex>
-          </Box>
         </Box>
+      </Box>
+      <Box backgroundColor={sikaai_colors.white} p={4} borderRadius={10}>
         <Flex mt={5} gap={3} direction={"column"}>
           <FormControl
-            control="input"
+            control="textArea"
             size="lg"
             register={register}
             name="text_content"
-            placeholder="Write your answer"
+            placeholder="Write your answer ......"
             label={"Write your answer..."}
+            error={errors?.text_content?.message ?? ""}
           />
           {/* <FormControl
             control="file"
@@ -181,7 +197,12 @@ const ForumComment = () => {
             register={register}
             name="image_content"
           /> */}
-          <Button onClick={handleSubmit(onSubmitHandler)}>Post</Button>
+          <Button
+            isLoading={isCreatingComment}
+            onClick={handleSubmit(onSubmitHandler)}
+          >
+            Post
+          </Button>
         </Flex>
       </Box>
 
@@ -201,6 +222,7 @@ const ForumComment = () => {
           </Select> */}
         </Flex>
         <Box>
+          {dataComments?.length === 0 && <Text>No comments yet...</Text>}
           {dataComments?.map(dataComment => {
             return (
               <div key={dataComment?.id}>
@@ -253,7 +275,7 @@ const ForumComment = () => {
                                 variant={"ghost"}
                                 onClick={() => {
                                   setCommentId(dataComment?.id);
-                                  setIsEdit(true);
+                                  setEdit(true);
                                   onEditModalOpen();
                                 }}
                                 size={"lg"}
@@ -304,6 +326,7 @@ const ForumComment = () => {
 
       {/* TODO: make generic for unpin and delete */}
       <ModalForm
+        isLoading={isUpdatingComment}
         title={dataComment?.is_pinned_comment ? "Unpin" : "Pin"}
         isModalOpen={isUnpinModalOpen}
         closeModal={onUnpinModalClose}
@@ -319,9 +342,14 @@ const ForumComment = () => {
 
       {/* edit */}
       <ModalForm
+        isLoading={isUpdatingComment}
         title={"Edit"}
         isModalOpen={isEditModalOpen}
-        closeModal={onEditModalClose}
+        closeModal={() => {
+          reset(defaultValues);
+          setEdit(false);
+          onEditModalClose();
+        }}
         resetButttonText={"Close"}
         submitButtonText={"Edit"}
         submitHandler={handleSubmit(onSubmitHandler)}
@@ -329,7 +357,7 @@ const ForumComment = () => {
         // modalSize={"sm"}
       >
         <FormControl
-          control="input"
+          control="textArea"
           size="lg"
           register={register}
           name="text_content"
@@ -341,6 +369,7 @@ const ForumComment = () => {
 
       {/* delete */}
       <ModalForm
+        isLoading={isDeletingComment}
         title={"Delete"}
         isModalOpen={isModalOpen}
         closeModal={onModalClose}

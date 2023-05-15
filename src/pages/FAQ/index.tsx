@@ -33,6 +33,8 @@ import {
 import httpStatus from "http-status";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import { useEffect, useState } from "react";
+import parse from "html-react-parser";
+
 const initialValue = {
   id: 0,
   question: "",
@@ -40,11 +42,19 @@ const initialValue = {
 };
 
 const FAQ = () => {
+  // TODO: is this better or initialization is better
   const [editId, setEditId] = useState<null | number>(null);
   const [delId, setDelId] = useState<number>();
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setEdit] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+    setValue,
+  } = useForm({
     defaultValues: initialValue,
   });
 
@@ -60,9 +70,9 @@ const FAQ = () => {
     onClose: onDelModalClose,
   } = useDisclosure();
 
-  const { mutateAsync: createFaq } = useCreateFaq();
-  const { mutateAsync: updateFaq } = useUpdateFaq();
-  const { mutateAsync: delFaq } = useDelFaq();
+  const { mutateAsync: createFaq, isLoading: isCreatingFaq } = useCreateFaq();
+  const { mutateAsync: updateFaq, isLoading: isUpdatingFaq } = useUpdateFaq();
+  const { mutateAsync: delFaq, isLoading: isDeletingFaq } = useDelFaq();
   const { data: dataFaq } = useGetFaq();
 
   useEffect(() => {
@@ -73,16 +83,15 @@ const FAQ = () => {
   const onCloseHandler = () => {
     onModalClose();
     reset(initialValue);
-    setIsEdit(false);
+    setEdit(false);
   };
-  const onSubmit = async (faqs: IFaq) => {
+  const onSubmitHandler = async (faqs: IFaq) => {
     if (isEdit && editId !== null) {
       const response = await updateFaq({
         ...faqs,
         id: editId,
       });
       if (response.status === httpStatus.OK) {
-        toastSuccess("Faq updated");
         onCloseHandler();
       }
     } else {
@@ -90,11 +99,11 @@ const FAQ = () => {
         ...faqs,
       });
       if (response.status === httpStatus.CREATED) {
-        toastSuccess("Faq created");
         onCloseHandler();
       }
     }
   };
+
   const handleDelete = async (id: number) => {
     const response = await delFaq(id.toString());
 
@@ -134,12 +143,13 @@ const FAQ = () => {
         </Flex>
 
         <ModalForm
+          isLoading={isUpdatingFaq || isCreatingFaq}
           isModalOpen={isOpen}
           title={isEdit ? "Edit FAQ" : "Add FAQ"}
           closeModal={onCloseHandler}
           resetButttonText={"Cancel"}
           submitButtonText={isEdit ? "Update" : "Add"}
-          submitHandler={handleSubmit(onSubmit)}
+          submitHandler={handleSubmit(onSubmitHandler)}
         >
           <>
             <FormControl
@@ -149,21 +159,25 @@ const FAQ = () => {
               name="question"
               placeholder={"your question"}
               label={"Question"}
-              isRequired
+              required
             />
+
             <FormControl
-              control="textArea"
-              size="lg"
-              register={register}
+              control="editor"
               name="answer"
-              placeholder={"Type where"}
               label={"Answer"}
-              isRequired
+              height={"100"}
+              placeholder={"Type here ..."}
+              data={watch("answer")}
+              onChange={(data: string) => setValue("answer", data)}
+              error={errors?.answer?.message ?? ""}
+              required
             />
           </>
         </ModalForm>
 
         <ModalForm
+          isLoading={isDeletingFaq}
           isModalOpen={isModalDelete}
           title={"Delete"}
           closeModal={onDelModalClose}
@@ -199,7 +213,7 @@ const FAQ = () => {
                   background={sikaai_colors.primary_light}
                   borderRadius={"0 0 8px 8px"}
                 >
-                  {faq?.answer}
+                  {parse(faq?.answer)}
                   <Flex
                     justify={"flex-end"}
                     gap={4}
@@ -216,7 +230,7 @@ const FAQ = () => {
                         width={"20px"}
                         onClick={() => {
                           setEditId(faq?.id ?? null);
-                          setIsEdit(true);
+                          setEdit(true);
                           onModalOpen();
                         }}
                         aria-label="settings"

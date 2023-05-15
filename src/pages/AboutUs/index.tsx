@@ -3,7 +3,7 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
-import DropzoneComponent from "@sikaai/components/form/DropzoneComponent/DropzoneComponent";
+import DropzoneComponent from "@sikaai/components/form/DropzoneComponent";
 import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import {
@@ -29,9 +29,12 @@ const AboutUs = () => {
   const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
   const [file, setFile] = useState<File | undefined>(undefined);
 
+  // react queries
   const { data: aboutUsData = [] } = useFetchAboutUs();
   const { mutateAsync: editAboutUs, isLoading: isUpdating } = useEditAboutUs();
-  const { mutateAsync: mutateVideo } = useSaveVideo();
+  const { mutateAsync: createVideo, isLoading: isCreatingVideo } =
+    useSaveVideo();
+  // react queries end
 
   const { onOpen, isOpen, onClose } = useDisclosure();
 
@@ -119,7 +122,7 @@ const AboutUs = () => {
 
   const onVideUpload = async () => {
     try {
-      const saveVideoResponse = await mutateVideo({ video: file });
+      const saveVideoResponse = await createVideo({ video: file });
       if (saveVideoResponse?.status == httpStatus.OK) {
         toastSuccess("video saved");
         setAcceptedFiles([]);
@@ -148,18 +151,24 @@ const AboutUs = () => {
           }}
         />
       </Box>
-      <Button width={"100%"} onClick={onVideUpload} marginY={5}>
+      {/* TODO: change this button */}
+      <Button
+        width={"100%"}
+        onClick={onVideUpload}
+        marginY={5}
+        isLoading={isCreatingVideo}
+      >
         Upload Video
       </Button>
       <DataTable data={aboutUsData ?? []} columns={columns} />
       <ModalForm
+        isLoading={isUpdating}
         isModalOpen={isOpen}
         title={"Edit About Us"}
         closeModal={onCloseHandler}
         resetButttonText={"Cancel"}
         submitButtonText={"Update"}
         submitHandler={handleSubmit(onSubmitHandler)}
-        isLoading={isUpdating}
       >
         <FormControl
           control="input"

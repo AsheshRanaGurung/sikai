@@ -11,6 +11,7 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import FormControl from "@sikaai/components/form/FormControl";
+import Skeleton from "@sikaai/components/skeleton";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import {
   useGetCourse,
@@ -23,6 +24,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValues = {
   courseName: "",
@@ -31,6 +34,20 @@ const defaultValues = {
   negativeMarking: "",
   timer: 0,
 };
+
+const vaidationSchema = Yup.object({
+  courseName: Yup.string().required("Course Name is required"),
+  description: Yup.string().required("Description is required"),
+  totalQuestions: Yup.number()
+    .required("Total questions is required")
+    .typeError("Enter valid number."),
+  negativeMarking: Yup.number()
+    .required("Negative marking is required")
+    .typeError("Enter valid number."),
+  timer: Yup.number()
+    .required("Value for timer is required")
+    .typeError("Enter valid number."),
+});
 
 const Courses = () => {
   const [courseId, setCourseId] = useState("");
@@ -44,8 +61,14 @@ const Courses = () => {
 
   const navigate = useNavigate();
 
-  const { register, reset, handleSubmit } = useForm({
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultValues,
+    resolver: yupResolver(vaidationSchema),
   });
 
   // For customized breadcrumb
@@ -56,8 +79,10 @@ const Courses = () => {
 
   // react queries
   const { data: tableData = [], isFetching } = useGetCourse(serviceId);
-  const { data: course } = useGetCourseById(courseId);
-  const { mutateAsync: createCourse } = useUpdateCourse();
+  const { data: course, isFetching: isFetchingCourse } =
+    useGetCourseById(courseId);
+  const { mutateAsync: createCourse, isLoading: isUpdatingCourse } =
+    useUpdateCourse();
   // react queries end
 
   const columns = useMemo(
@@ -147,7 +172,7 @@ const Courses = () => {
         timer: +course?.course_info?.time_limit_in_seconds / 60,
       });
     }
-  }, [course]);
+  }, [course, edit]);
 
   return (
     <>
@@ -168,73 +193,87 @@ const Courses = () => {
         // onAction={onModalOpen}
       />
       <ModalForm
+        isLoading={isUpdatingCourse}
         title={"Edit new course"}
         isModalOpen={isModalOpen}
         closeModal={() => {
+          reset(defaultValues);
+          setEdit(false);
           onModalClose();
         }}
         resetButttonText={"Cancel"}
         submitHandler={handleSubmit(onSubmitHandler)}
         submitButtonText={edit ? "Update" : "Add"}
       >
-        <Grid templateColumns="repeat(4, 1fr)" gap={6}>
-          <GridItem>
+        {isFetchingCourse ? (
+          <Skeleton count={4} height={"40px"} />
+        ) : (
+          <>
+            <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+              <GridItem>
+                <FormControl
+                  control="input"
+                  type="number"
+                  name="totalQuestions"
+                  register={register}
+                  label={"Total Questions"}
+                  placeholder={"total questions"}
+                  color={sikaai_colors.primary}
+                  error={errors?.totalQuestions?.message ?? ""}
+                />
+              </GridItem>
+              <GridItem>
+                <FormControl
+                  control="input"
+                  type="number"
+                  name="negativeMarking"
+                  steps={0.1}
+                  register={register}
+                  label={"Negative Marking"}
+                  placeholder={"negative marking"}
+                  color={sikaai_colors.primary}
+                  error={errors?.negativeMarking?.message ?? ""}
+                />
+              </GridItem>
+              <GridItem>
+                <Flex alignItems={"center"} gap={2}>
+                  <FormControl
+                    control="input"
+                    type="number"
+                    name="timer"
+                    register={register}
+                    label={"Set Timer"}
+                    placeholder={"set timer"}
+                    color={sikaai_colors.primary}
+                    error={errors?.timer?.message ?? ""}
+                  />
+                  <Text mt={9} fontWeight={400} fontSize={"14px"}>
+                    Minutes
+                  </Text>
+                </Flex>
+              </GridItem>
+              <GridItem></GridItem>
+            </Grid>
             <FormControl
               control="input"
-              type="number"
-              name="totalQuestions"
+              type="text"
+              name="courseName"
               register={register}
-              label={"Total Questions"}
-              placeholder={"total questions"}
-              color={sikaai_colors.primary}
+              label={"Course Name"}
+              placeholder={"course name"}
+              error={errors?.courseName?.message ?? ""}
             />
-          </GridItem>
-          <GridItem>
             <FormControl
-              control="input"
-              type="number"
-              name="negativeMarking"
-              steps={0.1}
+              control="textArea"
+              type="text"
+              name="description"
               register={register}
-              label={"Negative Marking"}
-              placeholder={"negative marking"}
-              color={sikaai_colors.primary}
+              label={"Description"}
+              placeholder={"description"}
+              error={errors?.description?.message ?? ""}
             />
-          </GridItem>
-          <GridItem>
-            <Flex alignItems={"center"} gap={2}>
-              <FormControl
-                control="input"
-                type="number"
-                name="timer"
-                register={register}
-                label={"Set Timer"}
-                placeholder={"set timer"}
-                color={sikaai_colors.primary}
-              />
-              <Text mt={9} fontWeight={400} fontSize={"14px"}>
-                Minutes
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem></GridItem>
-        </Grid>
-        <FormControl
-          control="input"
-          type="text"
-          name="courseName"
-          register={register}
-          label={"Course Name"}
-          placeholder={"course name"}
-        />
-        <FormControl
-          control="textArea"
-          type="text"
-          name="description"
-          register={register}
-          label={"Description"}
-          placeholder={"description"}
-        />
+          </>
+        )}
       </ModalForm>
     </>
   );

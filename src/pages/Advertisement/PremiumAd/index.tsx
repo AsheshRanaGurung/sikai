@@ -89,15 +89,6 @@ const PremiumAd = () => {
             />
           </>
         </ModalForm>
-        {/* <Box bgColor={sikaai_colors.white} p={4}>
-        <Button> Save </Button> {""}
-        <Button variant={"reset"}> Close</Button> {""}
-        <Button size={"fit"}> Browse Image</Button> {""}
-        <Button size={"fit"}> Add Image</Button> {""}
-        <Button variant={"primaryOutline"}> Clear </Button> {""}
-        <Button size={"fit"}>ic Upload Advertisement</Button> {""}
-        <Switch value={true} toggleSwitch={() => {}} />
-      </Box> */}
       </div>
     </>
   );

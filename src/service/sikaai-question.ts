@@ -155,7 +155,7 @@ const useDeleteQuestionSet = () => {
   return useMutation(deleteQuestionSet, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
-      toastFail("Question set deleted successfuly");
+      toastSuccess("Question set deleted successfuly");
     },
     onError: () => {
       toastFail("Couldnot delete Question Set");

@@ -19,17 +19,29 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { CellProps } from "react-table";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValues = {
   name: "",
 };
 
+const validationSchema = Yup.object({
+  name: Yup.string().required("This field is required"),
+});
+
 const QuestionSet = () => {
   const [isEdit, setEdit] = useState(false);
   const [questionSetId, setQuestionSetId] = useState("");
 
-  const { register, handleSubmit, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultValues,
+    resolver: yupResolver(validationSchema),
   });
 
   const navigate = useNavigate();
@@ -59,10 +71,12 @@ const QuestionSet = () => {
   const encodedCourse = encodeURIComponent(course);
 
   // React queries
-  const { mutateAsync: createQuestionSet } = useCreateQuestionSet();
+  const { mutateAsync: createQuestionSet, isLoading: isCreatingQuestionSet } =
+    useCreateQuestionSet();
   const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
   const { data: questionSet } = useGetQuestionSetById({ id: questionSetId });
-  const { mutateAsync: updateQuestionSet } = useUpdateQuestionSet();
+  const { mutateAsync: updateQuestionSet, isLoading: isUpdatingQuestionSet } =
+    useUpdateQuestionSet();
   const { mutateAsync: deleteQuestionSet } = useDeleteQuestionSet();
   // React queries end
 
@@ -154,7 +168,7 @@ const QuestionSet = () => {
     if (isEdit && !!questionSetId) {
       reset({ ...defaultValues, name: questionSet?.name });
     }
-  }, [questionSet]);
+  }, [questionSet, isEdit]);
 
   return (
     <>
@@ -187,9 +201,15 @@ const QuestionSet = () => {
         />
 
         <ModalForm
+          isLoading={isCreatingQuestionSet || isUpdatingQuestionSet}
           isModalOpen={isModalOpen}
           title={"Add question set"}
-          closeModal={onModalClose}
+          closeModal={() => {
+            // TODO: reset() to reset(defaultvalues) reset({})
+            reset(defaultValues);
+            setEdit(false);
+            onModalClose();
+          }}
           resetButttonText={"Cancel"}
           submitButtonText={"Create"}
           submitHandler={handleSubmit(onSubmitHandler)}
@@ -201,6 +221,7 @@ const QuestionSet = () => {
             name="name"
             placeholder={"Service Name"}
             label={"Service Name"}
+            error={errors?.name?.message ?? ""}
           />
         </ModalForm>
       </div>

@@ -38,7 +38,8 @@ const ContactUs = () => {
   const [updateId, setUpdateId] = useState("");
   const { data: contactDetails = [], isFetching: tableDataFetching } =
     useGetContact();
-  const { mutateAsync: updateContact } = useUpdateContact();
+  const { mutateAsync: updateContact, isLoading: isUpdatingContact } =
+    useUpdateContact();
   const { data: contact } = useGetContactById(updateId);
   const {
     isOpen,
@@ -86,7 +87,7 @@ const ContactUs = () => {
     },
   ];
 
-  const onSubmit = async (contactDetails: typeof defaultValues) => {
+  const onSubmitHandler = async (contactDetails: typeof defaultValues) => {
     const response = await updateContact({ ...contactDetails, id: +updateId });
 
     if (response?.status === httpStatus.OK) {
@@ -168,13 +169,15 @@ const ContactUs = () => {
         columns={columns}
         loading={tableDataFetching}
       />
+
       <ModalForm
+        isLoading={isUpdatingContact}
         isModalOpen={isOpen}
         title={"Edit"}
         closeModal={onModalClose}
         resetButttonText={"Cancel"}
         submitButtonText={"Edit"}
-        submitHandler={handleSubmit(onSubmit)}
+        submitHandler={handleSubmit(onSubmitHandler)}
       >
         <>
           <FormControl
