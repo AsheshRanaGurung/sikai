@@ -47,11 +47,14 @@ export const api = {
     delete: "/api/v1/forum/{forum_id}/comment/{id}/",
   },
   advertisement: {
-    get: "/api/v1/advertisement/advertise/",
-    post: "/api/v1/advertisement/advertise/",
+    get: "api/v1/advertisement/?type={type}",
+    post: "/api/v1/advertisement/",
     getById: "/api/v1/advertisement/get/{id}/",
-    patch: "/api/v1/advertisement/update/{id}/",
-    delete: "/api/v1/advertisement/delete/{id}/",
+    patch: "/api/v1/advertisement/{id}/",
+    delete: "/api/v1/advertisement/{id}/",
+    adPlacement: {
+      get: "api/v1/advertisement/ad-placement-pages/",
+    },
   },
   question: {
     get: "/api/v1/assessment/question/",
@@ -68,7 +71,7 @@ export const api = {
     get: "api/v1/dashboard/recent-registered-students/",
     card: {
       get: "api/v1/dashboard/",
-    }
+    },
   },
   map: {
     get: "api/v1/info/map-location/",

@@ -1,3 +1,4 @@
+import { toFormData } from "@sikaai/utils/form-data";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
@@ -6,27 +7,35 @@ import { toastFail, toastSuccess } from "./service-toast";
 export interface IAdvertisementReq {
   name: string;
   ad_type: string;
-  description: string;
-  banner: string;
-  ad_link: string;
+  description?: string;
+  banner: Blob;
+  ad_link?: string;
   display_status: boolean;
+  page: string;
 }
 
-export interface IAdvertisementResponse extends IAdvertisementReq {
+export interface IAdPlacementPages {
+  id: string;
+  name: string;
+}
+
+export interface IAdvertisementResponse
+  extends Omit<IAdvertisementReq, "banner"> {
   id: number;
+  banner: string;
+}
+export interface IAdvertisementUpdate extends IAdvertisementReq {
+  id: string;
 }
 
-const getAdvertisement = () => {
+const getAdvertisement = (type: string) => {
   return httpClient.get<SikaaiResponse<IAdvertisementResponse[]>>(
-    api.advertisement.get
-    // ,{
-    //     page_name: "2"
-    // }
+    api.advertisement.get.replace("{type}", type)
   );
 };
 
-const useGetAdvertisement = () => {
-  return useQuery([api.advertisement.get], getAdvertisement, {
+const useGetAdvertisement = (type: string) => {
+  return useQuery([api.advertisement.get, type], () => getAdvertisement(type), {
     select: ({ data }) => data?.data,
     onError: () => {
       toastFail("Failed to load advertisement");
@@ -34,19 +43,24 @@ const useGetAdvertisement = () => {
   });
 };
 
-const createAdvertisement = (advertisementDetails: IAdvertisementResponse) => {
-  return httpClient.post(api.advertisement.post, advertisementDetails);
+const createAdvertisement = (advertisementDetails: IAdvertisementReq) => {
+  return httpClient.post(
+    api.advertisement.post,
+    toFormData(advertisementDetails)
+  );
 };
 
 const useCreateAdvertisement = () => {
   const queryClient = useQueryClient();
   return useMutation(createAdvertisement, {
     onSuccess: () => {
-      toastSuccess("Advertisement created successfuly!");
       queryClient.invalidateQueries(api.advertisement.get);
+      toastSuccess("Advertisement created successfuly!");
     },
-    onError: () => {
-      toastFail("Couldnot create advertisement");
+    onError: (e: any) => {
+      toastFail(
+        e?.response?.data?.error[0]?.name || "Couldnot create advertisement"
+      );
     },
   });
 };
@@ -70,8 +84,11 @@ const useGetAdvertisementById = (id: string) => {
   );
 };
 
-const updateAdvertisement = (advertisementDetails: IAdvertisementReq) => {
-  return httpClient.patch(api.advertisement.patch, advertisementDetails);
+const updateAdvertisement = (advertisementDetails: IAdvertisementUpdate) => {
+  return httpClient.patch(
+    api.advertisement.patch.replace("{id}", advertisementDetails.id),
+    toFormData(advertisementDetails)
+  );
 };
 
 const useUpdateAdvertisement = () => {
@@ -87,7 +104,7 @@ const useUpdateAdvertisement = () => {
   });
 };
 
-const deleteAdvertisement = (id: string) => {
+const deleteAdvertisement = ({ id }: { id: string }) => {
   return httpClient.delete(api.advertisement.delete.replace("{id}", id));
 };
 
@@ -98,6 +115,24 @@ const useDeleteAdvertisement = () => {
       queryClient.invalidateQueries(api.advertisement.get);
       toastSuccess("Advertisement deleted sucessfuly");
     },
+    onError: (e: any) => {
+      toastFail(e.response?.data.message || "Couldn't delete Ad");
+    },
+  });
+};
+
+const getAdPlacementPages = () => {
+  return httpClient.get<SikaaiResponse<IAdPlacementPages[]>>(
+    api.advertisement.adPlacement.get
+  );
+};
+
+const useGetAdPlacementPages = () => {
+  return useQuery([api.advertisement.adPlacement.get], getAdPlacementPages, {
+    select: ({ data }) => data?.data,
+    onError: (e: any) => {
+      toastFail(e.response?.data.message || "Couldnot fetch data");
+    },
   });
 };
 
@@ -107,4 +142,5 @@ export {
   useGetAdvertisementById,
   useUpdateAdvertisement,
   useDeleteAdvertisement,
+  useGetAdPlacementPages,
 };

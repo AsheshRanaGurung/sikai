@@ -96,7 +96,6 @@ const Services = () => {
             onModalOpen();
           };
           // const onDelete = () => {
-          //   console.log("here");
           // };
           const onView = () => {
             const encodedName = encodeURIComponent(row.original?.name);

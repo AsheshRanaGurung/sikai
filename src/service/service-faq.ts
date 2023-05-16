@@ -49,6 +49,7 @@ const useDelFaq = () => {
   const queryClient = useQueryClient();
   return useMutation(delFaq, {
     onSuccess: () => {
+      toastSuccess("Faq deleted");
       queryClient.invalidateQueries(api.faq.get);
     },
     onError: (e: any) => {

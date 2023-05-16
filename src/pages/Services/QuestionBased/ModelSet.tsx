@@ -30,7 +30,6 @@ const ModelSet = () => {
 
   const onSubmitHandler = (data: any, e: any) => {
     e.preventDefault();
-    console.log(data);
   };
 
   const columns = useMemo(
