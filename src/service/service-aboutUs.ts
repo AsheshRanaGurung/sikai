@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { SikaaiResponse, api } from "./service-api";
 import { httpClient } from "./service-axois";
 import { toFormData } from "@sikaai/utils/form-data";
-import { toastFail } from "./service-toast";
+import { toastFail, toastSuccess } from "./service-toast";
 
 export interface IAboutUs {
   id: number | string;
@@ -46,6 +46,7 @@ const useEditAboutUs = () => {
       toastFail(error?.data?.message ?? "");
     },
     onSuccess: () => {
+      toastSuccess("Updated successfuly");
       clientQuery.invalidateQueries(api.about.fetch);
     },
   });
@@ -59,6 +60,7 @@ const useSaveVideo = () => {
   const clientQuery = useQueryClient();
   return useMutation(saveMedia, {
     onSuccess: () => {
+      toastSuccess("video saved");
       clientQuery.invalidateQueries(api.about.fetch);
     },
   });

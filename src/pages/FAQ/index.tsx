@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Box,
   Button,
+  Divider,
   Flex,
   IconButton,
   Input,
@@ -31,7 +32,6 @@ import {
   useUpdateFaq,
 } from "@sikaai/service/service-faq";
 import httpStatus from "http-status";
-import { toastSuccess } from "@sikaai/service/service-toast";
 import { useEffect, useState } from "react";
 import parse from "html-react-parser";
 
@@ -108,7 +108,6 @@ const FAQ = () => {
     const response = await delFaq(id.toString());
 
     if (response.status === httpStatus.OK) {
-      toastSuccess("Faq deleted");
       onDelModalClose();
     }
   };
@@ -209,17 +208,16 @@ const FAQ = () => {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel
-                  borderTop={"1px solid gray"}
                   background={sikaai_colors.primary_light}
                   borderRadius={"0 0 8px 8px"}
+                  pb={0}
                 >
-                  {parse(faq?.answer)}
-                  <Flex
-                    justify={"flex-end"}
-                    gap={4}
-                    alignItems={"center"}
-                    mr={3}
-                  >
+                  <Divider borderColor={sikaai_colors.accordion_bg} />
+                  <Box py={3} color={sikaai_colors.accordion_text}>
+                    {faq?.answer}
+                  </Box>
+                  <Divider borderColor={sikaai_colors.accordion_bg} />
+                  <Flex justify={"flex-end"} alignItems={"center"} py={1}>
                     <Tooltip
                       hasArrow
                       label="Edit"
@@ -227,7 +225,7 @@ const FAQ = () => {
                       color={sikaai_colors.white}
                     >
                       <IconButton
-                        width={"20px"}
+                        width={"22px"}
                         onClick={() => {
                           setEditId(faq?.id ?? null);
                           setEdit(true);
@@ -249,7 +247,6 @@ const FAQ = () => {
                         }}
                       />
                     </Tooltip>
-
                     <Tooltip
                       hasArrow
                       label="Delete"

@@ -7,7 +7,6 @@ interface ILatlongData {
 }
 
 function MapComponent({ latitude, longitude }: ILatlongData) {
-  // console.log(+lat, +long);
 
   return (
     <MapContainer

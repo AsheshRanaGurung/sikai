@@ -5,6 +5,7 @@ import Radio from "./Radio";
 import Password from "./Password";
 import TextArea from "./TextArea";
 import Editor from "./Editor";
+import MultiSelect from "./MultiSelect";
 
 function FormControl(props: any) {
   const { control, ...rest } = props;
@@ -23,6 +24,8 @@ function FormControl(props: any) {
       return <TextArea {...rest} />;
     case "editor":
       return <Editor {...rest} />;
+    case "multiSelect":
+      return <MultiSelect {...rest} />;
 
     default:
       return null;

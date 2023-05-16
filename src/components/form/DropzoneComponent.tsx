@@ -87,6 +87,7 @@ export default function DropzoneComponent({
     if (imagePreview && imagePreview != "")
       setPreview([
         {
+          fileType: "image",
           link: imagePreview ?? "",
         },
       ]);
