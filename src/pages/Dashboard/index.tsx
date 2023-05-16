@@ -86,6 +86,7 @@ const Dashboard = () => {
 
   // options for doghnut graph
   const options_doghnut = {
+    cutout: 120,
     responsive: true,
     plugins: {
       legend: {
@@ -235,8 +236,12 @@ const Dashboard = () => {
         </Grid>
       </Box>
 
-      <Box background={sikaai_colors.white} borderRadius={12} p={4}>
-        <Text fontWeight={"bold"} color={sikaai_colors.gray_text}>
+      <Box background={sikaai_colors.white} borderRadius={12} p={1}>
+        <Text
+          fontWeight={"bold"}
+          color={sikaai_colors.gray_text}
+          p={"16px 16px 4px 16px"}
+        >
           Recent Student Onboard
         </Text>
         <DataTable

@@ -12,7 +12,6 @@ import {
   useFetchAboutUs,
   useSaveVideo,
 } from "@sikaai/service/service-aboutUs";
-import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -52,7 +51,6 @@ const AboutUs = () => {
       const editAboutUsResponse = await editAboutUs({ ...data, id: editId });
 
       if (editAboutUsResponse?.status == httpStatus.OK) {
-        toastSuccess("Updated successfuly");
         onCloseHandler();
       }
     } catch (error) {
@@ -124,7 +122,6 @@ const AboutUs = () => {
     try {
       const saveVideoResponse = await createVideo({ video: file });
       if (saveVideoResponse?.status == httpStatus.OK) {
-        toastSuccess("video saved");
         setAcceptedFiles([]);
       }
     } catch (error) {

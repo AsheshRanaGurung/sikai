@@ -38,8 +38,8 @@ const ModelSet = () => {
   // react queries end
 
   const onSubmitHandler = (data: any, e: any) => {
-    e.preventDefault();
     console.log(data);
+    e.preventDefault();
   };
 
   const columns = useMemo(
