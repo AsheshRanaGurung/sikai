@@ -42,7 +42,6 @@ const Dashboard = () => {
   //react query
   const { data: studentDetails = [], isFetching } = useGetStudent();
   const { data: dashboardCardData } = useGetDashboardCard();
-  console.log("dashboardCardData", dashboardCardData);
   // react query end
 
   const labels = [
@@ -200,10 +199,7 @@ const Dashboard = () => {
                     fontSize={"20px"}
                     color={sikaai_colors.primary_dark}
                   >
-                    <>
-                      {/* {console.log(item?.cardNumber, "hjklhfd")} */}
-                      {item?.cardNumber}
-                    </>
+                    <>{item?.cardNumber}</>
                   </Text>
                 </Box>
               </Flex>

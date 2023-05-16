@@ -40,10 +40,7 @@ const Forum = () => {
       {/* TODO: change colorscheme to primary */}
       <Tabs variant="soft-rounded" colorScheme="blue">
         <TabList>
-          {/* TODO: discussion with design */}
           <Tab>Recent</Tab>
-          {/* <Tab>Popular</Tab>
-          <Tab>Pending Reply</Tab> */}
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -65,6 +62,7 @@ const Forum = () => {
                       )
                     }
                     my={3}
+                    cursor={"pointer"}
                   >
                     <DoubleCommentIcon />
                     <Box>

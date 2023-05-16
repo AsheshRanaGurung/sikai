@@ -26,7 +26,6 @@ const NonQuestionnaire = () => {
     onClose: onModalClose,
   } = useDisclosure();
 
-  // TODO: this can be refactored
   // TODO: sidebar can be refactored
   const columns = useMemo(
     () => [

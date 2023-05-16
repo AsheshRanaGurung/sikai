@@ -143,9 +143,6 @@ const ForumComment = () => {
         is_pinned_comment: dataComment?.is_pinned_comment,
       });
     }
-    // TODO: check param and implement in another places too
-    // if isEdit value changes then the data is refetched
-    // if isEdit is not kept then unpin doesnot work
   }, [dataComment, isEdit, isPin]);
 
   return (

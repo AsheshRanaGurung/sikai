@@ -40,7 +40,7 @@ const Subjects = () => {
   const encodedCourse = encodeURIComponent(course);
 
   // react queries
-  const { data: tableData = [], isFetching } = useGetSubjects(courseId);
+  const { data: tableData = [], isFetching } = useGetSubjects({ courseId });
   // react queries end
 
   const columns = useMemo(

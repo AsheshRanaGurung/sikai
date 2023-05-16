@@ -28,6 +28,15 @@ const ModelSet = () => {
   const encodedService = encodeURIComponent(service);
   const encodedCourse = encodeURIComponent(course);
 
+  // react queries
+  // const {data: subjects, isFetching} = useGetSubjects({courseId});
+  // const subjectLength = subjects && subjects.length;
+  // for (let i=0; i<subjectLength; i++) {
+
+  //   const {data: subjectSet, isFetching: isFetchingSubjectSet} = useGetQuestionSet({subjectId})
+  // }
+  // react queries end
+
   const onSubmitHandler = (data: any, e: any) => {
     e.preventDefault();
     console.log(data);
@@ -53,6 +62,7 @@ const ModelSet = () => {
     ],
     []
   );
+
   return (
     <>
       <BreadCrumb

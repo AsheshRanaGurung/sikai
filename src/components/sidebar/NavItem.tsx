@@ -5,8 +5,9 @@ import { sikaai_colors } from "@sikaai/theme/color";
 import { RightArrowIcon } from "../../assets/svgs";
 
 const NavItem = ({ name, to, child, icon, isCollapse, visible }: INavItem) => {
-  //make a generic component
-  const match = location.pathname.match(/services/g);
+  // TODO: change this to dynamic logic
+  const match =
+    location.pathname.match(/services/g) || location.pathname.match(/forum/g);
 
   const activeParent = child?.some(item => item.to === location.pathname);
 

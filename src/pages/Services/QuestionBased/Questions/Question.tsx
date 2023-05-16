@@ -26,6 +26,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { AddImageIcon } from "@sikaai/assets/svgs";
 
 const defaultValues = {
   question_text: "",
@@ -190,11 +191,19 @@ function MyComponent() {
                           />
                         </GridItem>
                         <GridItem colSpan={2}>
-                          <FormControl
-                            width="250px"
-                            control="file"
-                            register={register}
+                          <label htmlFor={"optionImageTest"}>
+                            <AddImageIcon />
+                          </label>
+                          <input
+                            id="optionImageTest"
+                            type="file"
+                            width={"2px"}
+                            {...register}
                             name={"optionAImage"}
+                            style={{
+                              display: "none",
+                              visibility: "hidden",
+                            }}
                           />
                         </GridItem>
                       </Grid>
@@ -217,12 +226,26 @@ function MyComponent() {
                           />
                         </GridItem>
                         <GridItem colSpan={2}>
-                          <FormControl
+                          <label htmlFor={"optionImageTest"}>
+                            <AddImageIcon />
+                          </label>
+                          <input
+                            id="optionImageTest"
+                            type="file"
+                            width={"2px"}
+                            {...register}
+                            name={"optionAImage"}
+                            style={{
+                              display: "none",
+                              visibility: "hidden",
+                            }}
+                          />
+                          {/* <FormControl
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionBImage"}
-                          />
+                          /> */}
                         </GridItem>
                       </Grid>
                       <Grid templateColumns="repeat(7, 1fr)" gap={6}>
@@ -244,11 +267,25 @@ function MyComponent() {
                           />
                         </GridItem>
                         <GridItem colSpan={2}>
-                          <FormControl
+                          {/* <FormControl
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionCImage"}
+                          /> */}
+                          <label htmlFor={"optionImageTest"}>
+                            <AddImageIcon />
+                          </label>
+                          <input
+                            id="optionImageTest"
+                            type="file"
+                            width={"2px"}
+                            {...register}
+                            name={"optionAImage"}
+                            style={{
+                              display: "none",
+                              visibility: "hidden",
+                            }}
                           />
                         </GridItem>
                       </Grid>
@@ -271,11 +308,25 @@ function MyComponent() {
                           />
                         </GridItem>
                         <GridItem colSpan={2}>
-                          <FormControl
+                          {/* <FormControl
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionDImage"}
+                          /> */}
+                          <label htmlFor={"optionImageTest"}>
+                            <AddImageIcon />
+                          </label>
+                          <input
+                            id="optionImageTest"
+                            type="file"
+                            width={"2px"}
+                            {...register}
+                            name={"optionAImage"}
+                            style={{
+                              display: "none",
+                              visibility: "hidden",
+                            }}
                           />
                         </GridItem>
                       </Grid>

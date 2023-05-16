@@ -12,16 +12,16 @@ export interface ISubjectsResponse {
   created_at: string;
 }
 
-const getSubjects = (id: string) => () => {
+const getSubjects = (courseId: string) => () => {
   return httpClient.get<SikaaiResponse<ISubjectsResponse[]>>(
-    api.subjects.get.replace("{course_id}", id)
+    api.subjects.get.replace("{course_id}", courseId)
   );
 };
 
-const useGetSubjects = (id: string) => {
-  return useQuery([api.subjects.get, id], getSubjects(id), {
+const useGetSubjects = ({ courseId }: { courseId: string }) => {
+  return useQuery([api.subjects.get, courseId], getSubjects(courseId), {
     select: ({ data }) => data.data,
-    enabled: !!id,
+    enabled: !!courseId,
     onError: () => {
       toastFail("Failed to fetch subjects");
     },

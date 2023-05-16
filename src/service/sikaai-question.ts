@@ -39,19 +39,23 @@ export interface IQuestionSetUpdateReq {
   is_active?: boolean;
 }
 
-const getQuestionSet = (id: string) => () => {
+const getQuestionSet = (subjectId: string) => () => {
   return httpClient.get<SikaaiResponse<IQuestionSetRes[]>>(
-    api.subjects_set.get.replace("{subject_id}", id)
+    api.subjects_set.get.replace("{subject_id}", subjectId)
   );
 };
 
-const useGetQuestionSet = (id: string) => {
-  return useQuery([api.subjects_set.get, id], getQuestionSet(id), {
-    select: ({ data }) => data.data,
-    onError: () => {
-      toastFail("Failed to fetch Question set");
-    },
-  });
+const useGetQuestionSet = ({ subjectId }: { subjectId: string }) => {
+  return useQuery(
+    [api.subjects_set.get, subjectId],
+    getQuestionSet(subjectId),
+    {
+      select: ({ data }) => data.data,
+      onError: () => {
+        toastFail("Failed to fetch Question set");
+      },
+    }
+  );
 };
 
 const createQuestionSet = (questionSetDetails: IQuestionSetReq) => {
