@@ -22,6 +22,8 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import {
   useGetContact,
   useGetContactById,
+  useGetMapLocation,
+  usePostMapLocation,
   useUpdateContact,
 } from "@sikaai/service/service-contactUs";
 import { CellProps } from "react-table";
@@ -34,13 +36,26 @@ const defaultValues = {
   created_at: "",
 };
 
+const latLongDefaultValues = {
+  latitude: "",
+  longitude: "",
+};
+
 const ContactUs = () => {
   const [updateId, setUpdateId] = useState("");
+
+  // react queries
   const { data: contactDetails = [], isFetching: tableDataFetching } =
     useGetContact();
+  const {
+    data: locationData = { longitude: "27.70122", latitude: "85.32266" },
+  } = useGetMapLocation();
+  const { mutateAsync: mutateLatLong, isLoading: isLatLongLoading } =
+    usePostMapLocation();
   const { mutateAsync: updateContact, isLoading: isUpdatingContact } =
     useUpdateContact();
   const { data: contact } = useGetContactById(updateId);
+
   const {
     isOpen,
     onOpen: onModalOpen,
@@ -50,6 +65,15 @@ const ContactUs = () => {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: defaultValues,
   });
+
+  const {
+    register: latLongRegister,
+    handleSubmit: latLongHandleSubmit,
+    reset: latLongReset,
+  } = useForm({
+    defaultValues: latLongDefaultValues,
+  });
+
   useEffect(() => {
     if (contact) {
       reset({
@@ -87,7 +111,15 @@ const ContactUs = () => {
     },
   ];
 
-  const onSubmitHandler = async (contactDetails: typeof defaultValues) => {
+  const onLatLongSubmitHandler = async (data: typeof latLongDefaultValues) => {
+    try {
+      await mutateLatLong(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSubmit = async (contactDetails: typeof defaultValues) => {
     const response = await updateContact({ ...contactDetails, id: +updateId });
 
     if (response?.status === httpStatus.OK) {
@@ -112,7 +144,14 @@ const ContactUs = () => {
             background={sikaai_colors.white}
             overflow={"hidden"}
           >
-            <MapComponent latitude={27} longitude={85} />
+            {locationData &&
+              locationData?.latitude &&
+              locationData?.longitude && (
+                <MapComponent
+                  latitude={parseFloat(locationData?.latitude)}
+                  longitude={parseFloat(locationData?.longitude)}
+                />
+              )}
           </GridItem>
           <GridItem
             w={"100%"}
@@ -130,7 +169,7 @@ const ContactUs = () => {
                 gap: "20px",
                 padding: "10px",
               }}
-              // onSubmit={handleSubmit(onSubmitHandler)}
+              onSubmit={latLongHandleSubmit(onLatLongSubmitHandler)}
             >
               <Flex>
                 <LocationIcon />
@@ -141,7 +180,7 @@ const ContactUs = () => {
               <FormControl
                 control="input"
                 size="lg"
-                register={register}
+                register={latLongRegister}
                 name="longitude"
                 label={"Longitude"}
                 placeholder={"longitude"}
@@ -149,16 +188,22 @@ const ContactUs = () => {
               <FormControl
                 control="input"
                 size="lg"
-                register={register}
+                register={latLongRegister}
                 name="latitude"
                 label={"Latitude"}
                 placeholder={"latitude"}
               />
               <Flex justify={"flex-start"} gap={5}>
-                <Button variant="primary" type="submit">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  isLoading={isLatLongLoading}
+                >
                   Save
                 </Button>
-                <Button variant="reset">Cancel</Button>
+                <Button variant="reset" onClick={() => latLongReset()}>
+                  Clear
+                </Button>
               </Flex>
             </form>
           </GridItem>
@@ -177,7 +222,7 @@ const ContactUs = () => {
         closeModal={onModalClose}
         resetButttonText={"Cancel"}
         submitButtonText={"Edit"}
-        submitHandler={handleSubmit(onSubmitHandler)}
+        submitHandler={handleSubmit(onSubmit)}
       >
         <>
           <FormControl
