@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
 import { toastFail, toastSuccess } from "./service-toast";
+import { toFormData } from "@sikaai/utils/form-data";
 
 export interface IQuestion {
   parent_id?: number;
@@ -90,7 +91,7 @@ const useGetQuestion = () => {
 };
 
 const createQuestion = (questionDetails: IQuestion) => {
-  return httpClient.post(api.question.post, questionDetails);
+  return httpClient.post(api.question.post, toFormData(questionDetails));
 };
 
 const useCreateQuestion = () => {
