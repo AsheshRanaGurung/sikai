@@ -184,7 +184,7 @@ const ForumComment = () => {
             size="lg"
             register={register}
             name="text_content"
-            placeholder="Write your answer ......"
+            placeholder="Your Comment ......"
             label={"Write your answer..."}
             error={errors?.text_content?.message ?? ""}
           />
@@ -340,7 +340,7 @@ const ForumComment = () => {
       {/* edit */}
       <ModalForm
         isLoading={isUpdatingComment}
-        title={"Edit"}
+        title={"Edit your comments"}
         isModalOpen={isEditModalOpen}
         closeModal={() => {
           reset(defaultValues);
@@ -358,8 +358,8 @@ const ForumComment = () => {
           size="lg"
           register={register}
           name="text_content"
-          placeholder="Write your answer"
-          label={"Write your answer..."}
+          placeholder="Your Comment"
+          label={""}
         />
         {/* TODO: image upload */}
       </ModalForm>

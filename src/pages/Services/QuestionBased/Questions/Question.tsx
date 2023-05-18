@@ -10,15 +10,16 @@ import {
   Flex,
   Grid,
   GridItem,
+  HStack,
   SimpleGrid,
   Spacer,
   Text,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import FormControl from "@sikaai/components/form/FormControl";
 import Switch from "@sikaai/components/switch";
 import { sikaai_colors } from "@sikaai/theme/color";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SubQuestion from "./subQuestion";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
@@ -26,7 +27,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import httpStatus from "http-status";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { AddImageIcon } from "@sikaai/assets/svgs";
+import { AddImageIcon } from "@sikaai/assets/svgs/index";
+import { useState } from "react";
 
 const defaultValues = {
   question_text: "",
@@ -42,7 +44,7 @@ const defaultValues = {
   optionDImage: null,
   answer: "",
   description: "",
-  // image: "",
+  image: null,
 };
 
 function MyComponent() {
@@ -66,28 +68,28 @@ function MyComponent() {
       options: [
         {
           answer_text: questionDetails?.answer_text1,
-          answer_image: questionDetails?.optionAImage[0],
+          // answer_image: questionDetails?.optionAImage[0],
           is_correct: questionDetails?.answer === "A" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text2,
-          answer_image: questionDetails?.optionBImage[0],
+          // answer_image: questionDetails?.optionBImage[0],
           is_correct: questionDetails?.answer === "B" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text3,
-          answer_image: questionDetails?.optionCImage[0],
+          // answer_image: questionDetails?.optionCImage[0],
           is_correct: questionDetails?.answer === "C" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text4,
-          answer_image: questionDetails?.optionDImage[0],
+          // answer_image: questionDetails?.optionDImage[0],
           is_correct: questionDetails?.answer === "D" ? true : false,
         },
       ],
       solution: {
         description: questionDetails?.description,
-        // answer_text: "hello",
+        // image: questionDetails?.image[0],
       },
     };
 
@@ -171,7 +173,10 @@ function MyComponent() {
                     >
                       Options
                     </Text>
-                    <SimpleGrid columns={2} spacing={5}>
+                    <SimpleGrid
+                      columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
+                      spacing={5}
+                    >
                       <Grid templateColumns="repeat(7, 1fr)" gap={6}>
                         <GridItem colSpan={1}>
                           <Text
@@ -182,7 +187,7 @@ function MyComponent() {
                             A:
                           </Text>
                         </GridItem>
-                        <GridItem colSpan={4}>
+                        <GridItem colSpan={5}>
                           <FormControl
                             control="input"
                             register={register}
@@ -190,20 +195,28 @@ function MyComponent() {
                             placeholder="option A"
                           />
                         </GridItem>
-                        <GridItem colSpan={2}>
-                          <label htmlFor={"optionImageTest"}>
-                            <AddImageIcon />
-                          </label>
-                          <input
-                            id="optionImageTest"
-                            type="file"
-                            width={"2px"}
-                            {...register}
+                        <GridItem colSpan={1}>
+                          <Tooltip
+                            label="Select Image"
+                            placement={"top"}
+                            bg="white"
+                            border="none"
+                            boxShadow={"base"}
+                          >
+                            <label
+                              htmlFor="optionImageA"
+                              style={{ alignSelf: "center" }}
+                            >
+                              <AddImageIcon />
+                            </label>
+                          </Tooltip>
+                          <FormControl
+                            width="250px"
+                            control="file"
+                            register={register}
                             name={"optionAImage"}
-                            style={{
-                              display: "none",
-                              visibility: "hidden",
-                            }}
+                            id="optionImageA"
+                            display="none"
                           />
                         </GridItem>
                       </Grid>
@@ -217,7 +230,7 @@ function MyComponent() {
                             B:
                           </Text>
                         </GridItem>
-                        <GridItem colSpan={4}>
+                        <GridItem colSpan={5}>
                           <FormControl
                             control="input"
                             register={register}
@@ -225,27 +238,29 @@ function MyComponent() {
                             placeholder="option B"
                           />
                         </GridItem>
-                        <GridItem colSpan={2}>
-                          <label htmlFor={"optionImageTest"}>
-                            <AddImageIcon />
-                          </label>
-                          <input
-                            id="optionImageTest"
-                            type="file"
-                            width={"2px"}
-                            {...register}
-                            name={"optionAImage"}
-                            style={{
-                              display: "none",
-                              visibility: "hidden",
-                            }}
-                          />
-                          {/* <FormControl
+                        <GridItem colSpan={1}>
+                          <Tooltip
+                            label="Select Image"
+                            placement={"top"}
+                            bg="white"
+                            border="none"
+                            boxShadow={"base"}
+                          >
+                            <label
+                              htmlFor="optionBImage"
+                              style={{ alignSelf: "center" }}
+                            >
+                              <AddImageIcon />
+                            </label>
+                          </Tooltip>
+                          <FormControl
+                            id="optionBImage"
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionBImage"}
-                          /> */}
+                            display="none"
+                          />
                         </GridItem>
                       </Grid>
                       <Grid templateColumns="repeat(7, 1fr)" gap={6}>
@@ -258,7 +273,7 @@ function MyComponent() {
                             C:
                           </Text>
                         </GridItem>
-                        <GridItem colSpan={4}>
+                        <GridItem colSpan={5}>
                           <FormControl
                             control="input"
                             register={register}
@@ -266,31 +281,37 @@ function MyComponent() {
                             placeholder="option C"
                           />
                         </GridItem>
-                        <GridItem colSpan={2}>
-                          {/* <FormControl
+                        <GridItem colSpan={1}>
+                          <Tooltip
+                            label="Select Image"
+                            placement={"top"}
+                            bg="white"
+                            border="none"
+                            boxShadow={"base"}
+                          >
+                            <label
+                              htmlFor="optionCImage"
+                              style={{ alignSelf: "center" }}
+                            >
+                              <AddImageIcon />
+                            </label>
+                          </Tooltip>
+                          <FormControl
+                            id="optionCImage"
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionCImage"}
-                          /> */}
-                          <label htmlFor={"optionImageTest"}>
-                            <AddImageIcon />
-                          </label>
-                          <input
-                            id="optionImageTest"
-                            type="file"
-                            width={"2px"}
-                            {...register}
-                            name={"optionAImage"}
-                            style={{
-                              display: "none",
-                              visibility: "hidden",
-                            }}
+                            display="none"
                           />
                         </GridItem>
                       </Grid>
                       <Grid templateColumns="repeat(7, 1fr)" gap={6}>
-                        <GridItem colSpan={1}>
+                        <GridItem
+                          colSpan={1}
+                          flexDirection={"row"}
+                          alignItems={"center"}
+                        >
                           <Text
                             color={sikaai_colors.primary}
                             mt={2}
@@ -299,7 +320,7 @@ function MyComponent() {
                             D:
                           </Text>
                         </GridItem>
-                        <GridItem colSpan={4}>
+                        <GridItem colSpan={5}>
                           <FormControl
                             control="input"
                             register={register}
@@ -307,26 +328,28 @@ function MyComponent() {
                             placeholder="option D"
                           />
                         </GridItem>
-                        <GridItem colSpan={2}>
-                          {/* <FormControl
+                        <GridItem colSpan={1} flexDirection={"row"}>
+                          <Tooltip
+                            label="Select Image"
+                            placement={"top"}
+                            bg="white"
+                            border="none"
+                            boxShadow={"base"}
+                          >
+                            <label
+                              htmlFor="optionDImage"
+                              style={{ alignSelf: "center" }}
+                            >
+                              <AddImageIcon />
+                            </label>
+                          </Tooltip>
+                          <FormControl
+                            id="optionDImage"
                             width="250px"
                             control="file"
                             register={register}
                             name={"optionDImage"}
-                          /> */}
-                          <label htmlFor={"optionImageTest"}>
-                            <AddImageIcon />
-                          </label>
-                          <input
-                            id="optionImageTest"
-                            type="file"
-                            width={"2px"}
-                            {...register}
-                            name={"optionAImage"}
-                            style={{
-                              display: "none",
-                              visibility: "hidden",
-                            }}
+                            display="none"
                           />
                         </GridItem>
                       </Grid>
@@ -368,7 +391,11 @@ function MyComponent() {
                     </Flex>
                   </Box>
 
-                  <Box>
+                  <HStack
+                    justifyContent={"space-around"}
+                    gap={3}
+                    wrap={"nowrap"}
+                  >
                     <Text
                       fontWeight={600}
                       fontSize={"16px"}
@@ -376,14 +403,34 @@ function MyComponent() {
                     >
                       Solution
                     </Text>
-
                     <FormControl
+                      flexGrow={1}
                       control="input"
                       register={register}
                       name={"description"}
                       placeholder="solution"
                     />
-                  </Box>
+                    <Box width={"6.5%"}>
+                      <Tooltip
+                        label="Select Image"
+                        placement={"top"}
+                        bg="white"
+                        border="none"
+                        boxShadow={"base"}
+                      >
+                        <label htmlFor="image" style={{ alignSelf: "center" }}>
+                          <AddImageIcon />
+                        </label>
+                      </Tooltip>
+                      <FormControl
+                        id="image"
+                        control="file"
+                        register={register}
+                        name={"image"}
+                        display="none"
+                      />
+                    </Box>
+                  </HStack>
                   <Button type="submit" isLoading={isLoading}>
                     Save
                   </Button>

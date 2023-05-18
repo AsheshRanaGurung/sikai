@@ -21,9 +21,7 @@ const getMapLocation = () => {
 
 const useGetMapLocation = () => {
   return useQuery([api.map.get], getMapLocation, {
-    select: ({ data }) => {
-      return data?.data;
-    },
+    select: data => data?.data?.data[0],
     onError: (e: any) => {
       toastFail(e.response?.data.message || "Couldn't load map");
     },

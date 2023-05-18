@@ -117,7 +117,7 @@ const FAQ = () => {
       <BreadCrumb
         items={[]}
         title={{
-          name: "Frequently Asked Question",
+          name: "Frequently Asked Question (FAQ'S)",
           route: `${NAVIGATION_ROUTES.FAQ}`,
         }}
       />
@@ -189,7 +189,7 @@ const FAQ = () => {
           <Text> Are you sure you want to delete?</Text>
         </ModalForm>
 
-        <Accordion defaultIndex={[0]} allowMultiple>
+        <Accordion>
           {dataFaq?.map(faq => {
             return (
               <AccordionItem mb={3} p={2} key={faq?.id}>

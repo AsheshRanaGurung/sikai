@@ -21,6 +21,7 @@ import { CellProps } from "react-table";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+// TODO: change this to OMIT
 interface IAdsFormData {
   name: string;
   ad_type: string;
@@ -29,7 +30,6 @@ interface IAdsFormData {
 }
 
 const defaultValues: IAdsFormData = {
-  // id: 0,
   name: "",
   ad_type: "",
   display_status: false,
@@ -44,23 +44,6 @@ const validationSchema = Yup.object({
 });
 
 const BasicAd = () => {
-  //react query start
-  const { data: advertisementData = [], isFetching } =
-    useGetAdvertisement("basic");
-  const { data: adPlacement = [] } = useGetAdPlacementPages();
-  const { mutateAsync: createAdvertisement } = useCreateAdvertisement();
-  const { mutateAsync: deleteAdvertisement } = useDeleteAdvertisement();
-  const { mutateAsync: updateAds } = useUpdateAdvertisement();
-
-  //react query end
-  // formatSelectOPtions
-  const advertisementPlacementOptions = formatSelectOptions({
-    data: adPlacement,
-    labelKeys: ["name"],
-    valueKey: "id",
-  });
-  // formatSelectOPtions end
-
   const [updateId, setUpdateId] = useState("");
   const [previewBanner, setPreviewBanner] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
@@ -80,6 +63,23 @@ const BasicAd = () => {
     defaultValues: defaultValues,
     resolver: yupResolver(validationSchema),
   });
+
+  //react query start
+  const { data: advertisementData = [], isFetching } =
+    useGetAdvertisement("basic");
+  const { data: adPlacement = [] } = useGetAdPlacementPages();
+  const { mutateAsync: createAdvertisement } = useCreateAdvertisement();
+  const { mutateAsync: deleteAdvertisement } = useDeleteAdvertisement();
+  const { mutateAsync: updateAds } = useUpdateAdvertisement();
+  //react query end
+
+  // formatSelectOPtions
+  const advertisementPlacementOptions = formatSelectOptions({
+    data: adPlacement,
+    labelKeys: ["name"],
+    valueKey: "id",
+  });
+  // formatSelectOPtions end
 
   const columns = [
     {

@@ -63,13 +63,13 @@ const checkAuthentication = () => {
   if (TokenService.isAuthenticated()) {
     return Promise.resolve(true);
   }
-  return Promise.reject(false);
+  return Promise.resolve(false);
 };
 
 const useAuthentication = () => {
   const queryClient = useQueryClient();
 
-  return useQuery(authTokenKey, checkAuthentication, {
+  return useQuery([authTokenKey], checkAuthentication, {
     onSuccess: () => {
       const tokenDetails = TokenService.getTokenDetails();
       if (tokenDetails) {

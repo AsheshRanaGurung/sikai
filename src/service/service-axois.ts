@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import httpStatus from "http-status";
 import TokenService from "./service-token";
-
 type RequestData = Record<string, any>;
 
 const defaultSikaaiResponse = {
@@ -86,7 +85,10 @@ axios.interceptors.response.use(
   response => response,
   async error => {
     if (error?.config?.url !== "/") {
-      if (error.response.status === httpStatus.UNAUTHORIZED) {
+      if (
+        error.response.status === httpStatus.UNAUTHORIZED &&
+        TokenService.getToken()?.refresh_token !== ""
+      ) {
         try {
           const refreshToken = TokenService.getToken()?.refresh_token || "";
           const response = await httpClient.post<{
@@ -101,6 +103,7 @@ axios.interceptors.response.use(
           };
           TokenService.setToken(tokens);
         } catch (_error) {
+          // navigateLogin();
           TokenService.clearToken();
           return Promise.reject(_error);
         }
