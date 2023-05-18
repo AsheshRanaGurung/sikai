@@ -37,7 +37,9 @@ const useGetStudent = () => {
 };
 
 const getDashboardCard = () => {
-  return httpClient.get<SikaaiResponse<IDashboardCard[]>>(api.dashboard.card.get);
+  return httpClient.get<SikaaiResponse<IDashboardCard[]>>(
+    api.dashboard.card.get
+  );
 };
 const useGetDashboardCard = () => {
   return useQuery(api.dashboard.card.get, getDashboardCard, {

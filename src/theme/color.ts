@@ -20,4 +20,5 @@ export const sikaai_colors = {
   tooltip_gray: "#1E1B39",
   accordion_bg: "#C5C9FD",
   accordion_text: "#5D619E",
+  graph_stroke: "#8884d8",
 };
