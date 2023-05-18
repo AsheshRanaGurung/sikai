@@ -56,6 +56,7 @@ function getTokenDetails() {
 
 function isAuthenticated() {
   const tokenDetails = getTokenDetails();
+
   if (tokenDetails) {
     return tokenDetails.exp * 1000 > Date.now();
   } else {

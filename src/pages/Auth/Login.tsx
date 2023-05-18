@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import httpStatus from "http-status";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import TokenService from "@sikaai/service/service-token";
 
 const defaultValues: LoginDetails = {
   email: "",
@@ -28,6 +29,7 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
+  TokenService.clearToken();
   const navigate = useNavigate();
   const { isOpen: isVisible, onToggle: onToggleVisibility } = useDisclosure();
   const { mutateAsync: initLogin, isLoading } = useLoginMutation();

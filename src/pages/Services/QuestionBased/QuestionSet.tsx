@@ -73,7 +73,7 @@ const QuestionSet = () => {
   // React queries
   const { mutateAsync: createQuestionSet, isLoading: isCreatingQuestionSet } =
     useCreateQuestionSet();
-  const { data: tableData = [], isFetching } = useGetQuestionSet(subjectId);
+  const { data: tableData = [], isFetching } = useGetQuestionSet({ subjectId });
   const { data: questionSet } = useGetQuestionSetById({ id: questionSetId });
   const { mutateAsync: updateQuestionSet, isLoading: isUpdatingQuestionSet } =
     useUpdateQuestionSet();

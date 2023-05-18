@@ -67,6 +67,17 @@ const secondary = defineStyle({
   },
 });
 
+const ghost = defineStyle({
+  ...baseStyles,
+  _hover: {
+    background: "transparent",
+    color: sikaai_colors.primary,
+  },
+  _active: {
+    background: "transparent",
+  },
+});
+
 const round = defineStyle({
   ...secondary,
   height: "34px",
@@ -82,6 +93,7 @@ export const buttonTheme = defineStyleConfig({
     primaryOutline,
     secondary,
     round,
+    ghost,
   },
   sizes: {
     sm: {

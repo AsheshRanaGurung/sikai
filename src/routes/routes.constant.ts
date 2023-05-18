@@ -6,7 +6,7 @@ export const NAVIGATION_ROUTES = {
   FAQ: "/FAQ",
   FAQ_CREATE: "/FAQ/create",
   FORUM: "/forum",
-  FORUM_ANSWER: "/answer",
+  FORUM_ANSWER: "/forum/answer",
   ABOUT_US: "/about-us",
   NOTIFICATION: "/notification",
   PREMIUM_AD: "/permium-ad",

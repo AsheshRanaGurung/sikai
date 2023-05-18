@@ -40,7 +40,7 @@ const Services = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const [isUpdate, setIsUpdate] = useState(false);
+  const [isEdit, setEdit] = useState(false);
   const [updateId, setUpdateId] = useState("");
   const navigate = useNavigate();
   const {
@@ -92,7 +92,7 @@ const Services = () => {
         }: CellProps<{ id: string; service_type: string; name: string }>) => {
           const onEdit = () => {
             setUpdateId(row.original?.id);
-            setIsUpdate(true);
+            setEdit(true);
             onModalOpen();
           };
           // const onDelete = () => {
@@ -143,7 +143,7 @@ const Services = () => {
     if (response?.status === httpStatus.OK) {
       onModalClose();
       setUpdateId("");
-      setIsUpdate(false);
+      setEdit(false);
       reset(defaultValues);
     }
   };
@@ -156,7 +156,7 @@ const Services = () => {
         description: service.description,
       });
     }
-  }, [service, updateId, isUpdate]);
+  }, [service, updateId, isEdit]);
 
   return (
     <>
@@ -180,12 +180,12 @@ const Services = () => {
           isModalOpen={isModalOpen}
           title={"Edit service"}
           closeModal={() => {
-            setIsUpdate(false);
+            setEdit(false);
             reset(defaultValues);
             onModalClose();
           }}
           resetButttonText={"Cancel"}
-          submitButtonText={isUpdate ? "Update" : "Add"}
+          submitButtonText={isEdit ? "Edit" : "Add"}
           submitHandler={handleSubmit(onSubmitHandler)}
         >
           {serviceLoading ? (

@@ -11,7 +11,7 @@ export interface ISelectOptions<T extends number | string> {
 
 const getLabel = (item: any, labelKeys: string[]) => {
   let label = item;
-  labelKeys?.forEach((labelKey) => {
+  labelKeys?.forEach(labelKey => {
     label = label?.[labelKey];
   });
   return label;
@@ -20,13 +20,13 @@ const getLabel = (item: any, labelKeys: string[]) => {
 export function formatSelectOptions({
   data,
   labelKeys,
-  valueKey
+  valueKey,
 }: IFormatSelectOptionParams) {
   return (
     data?.map((item: any) => {
       return {
         label: getLabel(item, labelKeys),
-        value: item?.[valueKey]
+        value: item?.[valueKey],
       };
     }) ?? []
   );

@@ -14,7 +14,6 @@ function MapComponent({ latitude, longitude }: ILatlongData) {
 
     return null;
   }
-
   return (
     <MapContainer
       center={[longitude, latitude]}

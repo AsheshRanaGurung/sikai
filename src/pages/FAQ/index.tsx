@@ -118,7 +118,7 @@ const FAQ = () => {
       <BreadCrumb
         items={[]}
         title={{
-          name: "Frequently Asked Question",
+          name: "Frequently Asked Question (FAQ'S)",
           route: `${NAVIGATION_ROUTES.FAQ}`,
         }}
       />
@@ -215,7 +215,7 @@ const FAQ = () => {
                 >
                   <Divider borderColor={sikaai_colors.accordion_bg} />
                   <Box py={3} color={sikaai_colors.accordion_text}>
-                    {faq?.answer}
+                    {parse(faq?.answer)}
                   </Box>
                   <Divider borderColor={sikaai_colors.accordion_bg} />
                   <Flex justify={"flex-end"} alignItems={"center"} py={1}>

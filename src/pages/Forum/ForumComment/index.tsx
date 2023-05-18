@@ -143,9 +143,6 @@ const ForumComment = () => {
         is_pinned_comment: dataComment?.is_pinned_comment,
       });
     }
-    // TODO: check param and implement in another places too
-    // if isEdit value changes then the data is refetched
-    // if isEdit is not kept then unpin doesnot work
   }, [dataComment, isEdit, isPin]);
 
   return (
@@ -187,7 +184,7 @@ const ForumComment = () => {
             size="lg"
             register={register}
             name="text_content"
-            placeholder="Write your answer ......"
+            placeholder="Your Comment ......"
             label={"Write your answer..."}
             error={errors?.text_content?.message ?? ""}
           />
@@ -343,7 +340,7 @@ const ForumComment = () => {
       {/* edit */}
       <ModalForm
         isLoading={isUpdatingComment}
-        title={"Edit"}
+        title={"Edit your comments"}
         isModalOpen={isEditModalOpen}
         closeModal={() => {
           reset(defaultValues);
@@ -361,8 +358,8 @@ const ForumComment = () => {
           size="lg"
           register={register}
           name="text_content"
-          placeholder="Write your answer"
-          label={"Write your answer..."}
+          placeholder="Your Comment"
+          label={""}
         />
         {/* TODO: image upload */}
       </ModalForm>
