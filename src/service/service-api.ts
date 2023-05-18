@@ -33,18 +33,18 @@ export const api = {
   forum: {
     get: "/api/v1/forum/",
     getById: "/api/v1/forum/{id}/",
+    comment: {
+      get: "/api/v1/forum/{forum_id}/comment/",
+      post: "/api/v1/forum/{forum_id}/comment/",
+      getById: "/api/v1/forum/{forum_id}/comment/{id}/",
+      patch: "/api/v1/forum/{forum_id}/comment/{id}/",
+      delete: "/api/v1/forum/{forum_id}/comment/{id}/",
+    },
   },
   about: {
     fetch: "/api/v1/info/about-us-content/",
     edit: "/api/v1/info/about-us-content/{id}/",
     saveVideo: "/api/v1/info/about-us-media/",
-  },
-  comment: {
-    get: "/api/v1/forum/{forum_id}/comment/",
-    post: "/api/v1/forum/{forum_id}/comment/",
-    getById: "/api/v1/forum/{forum_id}/comment/{id}/",
-    patch: "/api/v1/forum/{forum_id}/comment/{id}/",
-    delete: "/api/v1/forum/{forum_id}/comment/{id}/",
   },
   advertisement: {
     get: "api/v1/advertisement/?type={type}",
