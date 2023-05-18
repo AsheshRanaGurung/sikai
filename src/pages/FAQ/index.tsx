@@ -83,6 +83,7 @@ const FAQ = () => {
   const onCloseHandler = () => {
     onModalClose();
     reset(initialValue);
+    setEditId(null);
     setEdit(false);
   };
   const onSubmitHandler = async (faqs: IFaq) => {
@@ -189,7 +190,7 @@ const FAQ = () => {
           <Text> Are you sure you want to delete?</Text>
         </ModalForm>
 
-        <Accordion defaultIndex={[0]} allowMultiple>
+        <Accordion defaultIndex={[0]} allowToggle>
           {dataFaq?.map(faq => {
             return (
               <AccordionItem mb={3} p={2} key={faq?.id}>
