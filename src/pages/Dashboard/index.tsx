@@ -8,116 +8,59 @@ import {
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
 import { sikaai_colors } from "@sikaai/theme/color";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Filler,
+  PieChart,
   Legend,
-  ArcElement,
-} from "chart.js";
-import { Line, Doughnut } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+  ResponsiveContainer,
+  Pie,
+} from "recharts";
+
 import DataTable from "@sikaai/components/common/table";
 import { useMemo } from "react";
 import {
   useGetDashboardCard,
   useGetStudent,
 } from "@sikaai/service/service-dashboard";
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend,
-  ArcElement
-);
+
 const Dashboard = () => {
   //react query
   const { data: studentDetails = [], isFetching } = useGetStudent();
   const { data: dashboardCardData } = useGetDashboardCard();
-  console.log("dashboardCardData", dashboardCardData);
   // react query end
+  const dataArea = dashboardCardData?.monthly_onboard_students
+    ? Object.entries(dashboardCardData?.monthly_onboard_students).map(
+        ([key, value]) => {
+          return {
+            name: key,
+            Total: value,
+          };
+        }
+      )
+    : [];
 
-  const labels = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MAY",
-    "JUL",
-    "AUG",
-    "SEP",
-    "OCT",
-    "DEC",
+  const dataPie = [
+    {
+      name: "Basic",
+      value: dashboardCardData?.basic_advertisements,
+      fill: "rgba(232, 232, 232, 1)",
+    },
+    {
+      name: "Advanced",
+      value: dashboardCardData?.advance_advertisements,
+      fill: "rgba(88, 95, 205, 1)",
+    },
+    {
+      name: "Premium",
+      value: dashboardCardData?.premium_advertisements,
+      //
+      fill: "rgba(251, 166, 57, 1)",
+    },
   ];
-
-  //data for line graph
-  const data_line = {
-    labels,
-    datasets: [
-      {
-        fill: true,
-        label: "Student",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 5000 })),
-        borderColor: sikaai_colors.primary,
-        backgroundColor: "rgba(207, 202, 255, 1)",
-      },
-    ],
-  };
-  // options for line graph
-  const options_line = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: true,
-        text: "MONTHLY CUSTOMER ONBOARD",
-      },
-    },
-  };
-
-  // options for doghnut graph
-  const options_doghnut = {
-    cutout: 120,
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: true,
-        text: "ADVERTISEMENT STATISTICS",
-      },
-    },
-  };
-  //data for doghnut
-  const data_doghnut = {
-    labels: ["Premium", "Advanced", "Basic"],
-    datasets: [
-      {
-        label: "Adertisement Percent",
-        data: [
-          dashboardCardData?.premium_advertisements,
-          dashboardCardData?.advance_advertisements,
-          dashboardCardData?.basic_advertisements,
-        ],
-        backgroundColor: [
-          "rgba(251, 166, 57, 1)",
-          "rgba(88, 95, 205, 1)",
-          "rgba(232, 232, 232, 1)",
-        ],
-      },
-    ],
-  };
 
   const cardsData = useMemo(
     () => [
@@ -154,7 +97,7 @@ const Dashboard = () => {
     () => [
       {
         Header: "Full name",
-        accessor: "fullName",
+        accessor: "full_name",
       },
       {
         Header: "Email",
@@ -166,7 +109,7 @@ const Dashboard = () => {
       },
       {
         Header: "Phone Number",
-        accessor: "phoneNumber",
+        accessor: "phone_number",
       },
       {
         Header: "College",
@@ -174,7 +117,7 @@ const Dashboard = () => {
       },
       {
         Header: "Date",
-        accessor: "date",
+        accessor: "created_at",
       },
     ],
     []
@@ -201,9 +144,7 @@ const Dashboard = () => {
                     fontSize={"20px"}
                     color={sikaai_colors.primary_dark}
                   >
-                    <>
-                      {item?.cardNumber}
-                    </>
+                    <>{item?.cardNumber}</>
                   </Text>
                 </Box>
               </Flex>
@@ -218,11 +159,52 @@ const Dashboard = () => {
             h={"400px"}
             borderRadius={"16px"}
             background={sikaai_colors.white}
-            display="flex"
-            justifyContent="center"
-            alignItems={"center"}
+            p={4}
+            // display="flex"
+            // justifyContent="center"
+            // alignItems={"center"}
           >
-            <Line options={options_line} data={data_line} />
+            <Text
+              color={sikaai_colors.light_gray_text}
+              fontSize={"sm"}
+              fontWeight={"bold"}
+            >
+              MONTHLY STUDENTS ONBOARD
+            </Text>
+            <ResponsiveContainer width={"100%"}>
+              <AreaChart
+                // width={1000}
+                // height={350}
+                data={dataArea}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor={sikaai_colors.graph_stroke}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={sikaai_colors.graph_stroke}
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" stroke="gray" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="Total"
+                  stroke={sikaai_colors.primary_dark}
+                  fillOpacity={1}
+                  fill="url(#total)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </GridItem>
           <GridItem
             w={"100%"}
@@ -230,11 +212,38 @@ const Dashboard = () => {
             borderRadius={"16px"}
             background={sikaai_colors.white}
             p={4}
-            display="flex"
-            justifyContent="center"
-            alignItems={"center"}
+            // display="flex"
+            // justifyContent="center"
+            // alignItems={"center"}
           >
-            <Doughnut options={options_doghnut} data={data_doghnut} />
+            <Text
+              color={sikaai_colors.light_gray_text}
+              fontSize={"sm"}
+              fontWeight={"bold"}
+            >
+              ADVERTISEMENT STATISTICS
+            </Text>
+            <ResponsiveContainer width={"100%"} height={"100%"}>
+              {/* <PieChart width={400} height={360}> */}
+              <PieChart>
+                <Pie
+                  data={dataPie}
+                  cx={250}
+                  cy={160}
+                  innerRadius={100}
+                  outerRadius={140}
+                  paddingAngle={0}
+                  dataKey="value"
+                />
+                <Tooltip />
+                <Legend
+                  align="center"
+                  formatter={value => (
+                    <span style={{ color: sikaai_colors.black }}>{value}</span>
+                  )}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </GridItem>
         </Grid>
       </Box>
