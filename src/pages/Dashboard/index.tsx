@@ -190,7 +190,29 @@ const Dashboard = () => {
                 <XAxis dataKey="name" stroke="gray" />
                 <YAxis />
                 <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
+                <Tooltip
+                  cursor={false}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { value } = payload[0];
+                      return (
+                        <Box
+                          bgColor={"black"}
+                          color="white"
+                          px={4}
+                          py={2}
+                          borderRadius="8"
+                          textAlign={"center"}
+                        >
+                          <p>Total Users</p>
+                          <p>{value}</p>
+                        </Box>
+                      );
+                    } else {
+                      return null;
+                    }
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="Total"
