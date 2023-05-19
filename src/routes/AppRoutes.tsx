@@ -24,6 +24,7 @@ import NonQuestionnaire from "@sikaai/pages/Services/NonQuestionnaire";
 import ForumAnswer from "@sikaai/pages/Forum/ForumComment";
 import Roles from "@sikaai/pages/roles";
 import ContactUs from "@sikaai/pages/ContactUs";
+import PageNotFound from "@sikaai/pages/PageNotFound";
 
 const AppRoutes = () => {
   const { data: isAuthenticated, isFetching } = useAuthentication();
@@ -45,7 +46,7 @@ const AppRoutes = () => {
           <Dashboard />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -55,7 +56,7 @@ const AppRoutes = () => {
           <PremiumAd />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -65,7 +66,7 @@ const AppRoutes = () => {
           <AdvanceAd />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -75,7 +76,7 @@ const AppRoutes = () => {
           <BasicAd />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -85,7 +86,7 @@ const AppRoutes = () => {
           <FAQ />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -95,7 +96,7 @@ const AppRoutes = () => {
           <Services />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -105,7 +106,7 @@ const AppRoutes = () => {
           <Courses />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -115,7 +116,7 @@ const AppRoutes = () => {
           <ServiceSection />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -125,7 +126,7 @@ const AppRoutes = () => {
           <QuestionSet />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -135,7 +136,7 @@ const AppRoutes = () => {
           <FormBased />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -145,7 +146,7 @@ const AppRoutes = () => {
           <NonQuestionnaire />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -155,7 +156,7 @@ const AppRoutes = () => {
           <Question />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -165,7 +166,7 @@ const AppRoutes = () => {
           <ModelSet />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -175,7 +176,7 @@ const AppRoutes = () => {
           <AbroadStudies />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -185,7 +186,7 @@ const AppRoutes = () => {
           <Forum />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -195,7 +196,7 @@ const AppRoutes = () => {
           <ForumAnswer />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -205,7 +206,7 @@ const AppRoutes = () => {
           <Roles />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -215,7 +216,7 @@ const AppRoutes = () => {
           <AboutUs />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {
@@ -225,7 +226,7 @@ const AppRoutes = () => {
           <ContactUs />
         </Layout>
       ) : (
-        <>hello</>
+        <PageNotFound />
       ),
     },
     {

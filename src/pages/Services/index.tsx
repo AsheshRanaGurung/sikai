@@ -81,7 +81,7 @@ const Services = () => {
       {
         Header: "Created Date",
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
-          const date = row.original?.created_at.substring(0, 10);
+          const date = row.original?.created_at?.substring(0, 10);
           return date;
         },
       },
@@ -156,7 +156,7 @@ const Services = () => {
         description: service.description,
       });
     }
-  }, [service, updateId, isEdit]);
+  }, [updateId, isEdit]);
 
   return (
     <>

@@ -37,23 +37,27 @@ export interface IForumCommentDelParams {
 
 const getComment = ({ forum_id }: { forum_id: string }) => {
   return httpClient.get<SikaaiResponse<IForumComment[]>>(
-    api.comment.get.replace("{forum_id}", forum_id)
+    api.forum.comment.get.replace("{forum_id}", forum_id)
   );
 };
 
 const useGetComment = ({ id }: { id: string }) => {
-  return useQuery([api.comment.get, id], () => getComment({ forum_id: id }), {
-    enabled: !!id,
-    select: ({ data }) => data.data,
-    onError: (e: any) => {
-      toastFail(e.response.data.error[0].name || "failed to access data");
-    },
-  });
+  return useQuery(
+    [api.forum.comment.get, id],
+    () => getComment({ forum_id: id }),
+    {
+      enabled: !!id,
+      select: ({ data }) => data.data,
+      onError: (e: any) => {
+        toastFail(e.response.data.error[0].name || "failed to access data");
+      },
+    }
+  );
 };
 
 const createComment = (commentDetails: IForumCommentReq) => {
   return httpClient.post(
-    api.comment.post.replace("{forum_id}", commentDetails.id),
+    api.forum.comment.post.replace("{forum_id}", commentDetails.id),
     commentDetails
   );
 };
@@ -62,7 +66,7 @@ const useCreateComment = () => {
   const queryClient = useQueryClient();
   return useMutation(createComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(api.comment.get);
+      queryClient.invalidateQueries(api.forum.comment.get);
       toastSuccess("Comment created sucessfuly");
     },
     onError: (e: any) => {
@@ -73,7 +77,9 @@ const useCreateComment = () => {
 
 const getCommentById = ({ forum_id, id }: { forum_id: string; id: string }) => {
   return httpClient.get<SikaaiResponse<IForumComment[]>>(
-    api.comment.getById.replace("{id}", id).replace("{forum_id}", forum_id)
+    api.forum.comment.getById
+      .replace("{id}", id)
+      .replace("{forum_id}", forum_id)
   );
 };
 
@@ -85,7 +91,7 @@ const useGetCommentById = ({
   id: string;
 }) => {
   return useQuery(
-    [api.comment.getById, id, forum_id],
+    [api.forum.comment.getById, id, forum_id],
     () => getCommentById({ forum_id, id }),
     {
       enabled: !!id && !!forum_id,
@@ -99,7 +105,7 @@ const useGetCommentById = ({
 
 const updateComment = (commentDetails: IForumCommentUpdateReq) => {
   return httpClient.patch(
-    api.comment.patch
+    api.forum.comment.patch
       .replace("{forum_id}", commentDetails.forum_id)
       .replace("{id}", commentDetails.id),
     commentDetails
@@ -110,8 +116,8 @@ const useUpdateComment = () => {
   const queryClient = useQueryClient();
   return useMutation(updateComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(api.comment.get);
-      queryClient.invalidateQueries(api.comment.getById);
+      queryClient.invalidateQueries(api.forum.comment.get);
+      queryClient.invalidateQueries(api.forum.comment.getById);
       toastSuccess("Comment updated successfuly");
     },
     onError: () => {
@@ -122,7 +128,7 @@ const useUpdateComment = () => {
 
 const deleteComment = (forumCommentParams: IForumCommentDelParams) => {
   return httpClient.delete(
-    api.comment.delete
+    api.forum.comment.delete
       .replace("{forum_id}", forumCommentParams.forum_id)
       .replace("{id}", forumCommentParams.id)
   );
@@ -132,7 +138,7 @@ const useDeleteComment = () => {
   const queryClient = useQueryClient();
   return useMutation(deleteComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(api.comment.get);
+      queryClient.invalidateQueries(api.forum.comment.get);
       toastSuccess("Comment deleted successfuly");
     },
   });

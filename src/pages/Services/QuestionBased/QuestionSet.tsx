@@ -112,7 +112,7 @@ const QuestionSet = () => {
         Cell: ({ row }: CellProps<{ id: string }>) => {
           const onEdit = () => {
             setEdit(true);
-            setQuestionSetId(row?.original?.id);
+            setQuestionSetId(row.original?.id);
             onModalOpen();
           };
           const onShowQues = () => {
@@ -121,7 +121,7 @@ const QuestionSet = () => {
             );
           };
           const onDelete = () => {
-            deleteQuestionSet({ id: row?.original?.id });
+            deleteQuestionSet({ id: row.original?.id });
           };
           return (
             <Stack alignItems={"flex-start"}>
