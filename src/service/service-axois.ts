@@ -1,3 +1,4 @@
+import navigateLogin from "@sikaai/hooks/navigateLogin";
 import axios, { AxiosRequestConfig } from "axios";
 import httpStatus from "http-status";
 import TokenService from "./service-token";
@@ -16,7 +17,6 @@ const refreshTokenURL = "/api/v1/users/token/refresh/";
 
 const baseConfig = (disableAuth?: boolean): AxiosRequestConfig<RequestData> => {
   const token = TokenService.getToken()?.access_token;
-  // const refresh_token = TokenService.getToken()?.refresh_token;
   return {
     baseURL,
     timeout: THREE_MINUTES,
@@ -24,7 +24,6 @@ const baseConfig = (disableAuth?: boolean): AxiosRequestConfig<RequestData> => {
       ? {}
       : {
           Authorization: `Bearer ${token}`,
-          // refresh_token,
         },
   };
 };
@@ -103,8 +102,8 @@ axios.interceptors.response.use(
           };
           TokenService.setToken(tokens);
         } catch (_error) {
-          // navigateLogin();
           TokenService.clearToken();
+          navigateLogin();
           return Promise.reject(_error);
         }
       }

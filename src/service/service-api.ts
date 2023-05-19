@@ -56,6 +56,16 @@ export const api = {
       get: "api/v1/advertisement/ad-placement-pages/",
     },
   },
+  model_set: {
+    get: "/api/v1/assessment/course/{course_id}/model-set/",
+    getById: "/api/v1/assessment/course/model-set/{id}/",
+    post: "/api/v1/assessment/course/{course_id}/model-set/",
+    patch: "/api/v1/assessment/course/model-set/{id}/",
+    delete: "/api/v1/assessment/course/model-set/{id}/",
+    subject_set: {
+      get: "/api/v1/assessment/course/{course_id}/subjects/subject-sets/",
+    },
+  },
   question: {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
