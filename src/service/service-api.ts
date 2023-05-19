@@ -33,18 +33,18 @@ export const api = {
   forum: {
     get: "/api/v1/forum/",
     getById: "/api/v1/forum/{id}/",
+    comment: {
+      get: "/api/v1/forum/{forum_id}/comment/",
+      post: "/api/v1/forum/{forum_id}/comment/",
+      getById: "/api/v1/forum/{forum_id}/comment/{id}/",
+      patch: "/api/v1/forum/{forum_id}/comment/{id}/",
+      delete: "/api/v1/forum/{forum_id}/comment/{id}/",
+    },
   },
   about: {
     fetch: "/api/v1/info/about-us-content/",
     edit: "/api/v1/info/about-us-content/{id}/",
     saveVideo: "/api/v1/info/about-us-media/",
-  },
-  comment: {
-    get: "/api/v1/forum/{forum_id}/comment/",
-    post: "/api/v1/forum/{forum_id}/comment/",
-    getById: "/api/v1/forum/{forum_id}/comment/{id}/",
-    patch: "/api/v1/forum/{forum_id}/comment/{id}/",
-    delete: "/api/v1/forum/{forum_id}/comment/{id}/",
   },
   advertisement: {
     get: "api/v1/advertisement/?type={type}",
@@ -54,6 +54,16 @@ export const api = {
     delete: "/api/v1/advertisement/{id}/",
     adPlacement: {
       get: "api/v1/advertisement/ad-placement-pages/",
+    },
+  },
+  model_set: {
+    get: "/api/v1/assessment/course/{course_id}/model-set/",
+    getById: "/api/v1/assessment/course/model-set/{id}/",
+    post: "/api/v1/assessment/course/{course_id}/model-set/",
+    patch: "/api/v1/assessment/course/model-set/{id}/",
+    delete: "/api/v1/assessment/course/model-set/{id}/",
+    subject_set: {
+      get: "/api/v1/assessment/course/{course_id}/subjects/subject-sets/",
     },
   },
   question: {
