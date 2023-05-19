@@ -24,7 +24,6 @@ import Skeleton from "@sikaai/components/skeleton";
 
 const defaultValues = {
   name: "",
-  // code: "",
   verbalAbility: "",
   quantitiveAbility: "",
   logicalReasoning: "",
@@ -33,7 +32,6 @@ const defaultValues = {
 
 const schema = Yup.object({
   name: Yup.string().required("This field is required"),
-  // code: Yup.string().required("This field is required"),
   verbalAbility: Yup.string().required("This field is required"),
   quantitiveAbility: Yup.string().required("This field is required"),
   logicalReasoning: Yup.string().required("This field is required"),
@@ -42,7 +40,6 @@ const schema = Yup.object({
 
 export interface ModalSetReq {
   name: string;
-  // code: string;
   verbalAbility: string;
   quantitiveAbility: string;
   logicalReasoning: string;
@@ -91,11 +88,13 @@ const ModelSet = () => {
   const { data: courses } = useGetSubjectSets({
     courseId,
   });
+  useGetModalSetsById(editId);
+  const { mutateAsync: deleteModalSet, isLoading: isDeleteingModal } =
+    useDeleteModalSets();
+  useGetModalSets({ course_id: courseId });
   const { mutateAsync: createModalSet, isLoading } = useCreateModalSets();
   const { data: modalSet, isFetching: isFetchingModalSet } =
     useGetModalSetsById(editId);
-  const { mutateAsync: deleteModalSet, isLoading: isDeleteingModal } =
-    useDeleteModalSets();
   const { mutateAsync: updateModalSet, isLoading: updatingModalSet } =
     useUpdateModalSets();
   // react queries end
@@ -103,41 +102,19 @@ const ModelSet = () => {
   const subjectSets =
     courses && courses?.subjects.map(subject => subject.subject_question_sets);
 
-  const verbalAbilityOptions =
+  const getOptions = (index: number) =>
     subjectSets &&
-    subjectSets[0] &&
+    subjectSets[index] &&
     formatSelectOptions({
-      data: subjectSets[0],
+      data: subjectSets[index],
       labelKeys: ["name"],
       valueKey: "id",
     });
 
-  const quantitativeAbilityOptions =
-    subjectSets &&
-    subjectSets[1] &&
-    formatSelectOptions({
-      data: subjectSets[1],
-      labelKeys: ["name"],
-      valueKey: "id",
-    });
-
-  const logicalReasoningOptions =
-    subjectSets &&
-    subjectSets[3] &&
-    formatSelectOptions({
-      data: subjectSets[3],
-      labelKeys: ["name"],
-      valueKey: "id",
-    });
-
-  const generalAwarenessOptions =
-    subjectSets &&
-    subjectSets[2] &&
-    formatSelectOptions({
-      data: subjectSets[2],
-      labelKeys: ["name"],
-      valueKey: "id",
-    });
+  const verbalAbilityOptions = getOptions(0);
+  const quantitativeAbilityOptions = getOptions(1);
+  const generalAwarenessOptions = getOptions(2);
+  const logicalReasoningOptions = getOptions(3);
 
   const onSubmitHandler = (data: ModalSetReq) => {
     if (isEdit) {
@@ -145,7 +122,6 @@ const ModelSet = () => {
         updateModalSet({
           id: editId,
           name: data?.name,
-          // code: data?.code,
           courseId,
           subject_question_sets: [
             +data?.generalAwareness,
@@ -165,7 +141,6 @@ const ModelSet = () => {
       try {
         createModalSet({
           name: data?.name,
-          // code: data?.code,
           courseId,
           subject_question_sets: [
             +data?.generalAwareness,
@@ -198,11 +173,11 @@ const ModelSet = () => {
         Cell: ({ row }: CellProps<{ id: string }>) => {
           const onEdit = () => {
             setEdit(true);
-            setEditId(row?.original?.id);
+            setEditId(row.original?.id);
             onModalOpen();
           };
           const onDelete = () => {
-            setDeleteId(row?.original?.id);
+            setDeleteId(row.original?.id);
             onDeleteModalOpen();
           };
           return <TableActions onEdit={onEdit} onDelete={onDelete} />;
@@ -217,7 +192,6 @@ const ModelSet = () => {
       reset({
         ...defaultValues,
         name: modalSet?.name,
-        // code: modalSet?.code,
         verbalAbility: modalSet?.subject_question_sets?.[3]?.id.toString(),
         quantitiveAbility: modalSet?.subject_question_sets?.[1]?.id.toString(),
         logicalReasoning: modalSet?.subject_question_sets?.[2]?.id.toString(),
@@ -323,15 +297,6 @@ const ModelSet = () => {
             )}
           </>
         )}
-        {/* <FormControl
-          control="input"
-          label={"Code"}
-          name={"code"}
-          placeholder={"Code"}
-          register={register}
-          error={errors?.code?.message || ""}
-          required
-        /> */}
       </ModalForm>
 
       <ModalForm

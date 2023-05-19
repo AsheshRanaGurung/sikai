@@ -104,7 +104,7 @@ const BasicAd = () => {
           onModalOpen();
         };
         const onDelete = () => {
-          deleteAdvertisement({ id: row?.original?.id });
+          deleteAdvertisement({ id: row.original?.id });
         };
 
         return (
