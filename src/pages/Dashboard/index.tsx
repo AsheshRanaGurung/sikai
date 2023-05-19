@@ -160,9 +160,6 @@ const Dashboard = () => {
             borderRadius={"16px"}
             background={sikaai_colors.white}
             p={4}
-            // display="flex"
-            // justifyContent="center"
-            // alignItems={"center"}
           >
             <Text
               color={sikaai_colors.light_gray_text}
@@ -173,8 +170,6 @@ const Dashboard = () => {
             </Text>
             <ResponsiveContainer width={"100%"}>
               <AreaChart
-                // width={1000}
-                // height={350}
                 data={dataArea}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               >
@@ -195,7 +190,29 @@ const Dashboard = () => {
                 <XAxis dataKey="name" stroke="gray" />
                 <YAxis />
                 <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
+                <Tooltip
+                  cursor={false}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { value } = payload[0];
+                      return (
+                        <Box
+                          bgColor={"black"}
+                          color="white"
+                          px={4}
+                          py={2}
+                          borderRadius="8"
+                          textAlign={"center"}
+                        >
+                          <p>Total Users</p>
+                          <p>{value}</p>
+                        </Box>
+                      );
+                    } else {
+                      return null;
+                    }
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="Total"
@@ -212,9 +229,6 @@ const Dashboard = () => {
             borderRadius={"16px"}
             background={sikaai_colors.white}
             p={4}
-            // display="flex"
-            // justifyContent="center"
-            // alignItems={"center"}
           >
             <Text
               color={sikaai_colors.light_gray_text}
@@ -224,7 +238,6 @@ const Dashboard = () => {
               ADVERTISEMENT STATISTICS
             </Text>
             <ResponsiveContainer width={"100%"} height={"100%"}>
-              {/* <PieChart width={400} height={360}> */}
               <PieChart>
                 <Pie
                   data={dataPie}
