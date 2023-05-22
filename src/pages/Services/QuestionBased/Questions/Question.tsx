@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Flex,
+  FormLabel,
   Grid,
   GridItem,
   HStack,
@@ -49,7 +50,7 @@ const defaultValues = {
 };
 
 function MyComponent() {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: defaultValues,
   });
   const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
@@ -212,12 +213,21 @@ function MyComponent() {
                             border="none"
                             boxShadow={"base"}
                           >
-                            <label
+                            <FormLabel
                               htmlFor="optionImageA"
-                              style={{ alignSelf: "center" }}
+                              alignSelf="center"
+                              sx={{
+                                "& svg": {
+                                  "& > circle": {
+                                    fill: watch("optionAImage")
+                                      ? "green"
+                                      : "#585FCD",
+                                  },
+                                },
+                              }}
                             >
                               <AddImageIcon />
-                            </label>
+                            </FormLabel>
                           </Tooltip>
                           <FormControl
                             width="250px"
@@ -255,12 +265,21 @@ function MyComponent() {
                             border="none"
                             boxShadow={"base"}
                           >
-                            <label
+                            <FormLabel
                               htmlFor="optionBImage"
-                              style={{ alignSelf: "center" }}
+                              alignSelf={"center"}
+                              sx={{
+                                "& svg": {
+                                  "& > circle": {
+                                    fill: watch("optionBImage")
+                                      ? "green"
+                                      : "#585FCD",
+                                  },
+                                },
+                              }}
                             >
                               <AddImageIcon />
-                            </label>
+                            </FormLabel>
                           </Tooltip>
                           <FormControl
                             id="optionBImage"
@@ -298,12 +317,21 @@ function MyComponent() {
                             border="none"
                             boxShadow={"base"}
                           >
-                            <label
+                            <FormLabel
                               htmlFor="optionCImage"
-                              style={{ alignSelf: "center" }}
+                              alignSelf={"center"}
+                              sx={{
+                                "& svg": {
+                                  "& > circle": {
+                                    fill: watch("optionCImage")
+                                      ? "green"
+                                      : "#585FCD",
+                                  },
+                                },
+                              }}
                             >
                               <AddImageIcon />
-                            </label>
+                            </FormLabel>
                           </Tooltip>
                           <FormControl
                             id="optionCImage"
@@ -345,12 +373,21 @@ function MyComponent() {
                             border="none"
                             boxShadow={"base"}
                           >
-                            <label
+                            <FormLabel
                               htmlFor="optionDImage"
-                              style={{ alignSelf: "center" }}
+                              alignSelf="center"
+                              sx={{
+                                "& svg": {
+                                  "& > circle": {
+                                    fill: watch("optionDImage")
+                                      ? "green"
+                                      : "#585FCD",
+                                  },
+                                },
+                              }}
                             >
                               <AddImageIcon />
-                            </label>
+                            </FormLabel>
                           </Tooltip>
                           <FormControl
                             id="optionDImage"
