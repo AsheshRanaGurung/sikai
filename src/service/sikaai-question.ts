@@ -15,14 +15,14 @@ export interface IQuestion {
 }
 
 interface IOption {
-  answer_text?: string;
-  answer_image?: File | null;
+  answer_text?: string | null;
+  answer_image_base64?: string | unknown;
   is_correct: boolean;
 }
 
 interface ISolution {
-  description?: string;
-  image?: string;
+  description?: string | null;
+  image?: string | unknown;
 }
 
 export interface IQuestionSetReq {
@@ -105,7 +105,27 @@ const useGetQuestion = () => {
 };
 
 const createQuestion = (questionDetails: IQuestion) => {
-  return httpClient.post(api.question.post, toFormData(questionDetails));
+  const requestPayload = {
+    ...questionDetails,
+
+    options: questionDetails.options?.map(item => {
+      return {
+        ...item,
+        answer_image_base64:
+          typeof item?.answer_image_base64 == "string"
+            ? item?.answer_image_base64.replace("data:image/png;base64,", "")
+            : "",
+        answer_text: item?.answer_text ?? null,
+      };
+    }),
+    solution: {
+      description: questionDetails?.solution?.description ?? null,
+      solution_image_base64:
+        typeof questionDetails?.solution?.image == "string" &&
+        questionDetails?.solution?.image.replace("data:image/png;base64,", ""),
+    },
+  };
+  return httpClient.post(api.question.post, requestPayload);
 };
 
 const useCreateQuestion = () => {

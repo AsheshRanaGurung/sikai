@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Flex,
+  FormLabel,
   Grid,
   GridItem,
   HStack,
@@ -33,26 +34,27 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { AddImageIcon, ExcelDownloadIcon } from "@sikaai/assets/svgs/index";
 import { useState } from "react";
 import BulkUpload from "@sikaai/components/bulkUpload";
+import { convertToBase64 } from "@sikaai/utils/index";
 
 const defaultValues = {
   question_text: "",
   // question_image: "",
   subject_question_set_id: null as number | null,
-  answer_text1: "",
-  answer_text2: "",
-  answer_text3: "",
-  answer_text4: "",
+  answer_text1: null,
+  answer_text2: null,
+  answer_text3: null,
+  answer_text4: null,
   optionAImage: null,
   optionBImage: null,
   optionCImage: null,
   optionDImage: null,
   answer: "",
-  description: "",
+  description: null,
   image: null,
 };
 
 function MyComponent() {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: defaultValues,
   });
   const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
@@ -68,35 +70,43 @@ function MyComponent() {
     onStatusOpen();
   };
 
-  const onSubmitHandler = async (questionDetails: any) => {
+  const onSubmitHandler = async (questionDetails: typeof defaultValues) => {
     const requestBody = {
       question_text: questionDetails?.question_text,
       subject_question_set_id: +questionSetId ?? 0,
       options: [
         {
           answer_text: questionDetails?.answer_text1,
-          // answer_image: questionDetails?.optionAImage[0],
+          answer_image_base64: await convertToBase64(
+            questionDetails?.optionAImage?.[0]
+          ),
           is_correct: questionDetails?.answer === "A" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text2,
-          // answer_image: questionDetails?.optionBImage[0],
+          answer_image_base64: await convertToBase64(
+            questionDetails?.optionBImage?.[0]
+          ),
           is_correct: questionDetails?.answer === "B" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text3,
-          // answer_image: questionDetails?.optionCImage[0],
+          answer_image_base64: await convertToBase64(
+            questionDetails?.optionCImage?.[0]
+          ),
           is_correct: questionDetails?.answer === "C" ? true : false,
         },
         {
           answer_text: questionDetails?.answer_text4,
-          // answer_image: questionDetails?.optionDImage[0],
+          answer_image_base64: await convertToBase64(
+            questionDetails?.optionDImage?.[0]
+          ),
           is_correct: questionDetails?.answer === "D" ? true : false,
         },
       ],
       solution: {
         description: questionDetails?.description,
-        // image: questionDetails?.image[0],
+        image: await convertToBase64(questionDetails?.image?.[0]),
       },
     };
 
@@ -231,12 +241,21 @@ function MyComponent() {
                               border="none"
                               boxShadow={"base"}
                             >
-                              <label
+                              <FormLabel
                                 htmlFor="optionImageA"
-                                style={{ alignSelf: "center" }}
+                                alignSelf="center"
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionAImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
                               >
                                 <AddImageIcon />
-                              </label>
+                              </FormLabel>
                             </Tooltip>
                             <FormControl
                               width="250px"
@@ -274,12 +293,21 @@ function MyComponent() {
                               border="none"
                               boxShadow={"base"}
                             >
-                              <label
+                              <FormLabel
                                 htmlFor="optionBImage"
-                                style={{ alignSelf: "center" }}
+                                alignSelf={"center"}
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionBImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
                               >
                                 <AddImageIcon />
-                              </label>
+                              </FormLabel>
                             </Tooltip>
                             <FormControl
                               id="optionBImage"
@@ -317,12 +345,21 @@ function MyComponent() {
                               border="none"
                               boxShadow={"base"}
                             >
-                              <label
+                              <FormLabel
                                 htmlFor="optionCImage"
-                                style={{ alignSelf: "center" }}
+                                alignSelf={"center"}
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionCImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
                               >
                                 <AddImageIcon />
-                              </label>
+                              </FormLabel>
                             </Tooltip>
                             <FormControl
                               id="optionCImage"
@@ -364,12 +401,21 @@ function MyComponent() {
                               border="none"
                               boxShadow={"base"}
                             >
-                              <label
+                              <FormLabel
                                 htmlFor="optionDImage"
-                                style={{ alignSelf: "center" }}
+                                alignSelf="center"
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionDImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
                               >
                                 <AddImageIcon />
-                              </label>
+                              </FormLabel>
                             </Tooltip>
                             <FormControl
                               id="optionDImage"
