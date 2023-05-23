@@ -156,7 +156,7 @@ const QuestionSet = () => {
         ...questionSetDetails,
         subject_id: subjectId,
       });
-      if (response.status === httpStatus.OK) {
+      if (response.status === httpStatus.CREATED) {
         reset(defaultValues);
         onModalClose();
         toastSuccess("Question set created successfuly");

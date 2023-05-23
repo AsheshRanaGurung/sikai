@@ -1,9 +1,8 @@
-import { toFormData } from "axios";
+import { AxiosError, toFormData } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
 import { toastFail, toastSuccess } from "./service-toast";
-// import { toFormData } from "@sikaai/utils/form-data";
 
 export interface IQuestion {
   parent_id?: number;
@@ -39,6 +38,16 @@ export interface IQuestionSetUpdateReq {
   id: string;
   name: string;
   is_active?: boolean;
+}
+
+export interface IBulkUpload {
+  subject_set_id: string;
+  csv_file: File | null;
+}
+
+export interface IExcelTemplate {
+  id: number;
+  csv_file: string;
 }
 
 const getQuestionSet = (subjectId: string) => () => {
@@ -169,6 +178,44 @@ const useDeleteQuestionSet = () => {
   });
 };
 
+const bulkUpload = (bulkUploadDetails: IBulkUpload) => {
+  console.log(bulkUploadDetails, "bulkUploadDetails");
+  return httpClient.post(
+    api.question.bulk.post.replace(
+      "{subject_set_id}",
+      bulkUploadDetails.subject_set_id
+    ),
+    toFormData({ csv_file: bulkUploadDetails.csv_file })
+  );
+};
+
+const useBulkUpload = () => {
+  return useMutation(bulkUpload, {
+    onSuccess: () => {
+      toastSuccess("Questions uploaded successfuly");
+    },
+    onError: () => {
+      toastFail("Couldnot upload questions");
+    },
+  });
+};
+
+const downloadExcelTemplate = () => {
+  return httpClient.get<SikaaiResponse<IExcelTemplate[]>>(
+    api.question.bulk.get
+  );
+};
+
+const useDownloadExcelTemplate = () => {
+  return useMutation(downloadExcelTemplate, {
+    onError: (error: AxiosError<{ error?: string; message: string }>) => {
+      toastFail(
+        error.response?.data.message || "Couldnot download excel template"
+      );
+    },
+  });
+};
+
 export {
   useGetQuestionSet,
   useCreateQuestionSet,
@@ -177,4 +224,6 @@ export {
   useGetQuestionSetById,
   useUpdateQuestionSet,
   useDeleteQuestionSet,
+  useBulkUpload,
+  useDownloadExcelTemplate,
 };

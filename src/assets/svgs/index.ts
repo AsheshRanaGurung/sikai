@@ -40,3 +40,5 @@ export { ReactComponent as RolesIcon } from "./rolesIcon.svg";
 export { ReactComponent as ContactIcon } from "./contactIcon.svg";
 export { ReactComponent as LocationIcon } from "./locationIcon.svg";
 export { ReactComponent as PageNotFoundIcon } from "./pageNotFoundIcon.svg";
+export { ReactComponent as ExcelIcon } from "./excelIcon.svg";
+export { ReactComponent as ExcelDownloadIcon } from "./excelDownloadIcon.svg";

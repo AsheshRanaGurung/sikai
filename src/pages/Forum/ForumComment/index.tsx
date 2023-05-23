@@ -34,6 +34,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import DropzoneComponent from "@sikaai/components/form/DropzoneComponent";
 
 const defaultValues = {
   text_content: "",
@@ -49,6 +50,8 @@ const ForumComment = () => {
   const [deleteId, setDeleteId] = useState("");
   const [isEdit, setEdit] = useState(false);
   const [isPin, setIsPin] = useState(false);
+  const [previewBanner, setPreviewBanner] = useState("");
+  const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
 
   const {
     register,
@@ -98,6 +101,7 @@ const ForumComment = () => {
     if (isEdit || isPin) {
       const response = await updateComment({
         ...commentDetails,
+        image_content: acceptedFiles?.[0],
         forum_id: forumId,
         id: commentId,
         is_pinned_comment: isPin
@@ -109,16 +113,21 @@ const ForumComment = () => {
         setIsPin(false);
         setCommentId("");
         onEditModalClose();
+        setAcceptedFiles([]);
+        setPreviewBanner("");
         onUnpinModalClose();
         reset(defaultValues);
       }
     } else {
       const response = await createComment({
         ...commentDetails,
+        image_content: acceptedFiles?.[0],
         id: forumId,
         is_pinned_comment: true,
       });
       if (response.status === httpStatus.CREATED) {
+        setAcceptedFiles([]);
+        setPreviewBanner("");
         reset(defaultValues);
       }
     }
@@ -142,6 +151,7 @@ const ForumComment = () => {
         text_content: dataComment?.text_content,
         is_pinned_comment: dataComment?.is_pinned_comment,
       });
+      setPreviewBanner(dataComment?.image_content || "");
     }
   }, [dataComment, isEdit, isPin]);
 
@@ -188,12 +198,14 @@ const ForumComment = () => {
             label={"Write your answer..."}
             error={errors?.text_content?.message ?? ""}
           />
-          {/* <FormControl
-            control="file"
-            size="lg"
-            register={register}
-            name="image_content"
-          /> */}
+          <DropzoneComponent
+            setAcceptedFiles={setAcceptedFiles}
+            helperText="Please Upload Files of size smaller than 10MB"
+            imagePreview={previewBanner}
+            accept={{
+              "image/png": [".png", ".jpeg", ".jpg"],
+            }}
+          />
           <Button
             isLoading={isCreatingComment}
             onClick={handleSubmit(onSubmitHandler)}
@@ -213,10 +225,6 @@ const ForumComment = () => {
           <Text fontWeight={"bold"} color={sikaai_colors.primary}>
             Comments
           </Text>
-          {/* <Select width={"140px"} size={"xs"} color={sikaai_colors.primary}>
-            <option>Most Recent</option>
-            <option>All Comment</option>
-          </Select> */}
         </Flex>
         <Box>
           {dataComments?.length === 0 && <Text>No comments yet...</Text>}
@@ -233,7 +241,6 @@ const ForumComment = () => {
                   <Image
                     borderRadius="full"
                     boxSize="36px"
-                    // src={dataComment?.image_content}
                     src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?size=626&ext=jpg&ga=GA1.2.2080231550.1678086178&semt=robertav1_2_sidr"
                     alt="profile"
                   />
@@ -311,8 +318,13 @@ const ForumComment = () => {
                         </Popover>
                       </Box>
                     </Flex>
-
                     <Text>{dataComment?.text_content}</Text>
+                    {dataComment?.image_content && (
+                      <Image
+                        src={dataComment?.image_content}
+                        alt="solutionImage"
+                      />
+                    )}
                   </Box>
                 </Grid>
               </div>
@@ -346,12 +358,12 @@ const ForumComment = () => {
           reset(defaultValues);
           setEdit(false);
           onEditModalClose();
+          setAcceptedFiles([]);
+          setPreviewBanner("");
         }}
         resetButttonText={"Close"}
         submitButtonText={"Edit"}
         submitHandler={handleSubmit(onSubmitHandler)}
-        // TODO: remove this comment
-        // modalSize={"sm"}
       >
         <FormControl
           control="textArea"
@@ -361,7 +373,15 @@ const ForumComment = () => {
           placeholder="Your Comment"
           label={""}
         />
-        {/* TODO: image upload */}
+
+        <DropzoneComponent
+          setAcceptedFiles={setAcceptedFiles}
+          helperText="Please Upload Files of size smaller than 10MB"
+          imagePreview={previewBanner}
+          accept={{
+            "image/png": [".png", ".jpeg", ".jpg"],
+          }}
+        />
       </ModalForm>
 
       {/* delete */}

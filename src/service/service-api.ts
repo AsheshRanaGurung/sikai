@@ -69,6 +69,10 @@ export const api = {
   question: {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
+    bulk: {
+      get: "/api/v1/assessment/csv-file-format/",
+      post: "/api/v1/assessment/subject/subject-set/{subject_set_id}/bulk-upload/",
+    },
   },
   faq: {
     get: "/api/v1/info/faq/",

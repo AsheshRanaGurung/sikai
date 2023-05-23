@@ -190,7 +190,7 @@ const FAQ = () => {
           <Text> Are you sure you want to delete?</Text>
         </ModalForm>
 
-        <Accordion defaultIndex={[0]} allowToggle>
+        <Accordion>
           {dataFaq?.map(faq => {
             return (
               <AccordionItem mb={3} p={2} key={faq?.id}>

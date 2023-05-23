@@ -1,3 +1,4 @@
+import { toFormData } from "axios";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { SikaaiResponse, api } from "./service-api";
 import { httpClient } from "./service-axois";
@@ -19,7 +20,7 @@ export interface IForumComment {
 export interface IForumCommentReq {
   id: string;
   text_content: string;
-  // image_content: string
+  image_content: Blob;
   is_pinned_comment: boolean;
   // created_by: number
 }
@@ -58,7 +59,7 @@ const useGetComment = ({ id }: { id: string }) => {
 const createComment = (commentDetails: IForumCommentReq) => {
   return httpClient.post(
     api.forum.comment.post.replace("{forum_id}", commentDetails.id),
-    commentDetails
+    toFormData(commentDetails)
   );
 };
 
