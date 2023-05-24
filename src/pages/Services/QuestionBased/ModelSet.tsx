@@ -102,7 +102,7 @@ const ModelSet = () => {
   const subjectSets =
     courses && courses?.subjects.map(subject => subject.subject_question_sets);
 
-  const getOptions = (index: number) =>
+  const getFormatedOptions = (index: number) =>
     subjectSets &&
     subjectSets[index] &&
     formatSelectOptions({
@@ -111,10 +111,10 @@ const ModelSet = () => {
       valueKey: "id",
     });
 
-  const verbalAbilityOptions = getOptions(0);
-  const quantitativeAbilityOptions = getOptions(1);
-  const generalAwarenessOptions = getOptions(2);
-  const logicalReasoningOptions = getOptions(3);
+  const verbalAbilityOptions = getFormatedOptions(0);
+  const quantitativeAbilityOptions = getFormatedOptions(1);
+  const generalAwarenessOptions = getFormatedOptions(2);
+  const logicalReasoningOptions = getFormatedOptions(3);
 
   const onSubmitHandler = (data: ModalSetReq) => {
     if (isEdit) {

@@ -8,7 +8,7 @@ export interface IQuestion {
   parent_id?: number;
   parent_content?: string;
   question_text: string;
-  question_image?: string;
+  question_image_base64?: string | unknown;
   subject_question_set_id: number;
   options: IOption[];
   solution: ISolution;
@@ -107,7 +107,13 @@ const useGetQuestion = () => {
 const createQuestion = (questionDetails: IQuestion) => {
   const requestPayload = {
     ...questionDetails,
-
+    question_image_base64:
+      typeof questionDetails?.question_image_base64 == "string"
+        ? questionDetails?.question_image_base64.replace(
+            "data:image/png;base64,",
+            ""
+          )
+        : "",
     options: questionDetails.options?.map(item => {
       return {
         ...item,
@@ -121,8 +127,12 @@ const createQuestion = (questionDetails: IQuestion) => {
     solution: {
       description: questionDetails?.solution?.description ?? null,
       solution_image_base64:
-        typeof questionDetails?.solution?.image == "string" &&
-        questionDetails?.solution?.image.replace("data:image/png;base64,", ""),
+        typeof questionDetails?.solution?.image == "string"
+          ? questionDetails?.solution?.image.replace(
+              "data:image/png;base64,",
+              ""
+            )
+          : "",
     },
   };
   return httpClient.post(api.question.post, requestPayload);
