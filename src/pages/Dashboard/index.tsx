@@ -122,10 +122,35 @@ const Dashboard = () => {
     ],
     []
   );
+  const getInnerRadius = () => {
+    const screenSize = window.innerWidth;
+    if (screenSize < 600) {
+      return 60;
+    } else {
+      return 100;
+    }
+  };
+
+  const getOuterRadius = () => {
+    const screenSize = window.innerWidth;
+    if (screenSize < 600) {
+      return 90;
+    } else {
+      return 140;
+    }
+  };
+
   return (
     <>
       <BreadCrumb items={[]} title={{ name: "Dashboard", route: "/" }} />
-      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+      <Grid
+        templateColumns={{
+          sm: "1fr",
+          md: "repeat(2,1fr)",
+          lg: "repeat(5,1fr)",
+        }}
+        gap={6}
+      >
         {cardsData?.map(item => {
           return (
             <GridItem
@@ -153,9 +178,17 @@ const Dashboard = () => {
         })}
       </Grid>
       <Box mb={5}>
-        <Grid templateColumns="repeat(1, 4fr 2fr)" gap={6} marginTop={"20px"}>
+        <Grid
+          templateColumns={{
+            sm: "1fr",
+            md: "1fr",
+            lg: "repeat(1, 4fr 2fr)",
+          }}
+          gap={6}
+          marginTop={"20px"}
+        >
           <GridItem
-            w={"100%"}
+            w={"99%"}
             h={"400px"}
             borderRadius={"16px"}
             background={sikaai_colors.white}
@@ -224,7 +257,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
           </GridItem>
           <GridItem
-            w={"100%"}
+            w={"99%"}
             height="400px"
             borderRadius={"16px"}
             background={sikaai_colors.white}
@@ -241,10 +274,8 @@ const Dashboard = () => {
               <PieChart>
                 <Pie
                   data={dataPie}
-                  cx={250}
-                  cy={160}
-                  innerRadius={100}
-                  outerRadius={140}
+                  innerRadius={getInnerRadius()}
+                  outerRadius={getOuterRadius()}
                   paddingAngle={0}
                   dataKey="value"
                 />

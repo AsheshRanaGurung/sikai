@@ -262,7 +262,12 @@ const DataTable = React.memo(
 
     return (
       <Box bgColor={sikaai_colors.white} p={4} borderRadius={"8px"}>
-        <Flex justifyContent="space-between" alignItems="center">
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          flexDirection={{ base: "column", md: "row" }}
+          rowGap={2}
+        >
           <Flex alignItems="center" gap={3}>
             <Flex position="relative">
               <Input
@@ -317,29 +322,6 @@ const DataTable = React.memo(
               <Text background={"#E6F0FA"} p={3} borderRadius={"5px"}>
                 {CurrentText}
               </Text>
-            )}
-
-            {exports && (
-              <Button
-                backgroundColor={sikaai_colors.gray}
-                color={sikaai_colors.primary}
-                size={"md"}
-                //leftIcon={<ExportIcon />}
-                onClick={onDownload}
-                outline="none"
-                border={"none"}
-                disabled={onDisableButton}
-                sx={{
-                  "&::before": {
-                    border: "none",
-                  },
-                  "&::after": {
-                    border: "none",
-                  },
-                }}
-              >
-                {exports}
-              </Button>
             )}
 
             {btnText && (

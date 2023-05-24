@@ -136,7 +136,14 @@ const ContactUs = () => {
         title={{ name: "Contact Us", route: `${NAVIGATION_ROUTES.CONTACT_US}` }}
       />
       <Box mb={5}>
-        <Grid templateColumns="repeat(1, 4fr 2fr)" gap={6} marginTop={"20px"}>
+        <Grid
+          templateColumns={{
+            md: "1fr",
+            lg: "repeat(1, 4fr 2fr)",
+          }}
+          gap={6}
+          marginTop={"20px"}
+        >
           <GridItem
             w={"100%"}
             h={"400px"}
