@@ -60,13 +60,13 @@ const Login = () => {
       justifyContent={"center"}
       alignItems="center"
     >
-      <Flex w={"100rem"}>
+      <Flex w={"100rem"} flexDirection={{ base: "column-reverse", md: "row" }}>
         <Flex
           flex={1}
           flexDirection={"column"}
           gap={4}
-          ml="6rem"
-          mr="20rem"
+          ml={{ base: "2rem", lg: "3rem", xl: "6rem" }}
+          mr={{ base: "2rem", lg: "3rem", xl: "20rem" }}
           py={"2rem"}
         >
           <Box>
@@ -131,7 +131,7 @@ const Login = () => {
 
         <Box flex={1}>
           <Flex direction={"column"} color={sikaai_colors.white}>
-            <SikaaiLoginIcon />
+            <SikaaiLoginIcon style={{ width: "100%", height: "auto" }} />
           </Flex>
         </Box>
       </Flex>
