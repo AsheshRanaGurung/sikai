@@ -107,20 +107,21 @@ const useGetQuestion = () => {
 const createQuestion = (questionDetails: IQuestion) => {
   const requestPayload = {
     ...questionDetails,
+    question_text: questionDetails?.question_text ?? null,
     question_image_base64:
       typeof questionDetails?.question_image_base64 == "string"
         ? questionDetails?.question_image_base64.replace(
             "data:image/png;base64,",
             ""
           )
-        : "",
+        : null,
     options: questionDetails.options?.map(item => {
       return {
         ...item,
         answer_image_base64:
           typeof item?.answer_image_base64 == "string"
             ? item?.answer_image_base64.replace("data:image/png;base64,", "")
-            : "",
+            : null,
         answer_text: item?.answer_text ?? null,
       };
     }),
@@ -132,7 +133,7 @@ const createQuestion = (questionDetails: IQuestion) => {
               "data:image/png;base64,",
               ""
             )
-          : "",
+          : null,
     },
   };
   return httpClient.post(api.question.post, requestPayload);

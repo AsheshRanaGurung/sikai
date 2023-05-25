@@ -16,6 +16,7 @@ export interface IForumResponse {
   is_deleted: boolean;
   is_locked: boolean;
   profile_picture: any;
+  is_admin_comment: boolean;
 }
 
 const getForum = () => {

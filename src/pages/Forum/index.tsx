@@ -1,5 +1,6 @@
-import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Spacer, Text } from "@chakra-ui/react";
 import {
+  BlueTickIcon,
   DotIcon,
   DoubleCommentIcon,
   RightArrowIcon,
@@ -32,7 +33,7 @@ const Forum = () => {
       <Box bgColor={sikaai_colors.white} p={4} borderRadius={"8px"}>
         {forum?.map(forumItem => {
           return (
-            <Flex
+            <Grid
               key={forumItem.id}
               gap={4}
               p={4}
@@ -45,6 +46,7 @@ const Forum = () => {
               }
               my={3}
               cursor={"pointer"}
+              templateColumns="max-content 1fr max-content max-content max-content"
             >
               <DoubleCommentIcon />
               <Box>
@@ -56,6 +58,7 @@ const Forum = () => {
                   fontSize={"13px"}
                   fontWeight={450}
                   alignItems={"center"}
+                  mt={3}
                 >
                   <Text>Started by </Text>
                   <Text color={sikaai_colors.primary}>
@@ -72,9 +75,9 @@ const Forum = () => {
               <Spacer />
               {/* TODO: when role === admin replied to comment blue tick */}
               {/* backend api waiting */}
-              {/* <BlueTickIcon /> */}
+              {forumItem.is_admin_comment && <BlueTickIcon />}
               <RightArrowIcon />
-            </Flex>
+            </Grid>
           );
         })}
       </Box>

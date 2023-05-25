@@ -11,7 +11,7 @@ import { useDownloadExcelTemplate } from "@sikaai/service/sikaai-question";
 import BulkUpload from "@sikaai/components/bulkUpload";
 
 function Question() {
-  const [clickCount, setClickCount] = useState(0);
+  const [clickCount, setClickCount] = useState(1);
   const { id: questionSetId = "" } = useParams();
   // TODO loader
   const { mutateAsync: downloadExcelTemplate } = useDownloadExcelTemplate();
@@ -26,8 +26,8 @@ function Question() {
   };
 
   const myComponents = Array.from({ length: clickCount }, (_, i) => (
-    <Box borderRadius={"8px"} p={1} key={i}>
-      <QuestionAccordion />
+    <Box key={i}>
+      <QuestionAccordion index={i + 1} />
     </Box>
   ));
 
@@ -46,17 +46,19 @@ function Question() {
 
   return (
     <>
-      <Flex gap={2} onClick={onDownloadExcelTemplate}>
-        <ExcelDownloadIcon />
-        <Text color={sikaai_colors.primary} fontWeight={600}>
+      <Flex gap={3} mb={4}>
+        <BulkUpload subject_set_id={questionSetId} />
+        <Button
+          leftIcon={<ExcelDownloadIcon />}
+          variant={"primaryOutline"}
+          onClick={onDownloadExcelTemplate}
+          size={"md"}
+        >
           Excel Template
-        </Text>
+        </Button>
       </Flex>
-      <BulkUpload subject_set_id={questionSetId} />
-      <Flex direction={"column"} gap={4}>
-        <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
-          {myComponents}
-        </Box>
+      <Flex direction={"column"} gap={3}>
+        {myComponents}
         <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
           <Flex gap={3} alignItems={"center"}>
             <Button variant={"round"} onClick={handleClick}>

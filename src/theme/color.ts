@@ -18,6 +18,7 @@ export const sikaai_colors = {
   gray_text: "#585858",
   gray_text_subtext: "#737373",
   tooltip_gray: "#1E1B39",
+  gray_border: "#e2e8e0",
   accordion_bg: "#C5C9FD",
   accordion_text: "#5D619E",
   graph_stroke: "#8884d8",

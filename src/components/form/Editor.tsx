@@ -18,6 +18,7 @@ export interface IEditor {
   onChange?: (data: string) => void;
   onBlur?: (data: string | undefined) => void;
   onInit?: (editor: ClassicEditor) => void;
+  disabled?: boolean;
 }
 
 const Editor = ({
@@ -30,6 +31,7 @@ const Editor = ({
   helperText,
   required,
   error,
+  disabled,
 }: IEditor) => {
   return (
     <FormControl isInvalid={!!error}>
@@ -45,6 +47,7 @@ const Editor = ({
       <CKEditor
         editor={ClassicEditor}
         data={data}
+        disabled={disabled}
         config={{
           removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed"],
         }}

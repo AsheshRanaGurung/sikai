@@ -27,32 +27,126 @@ import { sikaai_colors } from "@sikaai/theme/color";
 import Switch from "@sikaai/components/switch";
 import SubQuestion from "./subQuestion";
 import FormControl from "@sikaai/components/form/FormControl";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const defaultValues = {
   question_text: "",
-  question_image_base64: null,
+  question_image_base64: null as FileList | null,
   subject_question_set_id: null as number | null,
-  answer_text1: null,
-  answer_text2: null,
-  answer_text3: null,
-  answer_text4: null,
-  optionAImage: null,
-  optionBImage: null,
-  optionCImage: null,
-  optionDImage: null,
+  answer_text1: "",
+  answer_text2: "",
+  answer_text3: "",
+  answer_text4: "",
+  optionAImage: null as FileList | null,
+  optionBImage: null as FileList | null,
+  optionCImage: null as FileList | null,
+  optionDImage: null as FileList | null,
   answer: "",
   description: "",
   image: null,
 };
-const QuestionAccordion = () => {
-  const { register, handleSubmit, watch, setValue } = useForm({
+
+const schema = Yup.object().shape(
+  {
+    question_text: Yup.string().when("question_image_base64", {
+      is: null,
+      then: () => Yup.string().required("Please enter your question"),
+      otherwise: () => Yup.string(),
+    }),
+    question_image_base64: Yup.mixed().when("question_text", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+    answer_text1: Yup.string().when("optionAImage", {
+      is: null,
+      then: () => Yup.string().required("This field is required"),
+      otherwise: () => Yup.string(),
+    }),
+    optionAImage: Yup.mixed().when("answer_text1", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+    answer_text2: Yup.string().when("optionBImage", {
+      is: null,
+      then: () => Yup.string().required("This field is required"),
+      otherwise: () => Yup.string(),
+    }),
+    optionBImage: Yup.mixed().when("answer_text2", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+    answer_text3: Yup.string().when("optionCImage", {
+      is: null,
+      then: () => Yup.string().required("This field is required"),
+      otherwise: () => Yup.string(),
+    }),
+    optionCImage: Yup.mixed().when("answer_text3", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+    answer_text4: Yup.string().when("optionDImage", {
+      is: null,
+      then: () => Yup.string().required("This field is required"),
+      otherwise: () => Yup.string(),
+    }),
+    optionDImage: Yup.mixed().when("answer_text4", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+    answer: Yup.string().required("This field is required"),
+    description: Yup.string().when("image", {
+      is: null,
+      then: () => Yup.string().required("This field is required"),
+      otherwise: () => Yup.string(),
+    }),
+    image: Yup.mixed().when("description", {
+      is: "",
+      then: () => Yup.mixed().required("This field is required").nullable(),
+      otherwise: () => Yup.mixed().nullable(),
+    }),
+  },
+  [
+    ["question_text", "question_image_base64"],
+    ["description", "image"],
+    ["answer_text4", "optionDImage"],
+    ["answer_text3", "optionCImage"],
+    ["answer_text2", "optionBImage"],
+    ["answer_text1", "optionAImage"],
+  ]
+);
+
+const QuestionAccordion = ({ index }: { index: number }) => {
+  // const [formDisabled, setFormDisabled] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: defaultValues,
+    resolver: yupResolver(schema),
   });
-  const { isOpen: isStatusOpen, onOpen: onStatusOpen } = useDisclosure();
+  const {
+    isOpen: isStatusOpen,
+    onOpen: onStatusOpen,
+    onClose: onStatusClose,
+  } = useDisclosure();
   const { id: questionSetId = "" } = useParams();
   const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
+
   const toggleSwitch = () => {
-    onStatusOpen();
+    if (isStatusOpen) {
+      onStatusClose();
+    } else {
+      onStatusOpen();
+    }
   };
 
   const onSubmitHandler = async (questionDetails: typeof defaultValues) => {
@@ -100,453 +194,522 @@ const QuestionAccordion = () => {
 
     const response = await createQuestion(requestBody);
     if (response.status === httpStatus.CREATED) {
+      // setFormDisabled(true);
       toastSuccess("Question set created successful");
     }
   };
 
+  console.log(watch());
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <Accordion defaultIndex={0} allowToggle>
-        <AccordionItem>
-          <h2>
-            <AccordionButton
-              _expanded={{
-                bg: sikaai_colors.primary,
-                color: sikaai_colors.white,
-              }}
-              borderRadius={"8px 8px 0 0"}
-              bg={sikaai_colors.secondary}
-            >
-              <Box
-                as="span"
-                flex="1"
-                textAlign="left"
-                fontWeight={600}
-                fontSize={"16px"}
-                //   color={sikaai_colors.primary}
+      <Box borderRadius={"8px"} p={3} bg={sikaai_colors.white}>
+        <Accordion
+          defaultIndex={0}
+          allowToggle
+          border={`1px solid ${sikaai_colors.gray_border}`}
+          borderRadius="md"
+          p={1}
+        >
+          <AccordionItem
+            sx={{
+              borderStyle: "none",
+            }}
+          >
+            <h2>
+              <AccordionButton
+                _expanded={{
+                  color: sikaai_colors.primary,
+                }}
+                sx={{
+                  borderStyle: "none",
+                  "&: hover": {
+                    bg: sikaai_colors.secondary,
+                  },
+                }}
               >
-                Question
-                {/* <button type="button" onClick={() => remove(index)}>
+                <Box
+                  as="span"
+                  flex="1"
+                  textAlign="left"
+                  fontWeight={600}
+                  fontSize={"16px"}
+                  color={sikaai_colors.primary}
+                >
+                  {`${index}. Question`}
+                  {/* {` Question`} */}
+                  {/* <button type="button" onClick={() => remove(index)}>
                           <TrashIcon />
                         </button> */}
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <Flex direction={"column"} gap={5}>
-              <Box>
-                <Flex gap={5}>
-                  <Text
-                    fontWeight={600}
-                    fontSize={"16px"}
-                    color={sikaai_colors.primary}
-                  >
-                    Description
-                  </Text>
-                  <Switch
-                    disabled={isStatusOpen}
-                    value={isStatusOpen}
-                    toggleSwitch={toggleSwitch}
-                  />
-                </Flex>
-                <Box>{isStatusOpen && <SubQuestion />}</Box>
-              </Box>
-              {!isStatusOpen && (
-                <>
-                  <Box>
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <Flex direction={"column"} gap={5}>
+                <Box>
+                  <Flex gap={5}>
                     <Text
                       fontWeight={600}
                       fontSize={"16px"}
                       color={sikaai_colors.primary}
                     >
-                      Question
+                      Description
                     </Text>
-                    <Flex gap={3}>
-                      <FormControl
-                        control="editor"
-                        name={`question_text`}
-                        placeholder="option A"
-                        data={watch("question_text")}
-                        onChange={(data: string) =>
-                          setValue("question_text", data)
-                        }
-                      />
-                      <Tooltip
-                        label="Select Image"
-                        placement={"top"}
-                        bg="white"
-                        border="none"
-                        boxShadow={"base"}
-                      >
-                        <FormLabel
-                          htmlFor="questionImage"
-                          alignSelf={"center"}
-                          sx={{
-                            "& svg": {
-                              "& > circle": {
-                                fill: watch("question_image_base64")
-                                  ? "green"
-                                  : "#585FCD",
-                              },
-                            },
-                          }}
-                        >
-                          <AddImageIcon />
-                        </FormLabel>
-                      </Tooltip>
-                    </Flex>
-                    <FormControl
-                      width="250px"
-                      control="file"
-                      register={register}
-                      name={"question_image_base64"}
-                      id="questionImage"
-                      display="none"
+                    <Switch
+                      // disabled={isStatusOpen}
+                      value={isStatusOpen}
+                      toggleSwitch={toggleSwitch}
                     />
-                  </Box>
-
-                  <Box>
-                    <Text
-                      fontWeight={600}
-                      fontSize={"16px"}
-                      color={sikaai_colors.primary}
-                    >
-                      Options
-                    </Text>
-                    <SimpleGrid
-                      columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
-                      spacing={5}
-                    >
-                      <Grid
-                        templateColumns="min-content repeat(6, 1fr)"
-                        gap={6}
-                      >
-                        <GridItem colSpan={1}>
-                          <Text
-                            color={sikaai_colors.primary}
-                            mt={2}
-                            textAlign={"right"}
-                          >
-                            A:
-                          </Text>
-                        </GridItem>
-                        <GridItem colSpan={5}>
-                          <FormControl
-                            control="input"
-                            name={`answer_text1`}
-                            placeholder="option A"
-                            register={register}
-                          />
-                        </GridItem>
-                        <GridItem colSpan={1}>
-                          <Tooltip
-                            label="Select Image"
-                            placement={"top"}
-                            bg="white"
-                            border="none"
-                            boxShadow={"base"}
-                          >
-                            <FormLabel
-                              htmlFor="optionImageA"
-                              alignSelf="center"
-                              sx={{
-                                "& svg": {
-                                  "& > circle": {
-                                    fill: watch("optionAImage")
-                                      ? "green"
-                                      : "#585FCD",
-                                  },
-                                },
-                              }}
-                            >
-                              <AddImageIcon />
-                            </FormLabel>
-                          </Tooltip>
-                          <FormControl
-                            width="250px"
-                            control="file"
-                            register={register}
-                            name={"optionAImage"}
-                            id="optionImageA"
-                            display="none"
-                          />
-                        </GridItem>
-                      </Grid>
-                      <Grid
-                        templateColumns="min-content repeat(6, 1fr)"
-                        gap={6}
-                      >
-                        <GridItem colSpan={1}>
-                          <Text
-                            color={sikaai_colors.primary}
-                            mt={2}
-                            textAlign={"right"}
-                          >
-                            B:
-                          </Text>
-                        </GridItem>
-                        <GridItem colSpan={5}>
-                          <FormControl
-                            control="input"
-                            register={register}
-                            name={`answer_text2`}
-                            placeholder="option B"
-                          />
-                        </GridItem>
-                        <GridItem colSpan={1}>
-                          <Tooltip
-                            label="Select Image"
-                            placement={"top"}
-                            bg="white"
-                            border="none"
-                            boxShadow={"base"}
-                          >
-                            <FormLabel
-                              htmlFor="optionBImage"
-                              alignSelf={"center"}
-                              sx={{
-                                "& svg": {
-                                  "& > circle": {
-                                    fill: watch("optionBImage")
-                                      ? "green"
-                                      : "#585FCD",
-                                  },
-                                },
-                              }}
-                            >
-                              <AddImageIcon />
-                            </FormLabel>
-                          </Tooltip>
-                          <FormControl
-                            id="optionBImage"
-                            width="250px"
-                            control="file"
-                            register={register}
-                            name={"optionBImage"}
-                            display="none"
-                          />
-                        </GridItem>
-                      </Grid>
-                      <Grid
-                        templateColumns="min-content repeat(6, 1fr)"
-                        gap={6}
-                      >
-                        <GridItem colSpan={1}>
-                          <Text
-                            color={sikaai_colors.primary}
-                            mt={2}
-                            textAlign={"right"}
-                          >
-                            C:
-                          </Text>
-                        </GridItem>
-                        <GridItem colSpan={5}>
-                          <FormControl
-                            control="input"
-                            register={register}
-                            name={`answer_text3`}
-                            placeholder="option C"
-                          />
-                        </GridItem>
-                        <GridItem colSpan={1}>
-                          <Tooltip
-                            label="Select Image"
-                            placement={"top"}
-                            bg="white"
-                            border="none"
-                            boxShadow={"base"}
-                          >
-                            <FormLabel
-                              htmlFor="optionCImage"
-                              alignSelf={"center"}
-                              sx={{
-                                "& svg": {
-                                  "& > circle": {
-                                    fill: watch("optionCImage")
-                                      ? "green"
-                                      : "#585FCD",
-                                  },
-                                },
-                              }}
-                            >
-                              <AddImageIcon />
-                            </FormLabel>
-                          </Tooltip>
-                          <FormControl
-                            id="optionCImage"
-                            width="250px"
-                            control="file"
-                            register={register}
-                            name={"optionCImage"}
-                            display="none"
-                          />
-                        </GridItem>
-                      </Grid>
-                      <Grid
-                        templateColumns="min-content repeat(6, 1fr)"
-                        gap={6}
-                      >
-                        <GridItem
-                          colSpan={1}
-                          flexDirection={"row"}
-                          alignItems={"center"}
-                        >
-                          <Text
-                            color={sikaai_colors.primary}
-                            mt={2}
-                            textAlign={"right"}
-                          >
-                            D:
-                          </Text>
-                        </GridItem>
-                        <GridItem colSpan={5}>
-                          <FormControl
-                            control="input"
-                            register={register}
-                            name={`answer_text4`}
-                            placeholder="option D"
-                          />
-                        </GridItem>
-                        <GridItem colSpan={1} flexDirection={"row"}>
-                          <Tooltip
-                            label="Select Image"
-                            placement={"top"}
-                            bg="white"
-                            border="none"
-                            boxShadow={"base"}
-                          >
-                            <FormLabel
-                              htmlFor="optionDImage"
-                              alignSelf="center"
-                              sx={{
-                                "& svg": {
-                                  "& > circle": {
-                                    fill: watch("optionDImage")
-                                      ? "green"
-                                      : "#585FCD",
-                                  },
-                                },
-                              }}
-                            >
-                              <AddImageIcon />
-                            </FormLabel>
-                          </Tooltip>
-                          <FormControl
-                            id="optionDImage"
-                            width="250px"
-                            control="file"
-                            register={register}
-                            name={"optionDImage"}
-                            display="none"
-                          />
-                        </GridItem>
-                      </Grid>
-                    </SimpleGrid>
-                  </Box>
-                  <Box>
-                    <Flex gap={6}>
+                  </Flex>
+                  <Box>{isStatusOpen && <SubQuestion />}</Box>
+                </Box>
+                {!isStatusOpen && (
+                  <>
+                    <Box>
                       <Text
                         fontWeight={600}
                         fontSize={"16px"}
                         color={sikaai_colors.primary}
-                        whiteSpace={"nowrap"}
                       >
-                        Choose the correct Answer
+                        Question
+                      </Text>
+                      <Flex gap={3}>
+                        <FormControl
+                          control="editor"
+                          // disabled={formDisabled}
+                          name={`question_text`}
+                          placeholder="option A"
+                          data={watch("question_text")}
+                          onChange={(data: string) =>
+                            setValue("question_text", data)
+                          }
+                          error={
+                            errors?.question_text?.message ||
+                            errors?.question_image_base64?.message ||
+                            ""
+                          }
+                        />
+                        <Tooltip
+                          label="Select Image"
+                          placement={"top"}
+                          bg="white"
+                          border="none"
+                          boxShadow={"base"}
+                        >
+                          <FormLabel
+                            htmlFor="questionImage"
+                            alignSelf={"center"}
+                            sx={{
+                              "& svg": {
+                                "& > circle": {
+                                  fill: watch("question_image_base64")
+                                    ? "green"
+                                    : "#585FCD",
+                                },
+                              },
+                            }}
+                          >
+                            <AddImageIcon />
+                          </FormLabel>
+                        </Tooltip>
+                      </Flex>
+                      <FormControl
+                        // disabled={formDisabled}
+                        width="250px"
+                        control="file"
+                        register={register}
+                        name={"question_image_base64"}
+                        id="questionImage"
+                        display="none"
+                      />
+                    </Box>
+
+                    <Box>
+                      <Text
+                        fontWeight={600}
+                        fontSize={"16px"}
+                        color={sikaai_colors.primary}
+                      >
+                        Options
+                      </Text>
+                      <SimpleGrid
+                        columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
+                        spacing={5}
+                      >
+                        <Grid
+                          templateColumns="min-content repeat(6, 1fr)"
+                          gap={6}
+                        >
+                          <GridItem colSpan={1}>
+                            <Text
+                              color={sikaai_colors.primary}
+                              mt={2}
+                              textAlign={"right"}
+                            >
+                              A:
+                            </Text>
+                          </GridItem>
+                          <GridItem colSpan={5}>
+                            <FormControl
+                              control="input"
+                              // disabled={formDisabled}
+                              name={`answer_text1`}
+                              placeholder="option A"
+                              register={register}
+                              error={
+                                errors?.answer_text1?.message ||
+                                errors?.optionAImage?.message ||
+                                ""
+                              }
+                            />
+                          </GridItem>
+                          <GridItem colSpan={1}>
+                            <Tooltip
+                              label="Select Image"
+                              placement={"top"}
+                              bg="white"
+                              border="none"
+                              boxShadow={"base"}
+                            >
+                              <FormLabel
+                                htmlFor="optionImageA"
+                                alignSelf="center"
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionAImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
+                              >
+                                <AddImageIcon />
+                              </FormLabel>
+                            </Tooltip>
+                            <FormControl
+                              // disabled={formDisabled}
+                              width="250px"
+                              control="file"
+                              register={register}
+                              name={"optionAImage"}
+                              id="optionImageA"
+                              display="none"
+                            />
+                          </GridItem>
+                        </Grid>
+                        <Grid
+                          templateColumns="min-content repeat(6, 1fr)"
+                          gap={6}
+                        >
+                          <GridItem colSpan={1}>
+                            <Text
+                              color={sikaai_colors.primary}
+                              mt={2}
+                              textAlign={"right"}
+                            >
+                              B:
+                            </Text>
+                          </GridItem>
+                          <GridItem colSpan={5}>
+                            <FormControl
+                              control="input"
+                              // disabled={formDisabled}
+                              register={register}
+                              name={`answer_text2`}
+                              placeholder="option B"
+                              error={
+                                errors?.answer_text2?.message ||
+                                errors?.optionBImage?.message ||
+                                ""
+                              }
+                            />
+                          </GridItem>
+                          <GridItem colSpan={1}>
+                            <Tooltip
+                              label="Select Image"
+                              placement={"top"}
+                              bg="white"
+                              border="none"
+                              boxShadow={"base"}
+                            >
+                              <FormLabel
+                                htmlFor="optionBImage"
+                                alignSelf={"center"}
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionBImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
+                              >
+                                <AddImageIcon />
+                              </FormLabel>
+                            </Tooltip>
+                            <FormControl
+                              // disabled={formDisabled}
+                              id="optionBImage"
+                              width="250px"
+                              control="file"
+                              register={register}
+                              name={"optionBImage"}
+                              display="none"
+                            />
+                          </GridItem>
+                        </Grid>
+                        <Grid
+                          templateColumns="min-content repeat(6, 1fr)"
+                          gap={6}
+                        >
+                          <GridItem colSpan={1}>
+                            <Text
+                              color={sikaai_colors.primary}
+                              mt={2}
+                              textAlign={"right"}
+                            >
+                              C:
+                            </Text>
+                          </GridItem>
+                          <GridItem colSpan={5}>
+                            <FormControl
+                              control="input"
+                              // disabled={formDisabled}
+                              register={register}
+                              name={`answer_text3`}
+                              placeholder="option C"
+                              error={
+                                errors?.answer_text3?.message ||
+                                errors?.optionCImage?.message ||
+                                ""
+                              }
+                            />
+                          </GridItem>
+                          <GridItem colSpan={1}>
+                            <Tooltip
+                              label="Select Image"
+                              placement={"top"}
+                              bg="white"
+                              border="none"
+                              boxShadow={"base"}
+                            >
+                              <FormLabel
+                                htmlFor="optionCImage"
+                                alignSelf={"center"}
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionCImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
+                              >
+                                <AddImageIcon />
+                              </FormLabel>
+                            </Tooltip>
+                            <FormControl
+                              // disabled={formDisabled}
+                              id="optionCImage"
+                              width="250px"
+                              control="file"
+                              register={register}
+                              name={"optionCImage"}
+                              display="none"
+                            />
+                          </GridItem>
+                        </Grid>
+                        <Grid
+                          templateColumns="min-content repeat(6, 1fr)"
+                          gap={6}
+                        >
+                          <GridItem
+                            colSpan={1}
+                            flexDirection={"row"}
+                            alignItems={"center"}
+                          >
+                            <Text
+                              color={sikaai_colors.primary}
+                              mt={2}
+                              textAlign={"right"}
+                            >
+                              D:
+                            </Text>
+                          </GridItem>
+                          <GridItem colSpan={5}>
+                            <FormControl
+                              control="input"
+                              // disabled={formDisabled}
+                              register={register}
+                              name={`answer_text4`}
+                              placeholder="option D"
+                              error={
+                                errors?.answer_text4?.message ||
+                                errors?.optionDImage?.message ||
+                                ""
+                              }
+                            />
+                          </GridItem>
+                          <GridItem colSpan={1} flexDirection={"row"}>
+                            <Tooltip
+                              label="Select Image"
+                              placement={"top"}
+                              bg="white"
+                              border="none"
+                              boxShadow={"base"}
+                            >
+                              <FormLabel
+                                htmlFor="optionDImage"
+                                alignSelf="center"
+                                sx={{
+                                  "& svg": {
+                                    "& > circle": {
+                                      fill: watch("optionDImage")
+                                        ? "green"
+                                        : "#585FCD",
+                                    },
+                                  },
+                                }}
+                              >
+                                <AddImageIcon />
+                              </FormLabel>
+                            </Tooltip>
+                            <FormControl
+                              // disabled={formDisabled}
+                              id="optionDImage"
+                              width="250px"
+                              control="file"
+                              register={register}
+                              name={"optionDImage"}
+                              display="none"
+                            />
+                          </GridItem>
+                        </Grid>
+                      </SimpleGrid>
+                    </Box>
+                    <Box>
+                      <Flex gap={6}>
+                        <Text
+                          fontWeight={600}
+                          fontSize={"16px"}
+                          color={sikaai_colors.primary}
+                          whiteSpace={"nowrap"}
+                        >
+                          Choose the correct Answer
+                        </Text>
+                        <FormControl
+                          // disabled={formDisabled}
+                          control="radio"
+                          options={[
+                            {
+                              label: "A",
+                              value: "A",
+                            },
+                            {
+                              label: "B",
+                              value: "B",
+                            },
+                            {
+                              label: "C",
+                              value: "C",
+                            },
+                            {
+                              label: "D",
+                              value: "D",
+                            },
+                          ]}
+                          register={register}
+                          name={`answer`}
+                          error={errors?.answer?.message || ""}
+                        />
+                      </Flex>
+                    </Box>
+
+                    <HStack
+                      justifyContent={"space-around"}
+                      gap={3}
+                      wrap={"nowrap"}
+                    >
+                      <Text
+                        fontWeight={600}
+                        fontSize={"16px"}
+                        color={sikaai_colors.primary}
+                      >
+                        Solution
                       </Text>
                       <FormControl
-                        control="radio"
-                        options={[
-                          {
-                            label: "A",
-                            value: "A",
-                          },
-                          {
-                            label: "B",
-                            value: "B",
-                          },
-                          {
-                            label: "C",
-                            value: "C",
-                          },
-                          {
-                            label: "D",
-                            value: "D",
-                          },
-                        ]}
-                        register={register}
-                        name={`answer`}
+                        control="editor"
+                        // disabled={formDisabled}
+                        name={`description`}
+                        placeholder="description"
+                        data={watch("description")}
+                        // height={"50"}
+                        onChange={(data: string) =>
+                          setValue("description", data)
+                        }
+                        error={
+                          errors?.description?.message ||
+                          errors?.image?.message ||
+                          ""
+                        }
                       />
-                    </Flex>
-                  </Box>
-
-                  <HStack
-                    justifyContent={"space-around"}
-                    gap={3}
-                    wrap={"nowrap"}
-                  >
-                    <Text
-                      fontWeight={600}
-                      fontSize={"16px"}
-                      color={sikaai_colors.primary}
-                    >
-                      Solution
-                    </Text>
-                    <FormControl
-                      control="editor"
-                      name={`description`}
-                      placeholder="description"
-                      data={watch("description")}
-                      // height={"50"}
-                      onChange={(data: string) => setValue("description", data)}
-                    />
-                    {/* <FormControl
+                      {/* <FormControl
+                      // disabled={formDisabled}
                         flexGrow={1}
                         control="input"
                         register={register}
                         name={"description"}
                         placeholder="solution"
                       /> */}
-                    <Box width={"6.5%"}>
-                      <Tooltip
-                        label="Select Image"
-                        placement={"top"}
-                        bg="white"
-                        border="none"
-                        boxShadow={"base"}
-                      >
-                        <FormLabel
-                          htmlFor="image"
-                          style={{ alignSelf: "center" }}
-                          sx={{
-                            "& svg": {
-                              "& > circle": {
-                                fill: watch("image") ? "green" : "#585FCD",
-                              },
-                            },
-                          }}
+                      <Box width={"6.5%"}>
+                        <Tooltip
+                          label="Select Image"
+                          placement={"top"}
+                          bg="white"
+                          border="none"
+                          boxShadow={"base"}
                         >
-                          <AddImageIcon />
-                        </FormLabel>
-                      </Tooltip>
-                      <FormControl
-                        id="image"
-                        control="file"
-                        register={register}
-                        name={"image"}
-                        display="none"
-                      />
-                    </Box>
-                  </HStack>
-                  <Button type="submit" isLoading={isLoading}>
-                    Save
-                  </Button>
-                </>
-              )}
-            </Flex>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+                          <FormLabel
+                            htmlFor="image"
+                            style={{ alignSelf: "center" }}
+                            sx={{
+                              "& svg": {
+                                "& > circle": {
+                                  fill: watch("image") ? "green" : "#585FCD",
+                                },
+                              },
+                            }}
+                          >
+                            <AddImageIcon />
+                          </FormLabel>
+                        </Tooltip>
+                        <FormControl
+                          // disabled={formDisabled}
+                          id="image"
+                          control="file"
+                          register={register}
+                          name={"image"}
+                          display="none"
+                        />
+                      </Box>
+                    </HStack>
+                    <Button
+                      type="submit"
+                      isLoading={isLoading}
+                      // disabled={formDisabled}
+                    >
+                      Save
+                    </Button>
+                  </>
+                )}
+              </Flex>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Box>
     </form>
   );
 };
