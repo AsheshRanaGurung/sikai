@@ -124,7 +124,12 @@ const FAQ = () => {
       />
 
       <Box background={sikaai_colors.white} p={3} borderRadius={12}>
-        <Flex justify={"space-between"} mb={4}>
+        <Flex
+          justify={"space-between"}
+          mb={4}
+          flexDirection={{ base: "column", md: "row" }}
+          rowGap={2}
+        >
           <InputGroup maxW={356}>
             <InputRightElement pointerEvents="none">
               <Search2Icon color="gray.300" />

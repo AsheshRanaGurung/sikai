@@ -36,7 +36,7 @@ export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
                 <Text
                   fontWeight={700}
                   color={sikaai_colors.primary}
-                  fontSize={"32px"}
+                  fontSize={{ base: "22px", md: "32px" }}
                   onClick={() => navigate(title.route)}
                 >
                   {title.name}
