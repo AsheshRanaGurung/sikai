@@ -5,6 +5,8 @@ import { httpClient } from "./service-axois";
 import { toastFail, toastSuccess } from "./service-toast";
 
 export interface IQuestion {
+  ///////////////
+  // TODO: parent id? and parent content
   parent_id?: number;
   parent_content?: string;
   question_text: string;
@@ -14,7 +16,7 @@ export interface IQuestion {
   solution: ISolution;
 }
 
-interface IOption {
+export interface IOption {
   answer_text?: string | null;
   answer_image_base64?: string | unknown;
   is_correct: boolean;
@@ -22,7 +24,7 @@ interface IOption {
 
 interface ISolution {
   description?: string | null;
-  image?: string | unknown;
+  solution_image_base64?: string | unknown;
 }
 
 export interface IQuestionSetReq {
@@ -32,6 +34,7 @@ export interface IQuestionSetReq {
 
 export interface IQuestionSetRes extends IQuestionSetReq {
   id: number;
+  question: IQuestionRes[];
 }
 
 export interface IQuestionSetUpdateReq {
@@ -67,6 +70,50 @@ const useGetQuestionSet = ({ subjectId }: { subjectId: string }) => {
       },
     }
   );
+};
+
+export interface IQuestionDetailsReq {
+  ///////////////
+  id: number;
+  parent_id?: number;
+  parent_content?: string;
+
+  question_text: string;
+  // question_image: string
+  question_image_base64: string | unknown;
+  // subject: number
+  options: IOptionReq[];
+  solution: ISolution;
+}
+
+export interface IOptionReq {
+  answer_text: string | null;
+  // test this for unkknown//////////////
+  answer_image_base64: string | unknown;
+  is_correct: boolean;
+}
+
+export interface ISolutionReq {
+  description: string;
+  solution_image_base64: string;
+}
+
+// update question
+
+const updateQuestionSetDetails = (questionSetDetails: IQuestionDetailsReq) => {
+  return httpClient.patch(
+    api.question.patch.replace("{id}", questionSetDetails.id.toString()),
+    questionSetDetails
+  );
+};
+
+const useUpdateQuestionSetDetails = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateQuestionSetDetails, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.subjects_set.getById);
+    },
+  });
 };
 
 const createQuestionSet = (questionSetDetails: IQuestionSetReq) => {
@@ -128,8 +175,8 @@ const createQuestion = (questionDetails: IQuestion) => {
     solution: {
       description: questionDetails?.solution?.description ?? null,
       solution_image_base64:
-        typeof questionDetails?.solution?.image == "string"
-          ? questionDetails?.solution?.image.replace(
+        typeof questionDetails?.solution?.solution_image_base64 == "string"
+          ? questionDetails?.solution?.solution_image_base64.replace(
               "data:image/png;base64,",
               ""
             )
@@ -150,6 +197,34 @@ const useCreateQuestion = () => {
     },
   });
 };
+
+export interface IQuestionRes {
+  id: number;
+  parent: any;
+  question_text: string;
+  ///////////////////
+  //  you have image make different default value for that image
+  // make that default value optional
+  // but you cannot make it ooptional
+  // when you get the response set that value on useeffect default values
+  // question_image: string;
+  question_image: any;
+  subject: number;
+  options: IOptionRes[];
+  solution: ISolutionRes;
+}
+
+export interface IOptionRes extends IOption {
+  id: number;
+  // answer_image: string;
+  answer_image: any;
+}
+
+export interface ISolutionRes extends ISolution {
+  id: number;
+  // image: string;
+  image: any;
+}
 
 const getQuestionSetById = ({ id }: { id: string }) => {
   return httpClient.get<SikaaiResponse<IQuestionSetRes[]>>(
@@ -210,7 +285,6 @@ const useDeleteQuestionSet = () => {
 };
 
 const bulkUpload = (bulkUploadDetails: IBulkUpload) => {
-  console.log(bulkUploadDetails, "bulkUploadDetails");
   return httpClient.post(
     api.question.bulk.post.replace(
       "{subject_set_id}",
@@ -257,4 +331,5 @@ export {
   useDeleteQuestionSet,
   useBulkUpload,
   useDownloadExcelTemplate,
+  useUpdateQuestionSetDetails,
 };

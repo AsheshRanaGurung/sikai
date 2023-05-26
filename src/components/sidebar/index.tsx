@@ -13,7 +13,6 @@ import {
   DocumentTextIcon,
   LogoutIcon,
   MessageQuestionIcon,
-  RolesIcon,
   ServiceIcon,
 } from "@sikaai/assets/svgs";
 
@@ -72,12 +71,12 @@ const Sidebar = ({
       icon: <DocumentTextIcon />,
       visible: true,
     },
-    {
-      name: "Roles",
-      to: NAVIGATION_ROUTES.ROLES,
-      icon: <RolesIcon />,
-      visible: true,
-    },
+    // {
+    //   name: "Roles",
+    //   to: NAVIGATION_ROUTES.ROLES,
+    //   icon: <RolesIcon />,
+    //   visible: true,
+    // },
     {
       name: "About Us",
       to: NAVIGATION_ROUTES.ABOUT_US,

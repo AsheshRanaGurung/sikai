@@ -17,7 +17,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { toastSuccess } from "@sikaai/service/service-toast";
-import { useCreateQuestion } from "@sikaai/service/sikaai-question";
+import {
+  IOption,
+  IQuestionRes,
+  useUpdateQuestionSetDetails,
+} from "@sikaai/service/sikaai-question";
 import { convertToBase64 } from "@sikaai/utils/index";
 import httpStatus from "http-status";
 import { useForm } from "react-hook-form";
@@ -29,23 +33,25 @@ import SubQuestion from "./subQuestion";
 import FormControl from "@sikaai/components/form/FormControl";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 
 const defaultValues = {
   question_text: "",
   question_image_base64: null as FileList | null,
-  subject_question_set_id: null as number | null,
-  answer_text1: "",
-  answer_text2: "",
-  answer_text3: "",
-  answer_text4: "",
+  answer_text1: "" as null | string,
   optionAImage: null as FileList | null,
+  answer_text2: "" as null | string,
   optionBImage: null as FileList | null,
+  answer_text3: "" as null | string,
   optionCImage: null as FileList | null,
+  answer_text4: "" as null | string,
   optionDImage: null as FileList | null,
   answer: "",
-  description: "",
-  image: null,
+  description: "" as null | string,
+  image: null as null | FileList,
 };
+// when you edit then only the image field is required
+// if you try to assign the same field with that then there is an error of course
 
 const schema = Yup.object().shape(
   {
@@ -121,13 +127,34 @@ const schema = Yup.object().shape(
   ]
 );
 
-const QuestionAccordion = ({ index }: { index: number }) => {
-  // const [formDisabled, setFormDisabled] = useState(false);
+// TODO: simplify this logic
+function getAnswer(answerArray: IOption[]) {
+  if (answerArray?.[0]?.is_correct) {
+    return "A";
+  } else if (answerArray?.[1]?.is_correct) {
+    return "B";
+  } else if (answerArray?.[2]?.is_correct) {
+    return "C";
+  } else if (answerArray?.[3]?.is_correct) {
+    return "D";
+  } else {
+    return "";
+  }
+}
+
+const QuestionAccordion1 = ({
+  questionDetailsProp,
+  index,
+}: {
+  questionDetailsProp: IQuestionRes;
+  index: number;
+}) => {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -139,7 +166,11 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     onClose: onStatusClose,
   } = useDisclosure();
   const { id: questionSetId = "" } = useParams();
-  const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
+
+  // react queries
+  const { mutateAsync: updateQuestion, isLoading } =
+    useUpdateQuestionSetDetails();
+  // react queries end
 
   const toggleSwitch = () => {
     if (isStatusOpen) {
@@ -149,8 +180,10 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     }
   };
 
+  console.log(questionDetailsProp, "questionDetailsProp?.id");
   const onSubmitHandler = async (questionDetails: typeof defaultValues) => {
     const requestBody = {
+      id: questionDetailsProp?.id,
       question_text: questionDetails?.question_text,
       question_image_base64: await convertToBase64(
         questionDetails?.question_image_base64?.[0]
@@ -194,18 +227,41 @@ const QuestionAccordion = ({ index }: { index: number }) => {
       },
     };
 
-    const response = await createQuestion(requestBody);
-    if (response.status === httpStatus.CREATED) {
+    const response = await updateQuestion(requestBody);
+    if (response.status === httpStatus.OK) {
       // setFormDisabled(true);
       toastSuccess("Question set created successful");
     }
   };
 
+  useEffect(() => {
+    if (questionDetailsProp) {
+      reset({
+        ...defaultValues,
+        question_text: questionDetailsProp?.question_text,
+        // question_image_base64: questionDetailsProp?.question_image,
+        answer_text1: questionDetailsProp?.options?.[0]?.answer_text,
+        answer_text2: questionDetailsProp?.options?.[1]?.answer_text,
+        answer_text3: questionDetailsProp?.options?.[2]?.answer_text,
+        answer_text4: questionDetailsProp?.options?.[3]?.answer_text,
+        // this doesnot seem to be required
+        // except to show the icon green
+        // optionAImage: questionDetailsProp?.options?.[0]?.answer_image,
+        // optionBImage: questionDetailsProp?.options?.[1]?.answer_image,
+        // optionCImage: questionDetailsProp?.options?.[2]?.answer_image,
+        // optionDImage: questionDetailsProp?.options?.[3]?.answer_image,
+        answer: getAnswer(questionDetailsProp?.options),
+        description: questionDetailsProp?.solution?.description,
+        // image: questionDetailsProp?.solution?.image,
+      });
+    }
+  }, [questionDetailsProp]);
+
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
       <Box borderRadius={"8px"} p={3} bg={sikaai_colors.white}>
         <Accordion
-          defaultIndex={0}
+          // defaultIndex={0}
           allowToggle
           border={`1px solid ${sikaai_colors.gray_border}`}
           borderRadius="md"
@@ -236,11 +292,11 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                   fontSize={"16px"}
                   color={sikaai_colors.primary}
                 >
-                  {`${index}. Question`}
-                  {/* {` Question`} */}
+                  {/* {` ${questionDetails?.id}. Question`} */}
+                  {` ${index}. Question`}
                   {/* <button type="button" onClick={() => remove(index)}>
-                          <TrashIcon />
-                        </button> */}
+                              <TrashIcon />
+                            </button> */}
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
@@ -658,13 +714,13 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                         }
                       />
                       {/* <FormControl
-                      // disabled={formDisabled}
-                        flexGrow={1}
-                        control="input"
-                        register={register}
-                        name={"description"}
-                        placeholder="solution"
-                      /> */}
+                          // disabled={formDisabled}
+                            flexGrow={1}
+                            control="input"
+                            register={register}
+                            name={"description"}
+                            placeholder="solution"
+                          /> */}
                       <Box width={"6.5%"}>
                         <Tooltip
                           label="Select Image"
@@ -702,7 +758,7 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                       isLoading={isLoading}
                       // disabled={formDisabled}
                     >
-                      Save
+                      Edit
                     </Button>
                   </>
                 )}
@@ -714,4 +770,5 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     </form>
   );
 };
-export default QuestionAccordion;
+
+export { QuestionAccordion1 };

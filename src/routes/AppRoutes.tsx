@@ -25,6 +25,7 @@ import ForumAnswer from "@sikaai/pages/Forum/ForumComment";
 import Roles from "@sikaai/pages/roles";
 import ContactUs from "@sikaai/pages/ContactUs";
 import PageNotFound from "@sikaai/pages/PageNotFound";
+import ViewQuestion from "@sikaai/pages/Services/QuestionBased/Questions/ViewQuestion";
 
 const AppRoutes = () => {
   const { data: isAuthenticated, isFetching } = useAuthentication();
@@ -154,6 +155,16 @@ const AppRoutes = () => {
       element: isAuthenticated ? (
         <Layout>
           <Question />
+        </Layout>
+      ) : (
+        <PageNotFound />
+      ),
+    },
+    {
+      path: `${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/:id`,
+      element: isAuthenticated ? (
+        <Layout>
+          <ViewQuestion />
         </Layout>
       ) : (
         <PageNotFound />

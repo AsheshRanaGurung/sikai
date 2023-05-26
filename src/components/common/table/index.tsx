@@ -178,8 +178,6 @@ const DataTable = React.memo(
     containerStyles,
     headerBackgroundColor = "rgba(0, 56, 147, 0.04);",
     btnText,
-    exports,
-    onDownload,
     optionGroup,
     CurrentText,
 

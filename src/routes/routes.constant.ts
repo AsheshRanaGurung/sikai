@@ -18,6 +18,7 @@ export const NAVIGATION_ROUTES = {
   QUESTION_SET: "/services/question-set",
   MODEL_SET: "/services/model-set",
   CREATE_QUESTION_SET: "/services/question-set-create",
+  VIEW_QUESTION_SET: "/services/question-set-view",
   ABROAD_STUDIES: "/services/abroad-studies",
   BASIC_AD: "/basic-ad",
   SETTINGS: "/settings",

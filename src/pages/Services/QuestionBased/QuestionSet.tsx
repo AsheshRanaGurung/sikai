@@ -110,6 +110,11 @@ const QuestionSet = () => {
       {
         Header: "Action",
         Cell: ({ row }: CellProps<{ id: string }>) => {
+          const onView = () => {
+            navigate(
+              `${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${row.original?.id}`
+            );
+          };
           const onEdit = () => {
             setEdit(true);
             setQuestionSetId(row.original?.id);
@@ -126,6 +131,7 @@ const QuestionSet = () => {
           return (
             <Stack alignItems={"flex-start"}>
               <TableActions
+                onView={onView}
                 onEdit={onEdit}
                 onShowQues={onShowQues}
                 onDelete={onDelete}

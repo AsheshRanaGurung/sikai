@@ -69,6 +69,8 @@ export const api = {
   question: {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
+    patch: "/api/v1/assessment/question/{id}/",
+    delete: "/api/v1/assessment/question/{id}/",
     bulk: {
       get: "/api/v1/assessment/csv-file-format/",
       post: "/api/v1/assessment/subject/subject-set/{subject_set_id}/bulk-upload/",
