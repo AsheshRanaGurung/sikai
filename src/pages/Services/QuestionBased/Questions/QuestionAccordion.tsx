@@ -15,6 +15,7 @@ import {
   Text,
   Tooltip,
   useDisclosure,
+  Image,
 } from "@chakra-ui/react";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
@@ -23,6 +24,7 @@ import httpStatus from "http-status";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { AddImageIcon } from "@sikaai/assets/svgs/index";
+import { ImageCancel } from "@sikaai/assets/svgs/index";
 import { sikaai_colors } from "@sikaai/theme/color";
 import Switch from "@sikaai/components/switch";
 import SubQuestion from "./subQuestion";
@@ -128,6 +130,7 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -198,8 +201,39 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     if (response.status === httpStatus.CREATED) {
       // setFormDisabled(true);
       toastSuccess("Question set created successful");
+      reset(defaultValues);
     }
   };
+  //TODO This func returns the selected image
+  // const ImageWithCancelButton = ({
+  //   image,
+  //   onImageRemove,
+  // }: {
+  //   image: FileList | null;
+  //   onImageRemove: () => void;
+  // }) => {
+  //   return (
+  //     <>
+  //       {image && (
+  //         <HStack alignItems={"top"} marginLeft={"2px"}>
+  //           <Image
+  //             height="55px"
+  //             width="55px"
+  //             src={URL.createObjectURL(image?.[0] as Blob)}
+  //             alt="This is an image"
+  //           />
+  //           <Box
+  //             onClick={() => {
+  //               onImageRemove();
+  //             }}
+  //           >
+  //             <ImageCancel style={{ cursor: "pointer" }} />
+  //           </Box>
+  //         </HStack>
+  //       )}
+  //     </>
+  //   );
+  // };
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
@@ -324,6 +358,25 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                         display="none"
                       />
                     </Box>
+                    {watch("question_image_base64") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("question_image_base64")?.[0] as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("question_image_base64", null);
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
 
                     <Box>
                       <Text
@@ -398,6 +451,27 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                               display="none"
                             />
                           </GridItem>
+                          <GridItem colSpan={6}>
+                            {watch("optionAImage") && (
+                              <HStack alignItems={"top"} marginLeft={"2px"}>
+                                <Image
+                                  height="55px"
+                                  width="55px"
+                                  src={URL.createObjectURL(
+                                    watch("optionAImage")?.[0] as Blob
+                                  )}
+                                  alt="this is image"
+                                />
+                                <Box
+                                  onClick={() => {
+                                    setValue("optionAImage", null);
+                                  }}
+                                >
+                                  <ImageCancel style={{ cursor: "pointer" }} />
+                                </Box>
+                              </HStack>
+                            )}
+                          </GridItem>
                         </Grid>
                         <Grid
                           templateColumns="min-content repeat(6, 1fr)"
@@ -460,7 +534,29 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                               display="none"
                             />
                           </GridItem>
+                          <GridItem colSpan={6}>
+                            {watch("optionBImage") && (
+                              <HStack alignItems={"top"} marginLeft={"2px"}>
+                                <Image
+                                  height="55px"
+                                  width="55px"
+                                  src={URL.createObjectURL(
+                                    watch("optionBImage")?.[0] as Blob
+                                  )}
+                                  alt="this is image"
+                                />
+                                <Box
+                                  onClick={() => {
+                                    setValue("optionBImage", null);
+                                  }}
+                                >
+                                  <ImageCancel style={{ cursor: "pointer" }} />
+                                </Box>
+                              </HStack>
+                            )}
+                          </GridItem>
                         </Grid>
+
                         <Grid
                           templateColumns="min-content repeat(6, 1fr)"
                           gap={6}
@@ -521,6 +617,27 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                               name={"optionCImage"}
                               display="none"
                             />
+                          </GridItem>
+                          <GridItem colSpan={6}>
+                            {watch("optionCImage") && (
+                              <HStack alignItems={"top"} marginLeft={"2px"}>
+                                <Image
+                                  height="55px"
+                                  width="55px"
+                                  src={URL.createObjectURL(
+                                    watch("optionCImage")?.[0] as Blob
+                                  )}
+                                  alt="this is image"
+                                />
+                                <Box
+                                  onClick={() => {
+                                    setValue("optionCImage", null);
+                                  }}
+                                >
+                                  <ImageCancel style={{ cursor: "pointer" }} />
+                                </Box>
+                              </HStack>
+                            )}
                           </GridItem>
                         </Grid>
                         <Grid
@@ -587,6 +704,27 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                               name={"optionDImage"}
                               display="none"
                             />
+                          </GridItem>
+                          <GridItem colSpan={6}>
+                            {watch("optionDImage") && (
+                              <HStack alignItems={"top"} marginLeft={"2px"}>
+                                <Image
+                                  height="55px"
+                                  width="55px"
+                                  src={URL.createObjectURL(
+                                    watch("optionDImage")?.[0] as Blob
+                                  )}
+                                  alt="this is image"
+                                />
+                                <Box
+                                  onClick={() => {
+                                    setValue("optionDImage", null);
+                                  }}
+                                >
+                                  <ImageCancel style={{ cursor: "pointer" }} />
+                                </Box>
+                              </HStack>
+                            )}
                           </GridItem>
                         </Grid>
                       </SimpleGrid>
@@ -697,6 +835,30 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                         />
                       </Box>
                     </HStack>
+                    {watch("image") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("image")?.[0] as unknown as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("image", null);
+                            // reset({
+                            //   ...watch(),
+                            //   image: null as FileList | null,
+                            // });
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
+
                     <Button
                       type="submit"
                       isLoading={isLoading}

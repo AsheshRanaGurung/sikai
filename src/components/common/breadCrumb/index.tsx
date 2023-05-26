@@ -11,11 +11,11 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { NotificationIcon } from "@sikaai/assets/svgs";
-
+import { getSidebarState } from "@sikaai/components/layouts/Layout";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
+import { RxHamburgerMenu } from "react-icons/rx";
 interface IBreadCrumb {
   items: { name: string; route: string }[];
   goBack?: string;
@@ -25,11 +25,16 @@ interface IBreadCrumb {
 export const BreadCrumb = ({ items, goBack, title }: IBreadCrumb) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { showSidebar, setShowSidebar } = getSidebarState();
 
   return (
     <Box pb={6} my={6}>
       <Flex justifyContent="space-between" alignItems="center" height={4}>
         <Breadcrumb spacing={1} separator={""}>
+          <Box _hover={{ cursor: "pointer" }}>
+            <RxHamburgerMenu onClick={() => setShowSidebar(!showSidebar)} />
+          </Box>
+
           <BreadcrumbItem>
             <BreadcrumbLink>
               <Flex alignItems={"center"}>

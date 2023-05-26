@@ -43,3 +43,4 @@ export { ReactComponent as PageNotFoundIcon } from "./pageNotFoundIcon.svg";
 export { ReactComponent as ExcelIcon } from "./excelIcon.svg";
 export { ReactComponent as ExcelDownloadIcon } from "./excelDownloadIcon.svg";
 export { ReactComponent as NoDataIcon } from "./noDataIcon.svg";
+export { ReactComponent as ImageCancel } from "./imageCancel.svg";
