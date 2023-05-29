@@ -25,7 +25,7 @@ function MapComponent({ latitude, longitude }: ILatlongData) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker position={[longitude, latitude]}>
-        <Popup>Code Himalaya</Popup>
+        <Popup>Sikaai</Popup>
       </Marker>
       <SetViewOnClick coords={[longitude, latitude]} />
     </MapContainer>
