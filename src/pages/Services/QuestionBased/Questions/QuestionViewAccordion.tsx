@@ -259,6 +259,7 @@ const QuestionViewAccordion = ({
         p={3}
         bg={sikaai_colors.white}
         mb={!questionDetailsProp.parent ? 3 : 0}
+        mt={!questionDetailsProp.parent ? 3 : 0}
       >
         <Accordion
           // TODO: remove this
