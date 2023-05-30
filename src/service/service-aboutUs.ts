@@ -12,12 +12,18 @@ export interface IAboutUs {
   created_at: string;
 }
 
-export interface IAboutUsMedia {
-  video: File | undefined;
+export interface IAboutUsMedia extends IAboutUs {
+  video: string;
 }
 
 export type IEditAboutUs = Omit<IAboutUs, "created_at">;
 
+export type IEditAboutUsMedia = Omit<
+  IAboutUsMedia,
+  "created_at" | "sub_heading" | "video" | "id"
+> & {
+  video: Blob;
+};
 const fetchAboutUs = () => {
   return httpClient.get<SikaaiResponse<IAboutUs[]>>(api.about.fetch);
 };
@@ -66,4 +72,37 @@ const useSaveVideo = () => {
   });
 };
 
-export { useFetchAboutUs, useEditAboutUs, useSaveVideo };
+const getVideoData = () => {
+  return httpClient.get<SikaaiResponse<IAboutUsMedia[]>>(api.about.get);
+};
+
+const useGetVideoData = () => {
+  return useQuery([api.about.get], getVideoData, {
+    select: ({ data }) => data.data,
+  });
+};
+
+const updateVideoData = (editVideoData: IEditAboutUsMedia) => {
+  return httpClient.patch(api.about.patch, toFormData(editVideoData));
+};
+
+const useUpdateVideoData = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateVideoData, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.about.get);
+      toastSuccess("Update successfully");
+    },
+    onError: () => {
+      toastFail("couldn't update");
+    },
+  });
+};
+
+export {
+  useFetchAboutUs,
+  useEditAboutUs,
+  useSaveVideo,
+  useGetVideoData,
+  useUpdateVideoData,
+};

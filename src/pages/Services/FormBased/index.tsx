@@ -4,27 +4,43 @@ import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
-import { useGetForm, useGetFormById } from "@sikaai/service/sikaai-form";
+
+import {
+  useDeleteForm,
+  useGetForm,
+  useGetFormById,
+} from "@sikaai/service/sikaai-form";
+
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CellProps } from "react-table";
 
 const FormBased = () => {
-  const { id = "", service = "" } = useParams();
+  const [modalId, setModalId] = useState("");
 
   // For customized breadcrumb
+  const { id = "", service = "" } = useParams();
   const decodedService = decodeURIComponent(service);
   //
 
-  // const { register } = useForm();
+  // React queries
+  const { data: tableData = [], isLoading: tableDataLoading } = useGetForm({
+    id: id,
+  });
+  const { data, isFetching: isFetchingFormDetails } = useGetFormById({
+    id: modalId,
+  });
+  const { mutateAsync: deleteForm } = useDeleteForm();
+
+  // React queries end
+
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
     onClose: onModalClose,
   } = useDisclosure();
 
-  const [modalId, setModalId] = useState("");
   const columns = useMemo(
     () => [
       {
@@ -62,7 +78,7 @@ const FormBased = () => {
             onModalOpen();
           };
           const onDelete = () => {
-            console.log("here");
+            deleteForm(row.original?.id);
           };
           return (
             <Stack alignItems={"flex-start"}>
@@ -74,15 +90,6 @@ const FormBased = () => {
     ],
     []
   );
-
-  // React queries
-  const { data: tableData = [], isLoading: tableDataLoading } = useGetForm({
-    id: id,
-  });
-  const { data, isFetching: isFetchingFormDetails } = useGetFormById({
-    id: modalId,
-  });
-  // React queries end
 
   return (
     <>
@@ -96,13 +103,14 @@ const FormBased = () => {
             },
           ]}
         />
-
-        <DataTable
-          data={tableData || []}
-          loading={tableDataLoading}
-          columns={columns}
-          // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
-        />
+        <Flex flexDir={"column"} gap={4}>
+          <DataTable
+            data={tableData || []}
+            loading={tableDataLoading}
+            columns={columns}
+            // filters={<Filter filter={[{ type: "Date" }, { type: "Status" }]} />}
+          />
+        </Flex>
 
         <ModalForm
           // TODO: change this to default values

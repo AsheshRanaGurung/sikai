@@ -1,7 +1,7 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
 import { httpClient } from "./service-axois";
-import { toastFail } from "./service-toast";
+import { toastFail, toastSuccess } from "./service-toast";
 
 export interface IFormResponse {
   id: number;
@@ -52,4 +52,21 @@ const useGetFormById = ({ id }: { id: string }) => {
   });
 };
 
-export { useGetForm, useGetFormById };
+const deleteForm = (id: string) => {
+  return httpClient.delete(api.form.delete.replace("{id}", id));
+};
+
+const useDeleteForm = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteForm, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(api.form.get);
+      toastSuccess("Form deleted Successfully");
+    },
+    onError: (e: any) => {
+      toastFail(e.response?.data.message || "Couldn't delete form");
+    },
+  });
+};
+
+export { useGetForm, useGetFormById, useDeleteForm };
