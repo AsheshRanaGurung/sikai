@@ -30,6 +30,8 @@ const AboutUs = () => {
 
   // react queries
   const { data: aboutUsData = [] } = useFetchAboutUs();
+  console.log("DATA", aboutUsData);
+  console.log("DATA", typeof aboutUsData);
   const { mutateAsync: editAboutUs, isLoading: isUpdating } = useEditAboutUs();
   const { mutateAsync: createVideo, isLoading: isCreatingVideo } =
     useSaveVideo();

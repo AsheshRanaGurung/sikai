@@ -7,6 +7,7 @@ import httpStatus from "http-status";
 
 const NoQuestions = ({ questionSetId }: { questionSetId: string }) => {
   // TODO loader
+  // incase there is no question created yet
   const { mutateAsync: downloadExcelTemplate } = useDownloadExcelTemplate();
   const onDownloadExcelTemplate = async () => {
     const response: any = await downloadExcelTemplate();

@@ -25,12 +25,6 @@ const Layout = ({ children }: ILayout) => {
     setIsHovered(false);
   }, [width]);
 
-  // Toggle the sidebar's collapsed state
-  // const toggleSidebar = () => {
-  //   setShowSidebar(!showSidebar);
-  //   setIsHovered(false);
-  // };
-
   // Calculate the current sidebar width based on its collapsed state and hovered state
   const sidebarWidth = useMemo(
     () => (showSidebar ? LAYOUT_WIDTHS.LARGE : LAYOUT_WIDTHS.SMALL),

@@ -8,7 +8,7 @@ export interface IQuestion {
   ///////////////
   // TODO: parent id? and parent content
   parent_id?: number;
-  parent_content?: string;
+  parent_content?: string | null;
   question_text: string;
   question_image_base64?: string | unknown;
   subject_question_set_id: number;
@@ -27,6 +27,7 @@ interface ISolution {
   solution_image_base64?: string | unknown;
 }
 
+// questionset
 export interface IQuestionSetReq {
   subject_id: string;
   name: string;
@@ -36,6 +37,7 @@ export interface IQuestionSetRes extends IQuestionSetReq {
   id: number;
   question: IQuestionRes[];
 }
+//  questionset end
 
 export interface IQuestionSetUpdateReq {
   id: string;
@@ -101,9 +103,40 @@ export interface ISolutionReq {
 // update question
 
 const updateQuestionSetDetails = (questionSetDetails: IQuestionDetailsReq) => {
+  const requestPayload = {
+    ...questionSetDetails,
+    question_text: questionSetDetails?.question_text ?? null,
+    question_image_base64:
+      typeof questionSetDetails?.question_image_base64 == "string"
+        ? questionSetDetails?.question_image_base64.replace(
+            "data:image/png;base64,",
+            ""
+          )
+        : null,
+    options: questionSetDetails.options?.map(item => {
+      return {
+        ...item,
+        answer_image_base64:
+          typeof item?.answer_image_base64 == "string"
+            ? item?.answer_image_base64.replace("data:image/png;base64,", "")
+            : null,
+        answer_text: item?.answer_text ?? null,
+      };
+    }),
+    solution: {
+      description: questionSetDetails?.solution?.description ?? null,
+      solution_image_base64:
+        typeof questionSetDetails?.solution?.solution_image_base64 == "string"
+          ? questionSetDetails?.solution?.solution_image_base64.replace(
+              "data:image/png;base64,",
+              ""
+            )
+          : null,
+    },
+  };
   return httpClient.patch(
     api.question.patch.replace("{id}", questionSetDetails.id.toString()),
-    questionSetDetails
+    requestPayload
   );
 };
 
@@ -139,7 +172,7 @@ const useCreateQuestionSet = () => {
 };
 
 const getQuestion = () => {
-  return httpClient.get<SikaaiResponse<any>>(api.question.get);
+  return httpClient.get<SikaaiResponse<IQuestionRes[]>>(api.question.get);
 };
 
 const useGetQuestion = () => {
@@ -183,7 +216,10 @@ const createQuestion = (questionDetails: IQuestion) => {
           : null,
     },
   };
-  return httpClient.post(api.question.post, requestPayload);
+  return httpClient.post<SikaaiResponse<IQuestionRes[]>>(
+    api.question.post,
+    requestPayload
+  );
 };
 
 const useCreateQuestion = () => {
@@ -200,9 +236,12 @@ const useCreateQuestion = () => {
 
 export interface IQuestionRes {
   id: number;
-  parent: any;
+  parent: IParent;
+  parent_id: number;
+  parent_content: string;
   question_text: string;
   ///////////////////
+  // TODO
   //  you have image make different default value for that image
   // make that default value optional
   // but you cannot make it ooptional
@@ -214,6 +253,11 @@ export interface IQuestionRes {
   solution: ISolutionRes;
 }
 
+export interface IParent {
+  id: number;
+  // TODO: handle parent content
+  parent_content: string;
+}
 export interface IOptionRes extends IOption {
   id: number;
   // answer_image: string;

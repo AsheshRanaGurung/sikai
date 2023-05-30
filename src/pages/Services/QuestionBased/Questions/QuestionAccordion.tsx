@@ -1,9 +1,4 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
   Button,
   Flex,
@@ -22,7 +17,7 @@ import { useCreateQuestion } from "@sikaai/service/sikaai-question";
 import { convertToBase64 } from "@sikaai/utils/index";
 import httpStatus from "http-status";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AddImageIcon } from "@sikaai/assets/svgs/index";
 import { ImageCancel } from "@sikaai/assets/svgs/index";
 import { sikaai_colors } from "@sikaai/theme/color";
@@ -31,6 +26,7 @@ import SubQuestion from "./subQuestion";
 import FormControl from "@sikaai/components/form/FormControl";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 
 const defaultValues = {
   question_text: "",
@@ -123,8 +119,15 @@ const schema = Yup.object().shape(
   ]
 );
 
-const QuestionAccordion = ({ index }: { index: number }) => {
-  // const [formDisabled, setFormDisabled] = useState(false);
+const QuestionAccordion = () => {
+  const navigate = useNavigate();
+
+  // Access optional params
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const parentId = queryParams.get("parentId");
+  // end
+
   const {
     register,
     handleSubmit,
@@ -136,6 +139,7 @@ const QuestionAccordion = ({ index }: { index: number }) => {
     defaultValues: defaultValues,
     resolver: yupResolver(schema),
   });
+
   const {
     isOpen: isStatusOpen,
     onOpen: onStatusOpen,
@@ -199,131 +203,160 @@ const QuestionAccordion = ({ index }: { index: number }) => {
 
     const response = await createQuestion(requestBody);
     if (response.status === httpStatus.CREATED) {
-      // setFormDisabled(true);
-      toastSuccess("Question set created successful");
       reset(defaultValues);
+      toastSuccess("Question set created successful");
+      navigate(`${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${questionSetId}`);
     }
   };
-  //TODO This func returns the selected image
-  // const ImageWithCancelButton = ({
-  //   image,
-  //   onImageRemove,
-  // }: {
-  //   image: FileList | null;
-  //   onImageRemove: () => void;
-  // }) => {
-  //   return (
-  //     <>
-  //       {image && (
-  //         <HStack alignItems={"top"} marginLeft={"2px"}>
-  //           <Image
-  //             height="55px"
-  //             width="55px"
-  //             src={URL.createObjectURL(image?.[0] as Blob)}
-  //             alt="This is an image"
-  //           />
-  //           <Box
-  //             onClick={() => {
-  //               onImageRemove();
-  //             }}
-  //           >
-  //             <ImageCancel style={{ cursor: "pointer" }} />
-  //           </Box>
-  //         </HStack>
-  //       )}
-  //     </>
-  //   );
-  // };
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
       <Box borderRadius={"8px"} p={3} bg={sikaai_colors.white}>
-        <Accordion
-          defaultIndex={0}
-          allowToggle
-          border={`1px solid ${sikaai_colors.gray_border}`}
-          borderRadius="md"
-          p={1}
+        <Flex
+          direction={"column"}
+          borderRadius={"8px"}
+          p={3}
+          gap={5}
+          bg={sikaai_colors.white}
         >
-          <AccordionItem
-            sx={{
-              borderStyle: "none",
-            }}
-          >
-            <h2>
-              <AccordionButton
-                _expanded={{
-                  color: sikaai_colors.primary,
-                }}
-                sx={{
-                  borderStyle: "none",
-                  "&: hover": {
-                    bg: sikaai_colors.secondary,
-                  },
-                }}
-              >
-                <Box
-                  as="span"
-                  flex="1"
-                  textAlign="left"
+          {!parentId && (
+            <Box>
+              <Flex gap={5}>
+                <Text
                   fontWeight={600}
                   fontSize={"16px"}
                   color={sikaai_colors.primary}
                 >
-                  {`${index}. Question`}
-                  {/* {` Question`} */}
-                  {/* <button type="button" onClick={() => remove(index)}>
-                          <TrashIcon />
-                        </button> */}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <Flex direction={"column"} gap={5}>
+                  Description
+                </Text>
+                <Switch
+                  // disabled={isStatusOpen}
+                  value={isStatusOpen}
+                  toggleSwitch={toggleSwitch}
+                />
+              </Flex>
+
+              <Box>{isStatusOpen && <SubQuestion />}</Box>
+            </Box>
+          )}
+
+          {!isStatusOpen &&
+            (parentId ? (
+              <SubQuestion />
+            ) : (
+              <>
                 <Box>
-                  <Flex gap={5}>
-                    <Text
-                      fontWeight={600}
-                      fontSize={"16px"}
-                      color={sikaai_colors.primary}
-                    >
-                      Description
-                    </Text>
-                    <Switch
-                      // disabled={isStatusOpen}
-                      value={isStatusOpen}
-                      toggleSwitch={toggleSwitch}
+                  <Text
+                    fontWeight={600}
+                    fontSize={"16px"}
+                    color={sikaai_colors.primary}
+                  >
+                    Question :
+                  </Text>
+                  <Flex gap={3}>
+                    <FormControl
+                      control="editor"
+                      name={`question_text`}
+                      placeholder="option A"
+                      data={watch("question_text")}
+                      onChange={(data: string) =>
+                        setValue("question_text", data)
+                      }
+                      error={
+                        errors?.question_text?.message ||
+                        errors?.question_image_base64?.message ||
+                        ""
+                      }
                     />
-                  </Flex>
-                  <Box>{isStatusOpen && <SubQuestion />}</Box>
-                </Box>
-                {!isStatusOpen && (
-                  <>
-                    <Box>
-                      <Text
-                        fontWeight={600}
-                        fontSize={"16px"}
-                        color={sikaai_colors.primary}
+                    <Tooltip
+                      label="Select Image"
+                      placement={"top"}
+                      bg="white"
+                      border="none"
+                      boxShadow={"base"}
+                    >
+                      <FormLabel
+                        htmlFor="questionImage"
+                        alignSelf={"center"}
+                        sx={{
+                          "& svg": {
+                            "& > circle": {
+                              fill: watch("question_image_base64")
+                                ? "green"
+                                : "#585FCD",
+                            },
+                          },
+                        }}
                       >
-                        Question
-                      </Text>
-                      <Flex gap={3}>
+                        <AddImageIcon />
+                      </FormLabel>
+                    </Tooltip>
+                  </Flex>
+                  <FormControl
+                    width="250px"
+                    control="file"
+                    register={register}
+                    name={"question_image_base64"}
+                    id="questionImage"
+                    display="none"
+                  />
+                </Box>
+                {watch("question_image_base64") && (
+                  <HStack alignItems={"top"} marginLeft={"2px"}>
+                    <Image
+                      height="55px"
+                      width="55px"
+                      src={URL.createObjectURL(
+                        watch("question_image_base64")?.[0] as Blob
+                      )}
+                      alt="this is image"
+                    />
+                    <Box
+                      onClick={() => {
+                        setValue("question_image_base64", null);
+                      }}
+                    >
+                      <ImageCancel style={{ cursor: "pointer" }} />
+                    </Box>
+                  </HStack>
+                )}
+
+                <Box>
+                  <Text
+                    fontWeight={600}
+                    fontSize={"16px"}
+                    color={sikaai_colors.primary}
+                  >
+                    Options :
+                  </Text>
+                  <SimpleGrid
+                    columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
+                    spacing={5}
+                  >
+                    <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
+                      <GridItem colSpan={1}>
+                        <Text
+                          color={sikaai_colors.primary}
+                          mt={2}
+                          textAlign={"right"}
+                        >
+                          A:
+                        </Text>
+                      </GridItem>
+                      <GridItem colSpan={5}>
                         <FormControl
-                          control="editor"
-                          // disabled={formDisabled}
-                          name={`question_text`}
+                          control="input"
+                          name={`answer_text1`}
                           placeholder="option A"
-                          data={watch("question_text")}
-                          onChange={(data: string) =>
-                            setValue("question_text", data)
-                          }
+                          register={register}
                           error={
-                            errors?.question_text?.message ||
-                            errors?.question_image_base64?.message ||
+                            errors?.answer_text1?.message ||
+                            errors?.optionAImage?.message ||
                             ""
                           }
                         />
+                      </GridItem>
+                      <GridItem colSpan={1}>
                         <Tooltip
                           label="Select Image"
                           placement={"top"}
@@ -332,12 +365,12 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                           boxShadow={"base"}
                         >
                           <FormLabel
-                            htmlFor="questionImage"
-                            alignSelf={"center"}
+                            htmlFor="optionImageA"
+                            alignSelf="center"
                             sx={{
                               "& svg": {
                                 "& > circle": {
-                                  fill: watch("question_image_base64")
+                                  fill: watch("optionAImage")
                                     ? "green"
                                     : "#585FCD",
                                 },
@@ -347,463 +380,61 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                             <AddImageIcon />
                           </FormLabel>
                         </Tooltip>
-                      </Flex>
-                      <FormControl
-                        // disabled={formDisabled}
-                        width="250px"
-                        control="file"
-                        register={register}
-                        name={"question_image_base64"}
-                        id="questionImage"
-                        display="none"
-                      />
-                    </Box>
-                    {watch("question_image_base64") && (
-                      <HStack alignItems={"top"} marginLeft={"2px"}>
-                        <Image
-                          height="55px"
-                          width="55px"
-                          src={URL.createObjectURL(
-                            watch("question_image_base64")?.[0] as Blob
-                          )}
-                          alt="this is image"
-                        />
-                        <Box
-                          onClick={() => {
-                            setValue("question_image_base64", null);
-                          }}
-                        >
-                          <ImageCancel style={{ cursor: "pointer" }} />
-                        </Box>
-                      </HStack>
-                    )}
-
-                    <Box>
-                      <Text
-                        fontWeight={600}
-                        fontSize={"16px"}
-                        color={sikaai_colors.primary}
-                      >
-                        Options
-                      </Text>
-                      <SimpleGrid
-                        columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
-                        spacing={5}
-                      >
-                        <Grid
-                          templateColumns="min-content repeat(6, 1fr)"
-                          gap={6}
-                        >
-                          <GridItem colSpan={1}>
-                            <Text
-                              color={sikaai_colors.primary}
-                              mt={2}
-                              textAlign={"right"}
-                            >
-                              A:
-                            </Text>
-                          </GridItem>
-                          <GridItem colSpan={5}>
-                            <FormControl
-                              control="input"
-                              // disabled={formDisabled}
-                              name={`answer_text1`}
-                              placeholder="option A"
-                              register={register}
-                              error={
-                                errors?.answer_text1?.message ||
-                                errors?.optionAImage?.message ||
-                                ""
-                              }
-                            />
-                          </GridItem>
-                          <GridItem colSpan={1}>
-                            <Tooltip
-                              label="Select Image"
-                              placement={"top"}
-                              bg="white"
-                              border="none"
-                              boxShadow={"base"}
-                            >
-                              <FormLabel
-                                htmlFor="optionImageA"
-                                alignSelf="center"
-                                sx={{
-                                  "& svg": {
-                                    "& > circle": {
-                                      fill: watch("optionAImage")
-                                        ? "green"
-                                        : "#585FCD",
-                                    },
-                                  },
-                                }}
-                              >
-                                <AddImageIcon />
-                              </FormLabel>
-                            </Tooltip>
-                            <FormControl
-                              // disabled={formDisabled}
-                              width="250px"
-                              control="file"
-                              register={register}
-                              name={"optionAImage"}
-                              id="optionImageA"
-                              display="none"
-                            />
-                          </GridItem>
-                          <GridItem colSpan={6}>
-                            {watch("optionAImage") && (
-                              <HStack alignItems={"top"} marginLeft={"2px"}>
-                                <Image
-                                  height="55px"
-                                  width="55px"
-                                  src={URL.createObjectURL(
-                                    watch("optionAImage")?.[0] as Blob
-                                  )}
-                                  alt="this is image"
-                                />
-                                <Box
-                                  onClick={() => {
-                                    setValue("optionAImage", null);
-                                  }}
-                                >
-                                  <ImageCancel style={{ cursor: "pointer" }} />
-                                </Box>
-                              </HStack>
-                            )}
-                          </GridItem>
-                        </Grid>
-                        <Grid
-                          templateColumns="min-content repeat(6, 1fr)"
-                          gap={6}
-                        >
-                          <GridItem colSpan={1}>
-                            <Text
-                              color={sikaai_colors.primary}
-                              mt={2}
-                              textAlign={"right"}
-                            >
-                              B:
-                            </Text>
-                          </GridItem>
-                          <GridItem colSpan={5}>
-                            <FormControl
-                              control="input"
-                              // disabled={formDisabled}
-                              register={register}
-                              name={`answer_text2`}
-                              placeholder="option B"
-                              error={
-                                errors?.answer_text2?.message ||
-                                errors?.optionBImage?.message ||
-                                ""
-                              }
-                            />
-                          </GridItem>
-                          <GridItem colSpan={1}>
-                            <Tooltip
-                              label="Select Image"
-                              placement={"top"}
-                              bg="white"
-                              border="none"
-                              boxShadow={"base"}
-                            >
-                              <FormLabel
-                                htmlFor="optionBImage"
-                                alignSelf={"center"}
-                                sx={{
-                                  "& svg": {
-                                    "& > circle": {
-                                      fill: watch("optionBImage")
-                                        ? "green"
-                                        : "#585FCD",
-                                    },
-                                  },
-                                }}
-                              >
-                                <AddImageIcon />
-                              </FormLabel>
-                            </Tooltip>
-                            <FormControl
-                              // disabled={formDisabled}
-                              id="optionBImage"
-                              width="250px"
-                              control="file"
-                              register={register}
-                              name={"optionBImage"}
-                              display="none"
-                            />
-                          </GridItem>
-                          <GridItem colSpan={6}>
-                            {watch("optionBImage") && (
-                              <HStack alignItems={"top"} marginLeft={"2px"}>
-                                <Image
-                                  height="55px"
-                                  width="55px"
-                                  src={URL.createObjectURL(
-                                    watch("optionBImage")?.[0] as Blob
-                                  )}
-                                  alt="this is image"
-                                />
-                                <Box
-                                  onClick={() => {
-                                    setValue("optionBImage", null);
-                                  }}
-                                >
-                                  <ImageCancel style={{ cursor: "pointer" }} />
-                                </Box>
-                              </HStack>
-                            )}
-                          </GridItem>
-                        </Grid>
-
-                        <Grid
-                          templateColumns="min-content repeat(6, 1fr)"
-                          gap={6}
-                        >
-                          <GridItem colSpan={1}>
-                            <Text
-                              color={sikaai_colors.primary}
-                              mt={2}
-                              textAlign={"right"}
-                            >
-                              C:
-                            </Text>
-                          </GridItem>
-                          <GridItem colSpan={5}>
-                            <FormControl
-                              control="input"
-                              // disabled={formDisabled}
-                              register={register}
-                              name={`answer_text3`}
-                              placeholder="option C"
-                              error={
-                                errors?.answer_text3?.message ||
-                                errors?.optionCImage?.message ||
-                                ""
-                              }
-                            />
-                          </GridItem>
-                          <GridItem colSpan={1}>
-                            <Tooltip
-                              label="Select Image"
-                              placement={"top"}
-                              bg="white"
-                              border="none"
-                              boxShadow={"base"}
-                            >
-                              <FormLabel
-                                htmlFor="optionCImage"
-                                alignSelf={"center"}
-                                sx={{
-                                  "& svg": {
-                                    "& > circle": {
-                                      fill: watch("optionCImage")
-                                        ? "green"
-                                        : "#585FCD",
-                                    },
-                                  },
-                                }}
-                              >
-                                <AddImageIcon />
-                              </FormLabel>
-                            </Tooltip>
-                            <FormControl
-                              // disabled={formDisabled}
-                              id="optionCImage"
-                              width="250px"
-                              control="file"
-                              register={register}
-                              name={"optionCImage"}
-                              display="none"
-                            />
-                          </GridItem>
-                          <GridItem colSpan={6}>
-                            {watch("optionCImage") && (
-                              <HStack alignItems={"top"} marginLeft={"2px"}>
-                                <Image
-                                  height="55px"
-                                  width="55px"
-                                  src={URL.createObjectURL(
-                                    watch("optionCImage")?.[0] as Blob
-                                  )}
-                                  alt="this is image"
-                                />
-                                <Box
-                                  onClick={() => {
-                                    setValue("optionCImage", null);
-                                  }}
-                                >
-                                  <ImageCancel style={{ cursor: "pointer" }} />
-                                </Box>
-                              </HStack>
-                            )}
-                          </GridItem>
-                        </Grid>
-                        <Grid
-                          templateColumns="min-content repeat(6, 1fr)"
-                          gap={6}
-                        >
-                          <GridItem
-                            colSpan={1}
-                            flexDirection={"row"}
-                            alignItems={"center"}
-                          >
-                            <Text
-                              color={sikaai_colors.primary}
-                              mt={2}
-                              textAlign={"right"}
-                            >
-                              D:
-                            </Text>
-                          </GridItem>
-                          <GridItem colSpan={5}>
-                            <FormControl
-                              control="input"
-                              // disabled={formDisabled}
-                              register={register}
-                              name={`answer_text4`}
-                              placeholder="option D"
-                              error={
-                                errors?.answer_text4?.message ||
-                                errors?.optionDImage?.message ||
-                                ""
-                              }
-                            />
-                          </GridItem>
-                          <GridItem colSpan={1} flexDirection={"row"}>
-                            <Tooltip
-                              label="Select Image"
-                              placement={"top"}
-                              bg="white"
-                              border="none"
-                              boxShadow={"base"}
-                            >
-                              <FormLabel
-                                htmlFor="optionDImage"
-                                alignSelf="center"
-                                sx={{
-                                  "& svg": {
-                                    "& > circle": {
-                                      fill: watch("optionDImage")
-                                        ? "green"
-                                        : "#585FCD",
-                                    },
-                                  },
-                                }}
-                              >
-                                <AddImageIcon />
-                              </FormLabel>
-                            </Tooltip>
-                            <FormControl
-                              // disabled={formDisabled}
-                              id="optionDImage"
-                              width="250px"
-                              control="file"
-                              register={register}
-                              name={"optionDImage"}
-                              display="none"
-                            />
-                          </GridItem>
-                          <GridItem colSpan={6}>
-                            {watch("optionDImage") && (
-                              <HStack alignItems={"top"} marginLeft={"2px"}>
-                                <Image
-                                  height="55px"
-                                  width="55px"
-                                  src={URL.createObjectURL(
-                                    watch("optionDImage")?.[0] as Blob
-                                  )}
-                                  alt="this is image"
-                                />
-                                <Box
-                                  onClick={() => {
-                                    setValue("optionDImage", null);
-                                  }}
-                                >
-                                  <ImageCancel style={{ cursor: "pointer" }} />
-                                </Box>
-                              </HStack>
-                            )}
-                          </GridItem>
-                        </Grid>
-                      </SimpleGrid>
-                    </Box>
-                    <Box>
-                      <Flex gap={6}>
-                        <Text
-                          fontWeight={600}
-                          fontSize={"16px"}
-                          color={sikaai_colors.primary}
-                          whiteSpace={"nowrap"}
-                        >
-                          Choose the correct Answer
-                        </Text>
                         <FormControl
-                          // disabled={formDisabled}
-                          control="radio"
-                          options={[
-                            {
-                              label: "A",
-                              value: "A",
-                            },
-                            {
-                              label: "B",
-                              value: "B",
-                            },
-                            {
-                              label: "C",
-                              value: "C",
-                            },
-                            {
-                              label: "D",
-                              value: "D",
-                            },
-                          ]}
+                          width="250px"
+                          control="file"
                           register={register}
-                          name={`answer`}
-                          error={errors?.answer?.message || ""}
+                          name={"optionAImage"}
+                          id="optionImageA"
+                          display="none"
                         />
-                      </Flex>
-                    </Box>
-
-                    <HStack
-                      justifyContent={"space-around"}
-                      gap={3}
-                      wrap={"nowrap"}
-                    >
-                      <Text
-                        fontWeight={600}
-                        fontSize={"16px"}
-                        color={sikaai_colors.primary}
-                      >
-                        Solution
-                      </Text>
-                      <FormControl
-                        control="editor"
-                        // disabled={formDisabled}
-                        name={`description`}
-                        placeholder="description"
-                        data={watch("description")}
-                        // height={"50"}
-                        onChange={(data: string) =>
-                          setValue("description", data)
-                        }
-                        error={
-                          errors?.description?.message ||
-                          errors?.image?.message ||
-                          ""
-                        }
-                      />
-                      {/* <FormControl
-                      // disabled={formDisabled}
-                        flexGrow={1}
-                        control="input"
-                        register={register}
-                        name={"description"}
-                        placeholder="solution"
-                      /> */}
-                      <Box width={"6.5%"}>
+                      </GridItem>
+                      <GridItem colSpan={6}>
+                        {watch("optionAImage") && (
+                          <HStack alignItems={"top"} marginLeft={"2px"}>
+                            <Image
+                              height="55px"
+                              width="55px"
+                              src={URL.createObjectURL(
+                                watch("optionAImage")?.[0] as Blob
+                              )}
+                              alt="this is image"
+                            />
+                            <Box
+                              onClick={() => {
+                                setValue("optionAImage", null);
+                              }}
+                            >
+                              <ImageCancel style={{ cursor: "pointer" }} />
+                            </Box>
+                          </HStack>
+                        )}
+                      </GridItem>
+                    </Grid>
+                    <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
+                      <GridItem colSpan={1}>
+                        <Text
+                          color={sikaai_colors.primary}
+                          mt={2}
+                          textAlign={"right"}
+                        >
+                          B:
+                        </Text>
+                      </GridItem>
+                      <GridItem colSpan={5}>
+                        <FormControl
+                          control="input"
+                          register={register}
+                          name={`answer_text2`}
+                          placeholder="option B"
+                          error={
+                            errors?.answer_text2?.message ||
+                            errors?.optionBImage?.message ||
+                            ""
+                          }
+                        />
+                      </GridItem>
+                      <GridItem colSpan={1}>
                         <Tooltip
                           label="Select Image"
                           placement={"top"}
@@ -812,12 +443,14 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                           boxShadow={"base"}
                         >
                           <FormLabel
-                            htmlFor="image"
-                            style={{ alignSelf: "center" }}
+                            htmlFor="optionBImage"
+                            alignSelf={"center"}
                             sx={{
                               "& svg": {
                                 "& > circle": {
-                                  fill: watch("image") ? "green" : "#585FCD",
+                                  fill: watch("optionBImage")
+                                    ? "green"
+                                    : "#585FCD",
                                 },
                               },
                             }}
@@ -826,52 +459,326 @@ const QuestionAccordion = ({ index }: { index: number }) => {
                           </FormLabel>
                         </Tooltip>
                         <FormControl
-                          // disabled={formDisabled}
-                          id="image"
+                          id="optionBImage"
+                          width="250px"
                           control="file"
                           register={register}
-                          name={"image"}
+                          name={"optionBImage"}
                           display="none"
                         />
-                      </Box>
-                    </HStack>
-                    {watch("image") && (
-                      <HStack alignItems={"top"} marginLeft={"2px"}>
-                        <Image
-                          height="55px"
-                          width="55px"
-                          src={URL.createObjectURL(
-                            watch("image")?.[0] as unknown as Blob
-                          )}
-                          alt="this is image"
-                        />
-                        <Box
-                          onClick={() => {
-                            setValue("image", null);
-                            // reset({
-                            //   ...watch(),
-                            //   image: null as FileList | null,
-                            // });
-                          }}
-                        >
-                          <ImageCancel style={{ cursor: "pointer" }} />
-                        </Box>
-                      </HStack>
-                    )}
+                      </GridItem>
+                      <GridItem colSpan={6}>
+                        {watch("optionBImage") && (
+                          <HStack alignItems={"top"} marginLeft={"2px"}>
+                            <Image
+                              height="55px"
+                              width="55px"
+                              src={URL.createObjectURL(
+                                watch("optionBImage")?.[0] as Blob
+                              )}
+                              alt="this is image"
+                            />
+                            <Box
+                              onClick={() => {
+                                setValue("optionBImage", null);
+                              }}
+                            >
+                              <ImageCancel style={{ cursor: "pointer" }} />
+                            </Box>
+                          </HStack>
+                        )}
+                      </GridItem>
+                    </Grid>
 
-                    <Button
-                      type="submit"
-                      isLoading={isLoading}
-                      // disabled={formDisabled}
+                    <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
+                      <GridItem colSpan={1}>
+                        <Text
+                          color={sikaai_colors.primary}
+                          mt={2}
+                          textAlign={"right"}
+                        >
+                          C:
+                        </Text>
+                      </GridItem>
+                      <GridItem colSpan={5}>
+                        <FormControl
+                          control="input"
+                          register={register}
+                          name={`answer_text3`}
+                          placeholder="option C"
+                          error={
+                            errors?.answer_text3?.message ||
+                            errors?.optionCImage?.message ||
+                            ""
+                          }
+                        />
+                      </GridItem>
+                      <GridItem colSpan={1}>
+                        <Tooltip
+                          label="Select Image"
+                          placement={"top"}
+                          bg="white"
+                          border="none"
+                          boxShadow={"base"}
+                        >
+                          <FormLabel
+                            htmlFor="optionCImage"
+                            alignSelf={"center"}
+                            sx={{
+                              "& svg": {
+                                "& > circle": {
+                                  fill: watch("optionCImage")
+                                    ? "green"
+                                    : "#585FCD",
+                                },
+                              },
+                            }}
+                          >
+                            <AddImageIcon />
+                          </FormLabel>
+                        </Tooltip>
+                        <FormControl
+                          id="optionCImage"
+                          width="250px"
+                          control="file"
+                          register={register}
+                          name={"optionCImage"}
+                          display="none"
+                        />
+                      </GridItem>
+                      <GridItem colSpan={6}>
+                        {watch("optionCImage") && (
+                          <HStack alignItems={"top"} marginLeft={"2px"}>
+                            <Image
+                              height="55px"
+                              width="55px"
+                              src={URL.createObjectURL(
+                                watch("optionCImage")?.[0] as Blob
+                              )}
+                              alt="this is image"
+                            />
+                            <Box
+                              onClick={() => {
+                                setValue("optionCImage", null);
+                              }}
+                            >
+                              <ImageCancel style={{ cursor: "pointer" }} />
+                            </Box>
+                          </HStack>
+                        )}
+                      </GridItem>
+                    </Grid>
+                    <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
+                      <GridItem
+                        colSpan={1}
+                        flexDirection={"row"}
+                        alignItems={"center"}
+                      >
+                        <Text
+                          color={sikaai_colors.primary}
+                          mt={2}
+                          textAlign={"right"}
+                        >
+                          D:
+                        </Text>
+                      </GridItem>
+                      <GridItem colSpan={5}>
+                        <FormControl
+                          control="input"
+                          register={register}
+                          name={`answer_text4`}
+                          placeholder="option D"
+                          error={
+                            errors?.answer_text4?.message ||
+                            errors?.optionDImage?.message ||
+                            ""
+                          }
+                        />
+                      </GridItem>
+                      <GridItem colSpan={1} flexDirection={"row"}>
+                        <Tooltip
+                          label="Select Image"
+                          placement={"top"}
+                          bg="white"
+                          border="none"
+                          boxShadow={"base"}
+                        >
+                          <FormLabel
+                            htmlFor="optionDImage"
+                            alignSelf="center"
+                            sx={{
+                              "& svg": {
+                                "& > circle": {
+                                  fill: watch("optionDImage")
+                                    ? "green"
+                                    : "#585FCD",
+                                },
+                              },
+                            }}
+                          >
+                            <AddImageIcon />
+                          </FormLabel>
+                        </Tooltip>
+                        <FormControl
+                          id="optionDImage"
+                          width="250px"
+                          control="file"
+                          register={register}
+                          name={"optionDImage"}
+                          display="none"
+                        />
+                      </GridItem>
+                      <GridItem colSpan={6}>
+                        {watch("optionDImage") && (
+                          <HStack alignItems={"top"} marginLeft={"2px"}>
+                            <Image
+                              height="55px"
+                              width="55px"
+                              src={URL.createObjectURL(
+                                watch("optionDImage")?.[0] as Blob
+                              )}
+                              alt="this is image"
+                            />
+                            <Box
+                              onClick={() => {
+                                setValue("optionDImage", null);
+                              }}
+                            >
+                              <ImageCancel style={{ cursor: "pointer" }} />
+                            </Box>
+                          </HStack>
+                        )}
+                      </GridItem>
+                    </Grid>
+                  </SimpleGrid>
+                </Box>
+                <Box>
+                  <Flex gap={6}>
+                    <Text
+                      fontWeight={600}
+                      fontSize={"16px"}
+                      color={sikaai_colors.primary}
+                      whiteSpace={"nowrap"}
                     >
-                      Save
-                    </Button>
-                  </>
+                      Choose the correct Answer :
+                    </Text>
+                    <FormControl
+                      control="radio"
+                      options={[
+                        {
+                          label: "A",
+                          value: "A",
+                        },
+                        {
+                          label: "B",
+                          value: "B",
+                        },
+                        {
+                          label: "C",
+                          value: "C",
+                        },
+                        {
+                          label: "D",
+                          value: "D",
+                        },
+                      ]}
+                      register={register}
+                      name={`answer`}
+                      error={errors?.answer?.message || ""}
+                    />
+                  </Flex>
+                </Box>
+
+                <Text
+                  fontWeight={600}
+                  fontSize={"16px"}
+                  color={sikaai_colors.primary}
+                >
+                  Solution :
+                </Text>
+                <HStack justifyContent={"space-around"} gap={3} wrap={"nowrap"}>
+                  <FormControl
+                    control="editor"
+                    name={`description`}
+                    placeholder="description"
+                    data={watch("description")}
+                    // height={"50"}
+                    onChange={(data: string) => setValue("description", data)}
+                    error={
+                      errors?.description?.message ||
+                      errors?.image?.message ||
+                      ""
+                    }
+                  />
+                  {/* <FormControl
+                      
+                        flexGrow={1}
+                        control="input"
+                        register={register}
+                        name={"description"}
+                        placeholder="solution"
+                      /> */}
+                  <Box width={"6.5%"}>
+                    <Tooltip
+                      label="Select Image"
+                      placement={"top"}
+                      bg="white"
+                      border="none"
+                      boxShadow={"base"}
+                    >
+                      <FormLabel
+                        htmlFor="image"
+                        style={{ alignSelf: "center" }}
+                        sx={{
+                          "& svg": {
+                            "& > circle": {
+                              fill: watch("image") ? "green" : "#585FCD",
+                            },
+                          },
+                        }}
+                      >
+                        <AddImageIcon />
+                      </FormLabel>
+                    </Tooltip>
+                    <FormControl
+                      id="image"
+                      control="file"
+                      register={register}
+                      name={"image"}
+                      display="none"
+                    />
+                  </Box>
+                </HStack>
+                {watch("image") && (
+                  <HStack alignItems={"top"} marginLeft={"2px"}>
+                    <Image
+                      height="55px"
+                      width="55px"
+                      src={URL.createObjectURL(
+                        watch("image")?.[0] as unknown as Blob
+                      )}
+                      alt="this is image"
+                    />
+                    <Box
+                      onClick={() => {
+                        setValue("image", null);
+                        // reset({
+                        //   ...watch(),
+                        //   image: null as FileList | null,
+                        // });
+                      }}
+                    >
+                      <ImageCancel style={{ cursor: "pointer" }} />
+                    </Box>
+                  </HStack>
                 )}
-              </Flex>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
+
+                <Button type="submit" isLoading={isLoading}>
+                  Save
+                </Button>
+              </>
+            ))}
+        </Flex>
       </Box>
     </form>
   );

@@ -12,7 +12,7 @@ import QuestionSet from "@sikaai/pages/Services/QuestionBased/QuestionSet";
 import AbroadStudies from "@sikaai/pages/Services/FormBased";
 import ModelSet from "@sikaai/pages/Services/QuestionBased/ModelSet";
 import Courses from "@sikaai/pages/Services/QuestionBased/Courses";
-import Question from "../pages/Services/QuestionBased/Questions/Question";
+import Question from "../pages/Services/QuestionBased/Questions/QuestionUpload";
 import Dashboard from "@sikaai/pages/Dashboard";
 import FormBased from "@sikaai/pages/Services/FormBased";
 import Forum from "@sikaai/pages/Forum";
@@ -25,7 +25,7 @@ import ForumAnswer from "@sikaai/pages/Forum/ForumComment";
 import Roles from "@sikaai/pages/roles";
 import ContactUs from "@sikaai/pages/ContactUs";
 import PageNotFound from "@sikaai/pages/PageNotFound";
-import ViewQuestion from "@sikaai/pages/Services/QuestionBased/Questions/ViewQuestion";
+import ViewQuestion from "@sikaai/pages/Services/QuestionBased/Questions/QuestionView";
 
 const AppRoutes = () => {
   const { data: isAuthenticated, isFetching } = useAuthentication();
@@ -245,12 +245,12 @@ const AppRoutes = () => {
       element: <Login />,
     },
   ];
-
+  const route = useRoutes(routes);
   if (isFetching) {
     return <Spinner />;
   }
 
-  return useRoutes(routes);
+  return route;
 };
 
 export default AppRoutes;

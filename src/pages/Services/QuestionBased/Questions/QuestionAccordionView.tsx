@@ -29,11 +29,11 @@ import { useParams } from "react-router-dom";
 import { AddImageIcon } from "@sikaai/assets/svgs/index";
 import { sikaai_colors } from "@sikaai/theme/color";
 import Switch from "@sikaai/components/switch";
-import SubQuestion from "./subQuestion";
 import FormControl from "@sikaai/components/form/FormControl";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
+import ImageWithCancelButton from "@sikaai/components/ImageIcon/RemoveImageIcon";
 
 const defaultValues = {
   question_text: "",
@@ -53,6 +53,7 @@ const defaultValues = {
 // when you edit then only the image field is required
 // if you try to assign the same field with that then there is an error of course
 
+// TODO: simplify this logic
 const schema = Yup.object().shape(
   {
     question_text: Yup.string().when("question_image_base64", {
@@ -142,12 +143,14 @@ function getAnswer(answerArray: IOption[]) {
   }
 }
 
-const QuestionAccordion1 = ({
+const QuestionAccordionView = ({
   questionDetailsProp,
   index,
-}: {
+}: // TODO: wrap parentId this with provider
+{
   questionDetailsProp: IQuestionRes;
   index: number;
+  parentId: number | null;
 }) => {
   const {
     register,
@@ -180,7 +183,6 @@ const QuestionAccordion1 = ({
     }
   };
 
-  console.log(questionDetailsProp, "questionDetailsProp?.id");
   const onSubmitHandler = async (questionDetails: typeof defaultValues) => {
     const requestBody = {
       id: questionDetailsProp?.id,
@@ -206,6 +208,13 @@ const QuestionAccordion1 = ({
         },
         {
           answer_text: questionDetails?.answer_text3,
+          // there is a problem when you upload an image and then try to save it
+          // but there is already image
+          // in that case you cannot convert to base64 since it is null
+          // for that you have to prepopulate the value as a file
+          // backend sends data as src
+          // we send data as base64
+          // when we set the data data comes in fileList
           answer_image_base64: await convertToBase64(
             questionDetails?.optionCImage?.[0]
           ),
@@ -229,7 +238,6 @@ const QuestionAccordion1 = ({
 
     const response = await updateQuestion(requestBody);
     if (response.status === httpStatus.OK) {
-      // setFormDisabled(true);
       toastSuccess("Question set created successful");
     }
   };
@@ -239,28 +247,34 @@ const QuestionAccordion1 = ({
       reset({
         ...defaultValues,
         question_text: questionDetailsProp?.question_text,
-        // question_image_base64: questionDetailsProp?.question_image,
+        question_image_base64: questionDetailsProp?.question_image,
         answer_text1: questionDetailsProp?.options?.[0]?.answer_text,
         answer_text2: questionDetailsProp?.options?.[1]?.answer_text,
         answer_text3: questionDetailsProp?.options?.[2]?.answer_text,
         answer_text4: questionDetailsProp?.options?.[3]?.answer_text,
         // this doesnot seem to be required
         // except to show the icon green
-        // optionAImage: questionDetailsProp?.options?.[0]?.answer_image,
-        // optionBImage: questionDetailsProp?.options?.[1]?.answer_image,
-        // optionCImage: questionDetailsProp?.options?.[2]?.answer_image,
-        // optionDImage: questionDetailsProp?.options?.[3]?.answer_image,
+        optionAImage: questionDetailsProp?.options?.[0]?.answer_image,
+        optionBImage: questionDetailsProp?.options?.[1]?.answer_image,
+        optionCImage: questionDetailsProp?.options?.[2]?.answer_image,
+        optionDImage: questionDetailsProp?.options?.[3]?.answer_image,
         answer: getAnswer(questionDetailsProp?.options),
         description: questionDetailsProp?.solution?.description,
-        // image: questionDetailsProp?.solution?.image,
+        image: questionDetailsProp?.solution?.image,
       });
     }
   }, [questionDetailsProp]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <Box borderRadius={"8px"} p={3} bg={sikaai_colors.white}>
+      <Box
+        borderRadius={"8px"}
+        p={3}
+        bg={sikaai_colors.white}
+        mb={!questionDetailsProp.parent ? 3 : 0}
+      >
         <Accordion
+          // TODO: remove this
           // defaultIndex={0}
           allowToggle
           border={`1px solid ${sikaai_colors.gray_border}`}
@@ -292,8 +306,8 @@ const QuestionAccordion1 = ({
                   fontSize={"16px"}
                   color={sikaai_colors.primary}
                 >
-                  {/* {` ${questionDetails?.id}. Question`} */}
                   {` ${index}. Question`}
+                  {/* TODO delete question */}
                   {/* <button type="button" onClick={() => remove(index)}>
                               <TrashIcon />
                             </button> */}
@@ -312,15 +326,11 @@ const QuestionAccordion1 = ({
                     >
                       Description
                     </Text>
-                    <Switch
-                      // disabled={isStatusOpen}
-                      value={isStatusOpen}
-                      toggleSwitch={toggleSwitch}
-                    />
+                    <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />
                   </Flex>
-                  <Box>{isStatusOpen && <SubQuestion />}</Box>
                 </Box>
                 {!isStatusOpen && (
+                  // TODO: add description portion
                   <>
                     <Box>
                       <Text
@@ -333,7 +343,6 @@ const QuestionAccordion1 = ({
                       <Flex gap={3}>
                         <FormControl
                           control="editor"
-                          // disabled={formDisabled}
                           name={`question_text`}
                           placeholder="option A"
                           data={watch("question_text")}
@@ -371,7 +380,6 @@ const QuestionAccordion1 = ({
                         </Tooltip>
                       </Flex>
                       <FormControl
-                        // disabled={formDisabled}
                         width="250px"
                         control="file"
                         register={register}
@@ -380,7 +388,15 @@ const QuestionAccordion1 = ({
                         display="none"
                       />
                     </Box>
-
+                    {
+                      <ImageWithCancelButton
+                        image={watch("question_image_base64")}
+                        imageSrc={questionDetailsProp.question_image}
+                        onImageRemove={() =>
+                          setValue("question_image_base64", null)
+                        }
+                      />
+                    }
                     <Box>
                       <Text
                         fontWeight={600}
@@ -409,7 +425,6 @@ const QuestionAccordion1 = ({
                           <GridItem colSpan={5}>
                             <FormControl
                               control="input"
-                              // disabled={formDisabled}
                               name={`answer_text1`}
                               placeholder="option A"
                               register={register}
@@ -445,7 +460,6 @@ const QuestionAccordion1 = ({
                               </FormLabel>
                             </Tooltip>
                             <FormControl
-                              // disabled={formDisabled}
                               width="250px"
                               control="file"
                               register={register}
@@ -453,6 +467,20 @@ const QuestionAccordion1 = ({
                               id="optionImageA"
                               display="none"
                             />
+                          </GridItem>
+                          <GridItem colSpan={6}>
+                            {
+                              <ImageWithCancelButton
+                                image={watch("optionAImage")}
+                                imageSrc={
+                                  questionDetailsProp?.options?.[0]
+                                    ?.answer_image
+                                }
+                                onImageRemove={() =>
+                                  setValue("optionAImage", null)
+                                }
+                              />
+                            }
                           </GridItem>
                         </Grid>
                         <Grid
@@ -471,7 +499,6 @@ const QuestionAccordion1 = ({
                           <GridItem colSpan={5}>
                             <FormControl
                               control="input"
-                              // disabled={formDisabled}
                               register={register}
                               name={`answer_text2`}
                               placeholder="option B"
@@ -507,7 +534,6 @@ const QuestionAccordion1 = ({
                               </FormLabel>
                             </Tooltip>
                             <FormControl
-                              // disabled={formDisabled}
                               id="optionBImage"
                               width="250px"
                               control="file"
@@ -516,6 +542,17 @@ const QuestionAccordion1 = ({
                               display="none"
                             />
                           </GridItem>
+                          {
+                            <ImageWithCancelButton
+                              image={watch("optionBImage")}
+                              imageSrc={
+                                questionDetailsProp?.options?.[1]?.answer_image
+                              }
+                              onImageRemove={() =>
+                                setValue("optionBImage", null)
+                              }
+                            />
+                          }
                         </Grid>
                         <Grid
                           templateColumns="min-content repeat(6, 1fr)"
@@ -533,7 +570,6 @@ const QuestionAccordion1 = ({
                           <GridItem colSpan={5}>
                             <FormControl
                               control="input"
-                              // disabled={formDisabled}
                               register={register}
                               name={`answer_text3`}
                               placeholder="option C"
@@ -569,7 +605,6 @@ const QuestionAccordion1 = ({
                               </FormLabel>
                             </Tooltip>
                             <FormControl
-                              // disabled={formDisabled}
                               id="optionCImage"
                               width="250px"
                               control="file"
@@ -578,6 +613,17 @@ const QuestionAccordion1 = ({
                               display="none"
                             />
                           </GridItem>
+                          {
+                            <ImageWithCancelButton
+                              image={watch("optionCImage")}
+                              imageSrc={
+                                questionDetailsProp?.options?.[2]?.answer_image
+                              }
+                              onImageRemove={() =>
+                                setValue("optionCImage", null)
+                              }
+                            />
+                          }
                         </Grid>
                         <Grid
                           templateColumns="min-content repeat(6, 1fr)"
@@ -599,7 +645,6 @@ const QuestionAccordion1 = ({
                           <GridItem colSpan={5}>
                             <FormControl
                               control="input"
-                              // disabled={formDisabled}
                               register={register}
                               name={`answer_text4`}
                               placeholder="option D"
@@ -635,7 +680,6 @@ const QuestionAccordion1 = ({
                               </FormLabel>
                             </Tooltip>
                             <FormControl
-                              // disabled={formDisabled}
                               id="optionDImage"
                               width="250px"
                               control="file"
@@ -643,6 +687,20 @@ const QuestionAccordion1 = ({
                               name={"optionDImage"}
                               display="none"
                             />
+                          </GridItem>
+                          <GridItem colSpan={6}>
+                            {
+                              <ImageWithCancelButton
+                                image={watch("optionDImage")}
+                                imageSrc={
+                                  questionDetailsProp?.options?.[3]
+                                    ?.answer_image
+                                }
+                                onImageRemove={() =>
+                                  setValue("optionDImage", null)
+                                }
+                              />
+                            }
                           </GridItem>
                         </Grid>
                       </SimpleGrid>
@@ -658,7 +716,6 @@ const QuestionAccordion1 = ({
                           Choose the correct Answer
                         </Text>
                         <FormControl
-                          // disabled={formDisabled}
                           control="radio"
                           options={[
                             {
@@ -684,26 +741,23 @@ const QuestionAccordion1 = ({
                         />
                       </Flex>
                     </Box>
-
+                    <Text
+                      fontWeight={600}
+                      fontSize={"16px"}
+                      color={sikaai_colors.primary}
+                    >
+                      Solution
+                    </Text>
                     <HStack
                       justifyContent={"space-around"}
                       gap={3}
                       wrap={"nowrap"}
                     >
-                      <Text
-                        fontWeight={600}
-                        fontSize={"16px"}
-                        color={sikaai_colors.primary}
-                      >
-                        Solution
-                      </Text>
                       <FormControl
                         control="editor"
-                        // disabled={formDisabled}
                         name={`description`}
                         placeholder="description"
                         data={watch("description")}
-                        // height={"50"}
                         onChange={(data: string) =>
                           setValue("description", data)
                         }
@@ -713,14 +767,7 @@ const QuestionAccordion1 = ({
                           ""
                         }
                       />
-                      {/* <FormControl
-                          // disabled={formDisabled}
-                            flexGrow={1}
-                            control="input"
-                            register={register}
-                            name={"description"}
-                            placeholder="solution"
-                          /> */}
+
                       <Box width={"6.5%"}>
                         <Tooltip
                           label="Select Image"
@@ -744,7 +791,6 @@ const QuestionAccordion1 = ({
                           </FormLabel>
                         </Tooltip>
                         <FormControl
-                          // disabled={formDisabled}
                           id="image"
                           control="file"
                           register={register}
@@ -753,11 +799,14 @@ const QuestionAccordion1 = ({
                         />
                       </Box>
                     </HStack>
-                    <Button
-                      type="submit"
-                      isLoading={isLoading}
-                      // disabled={formDisabled}
-                    >
+                    {
+                      <ImageWithCancelButton
+                        image={watch("image")}
+                        imageSrc={questionDetailsProp?.solution?.image}
+                        onImageRemove={() => setValue("image", null)}
+                      />
+                    }
+                    <Button type="submit" isLoading={isLoading}>
                       Edit
                     </Button>
                   </>
@@ -771,4 +820,4 @@ const QuestionAccordion1 = ({
   );
 };
 
-export { QuestionAccordion1 };
+export { QuestionAccordionView };
