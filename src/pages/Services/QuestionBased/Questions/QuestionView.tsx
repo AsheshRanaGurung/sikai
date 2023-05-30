@@ -50,38 +50,34 @@ function ViewQuestion() {
       {data?.question?.map((questionDetails, index) => {
         return (
           <>
+            {/* addition of subquestion */}
+            {questionDetails?.parent &&
+              questionDetails?.id === questionDetails?.parent?.id + 1 && (
+                <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
+                  <Flex
+                    gap={3}
+                    alignItems={"center"}
+                    onClick={() => {
+                      const parentId = questionDetails.parent?.id;
+                      navigate(
+                        `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${questionSetId}?parentId=${parentId}`
+                      );
+                    }}
+                  >
+                    <Button variant={"round"}>
+                      <AddIcon />
+                    </Button>
+                    <Text>Add Sub Question</Text>
+                  </Flex>
+                </Box>
+              )}
+            {/* end */}
             <QuestionAccordionView
               key={questionDetails?.id}
               questionDetailsProp={questionDetails}
               index={index + 1}
               parentId={questionDetails?.parent?.id}
             />
-
-            {/* addition of subquestion */}
-            {questionDetails?.parent && (
-              <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
-                <Flex
-                  gap={3}
-                  alignItems={"center"}
-                  onClick={() => {
-                    const parentId = questionDetails.parent?.id;
-                    navigate(
-                      `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${questionSetId}?parentId=${parentId}`
-                    );
-                  }}
-                >
-                  {questionDetails?.id === questionDetails?.parent?.id + 1 && (
-                    <>
-                      <Button variant={"round"}>
-                        <AddIcon />
-                      </Button>
-                      <Text>Add Sub Question</Text>
-                    </>
-                  )}
-                </Flex>
-              </Box>
-            )}
-            {/* end */}
           </>
         );
       })}
@@ -91,7 +87,6 @@ function ViewQuestion() {
           alignItems={"center"}
           onClick={() => {
             navigate(
-              // `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${questionSetId}`
               `${NAVIGATION_ROUTES.CREATE_QUESTION_SET}/${questionSetId}`
             );
           }}

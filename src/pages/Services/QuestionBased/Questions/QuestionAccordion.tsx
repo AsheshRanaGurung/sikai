@@ -11,6 +11,7 @@ import {
   Tooltip,
   useDisclosure,
   Image,
+  Spacer,
 } from "@chakra-ui/react";
 import { toastSuccess } from "@sikaai/service/service-toast";
 import { useCreateQuestion } from "@sikaai/service/sikaai-question";
@@ -42,7 +43,7 @@ const defaultValues = {
   optionDImage: null as FileList | null,
   answer: "",
   description: "",
-  image: null,
+  image: null as FileList | null,
 };
 
 const schema = Yup.object().shape(
@@ -229,11 +230,7 @@ const QuestionAccordion = () => {
                 >
                   Description
                 </Text>
-                <Switch
-                  // disabled={isStatusOpen}
-                  value={isStatusOpen}
-                  toggleSwitch={toggleSwitch}
-                />
+                <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />
               </Flex>
 
               <Box>{isStatusOpen && <SubQuestion />}</Box>
@@ -245,6 +242,7 @@ const QuestionAccordion = () => {
               <SubQuestion />
             ) : (
               <>
+                {/*TODO: from here */}
                 <Box>
                   <Text
                     fontWeight={600}
@@ -702,7 +700,6 @@ const QuestionAccordion = () => {
                     name={`description`}
                     placeholder="description"
                     data={watch("description")}
-                    // height={"50"}
                     onChange={(data: string) => setValue("description", data)}
                     error={
                       errors?.description?.message ||
@@ -772,10 +769,31 @@ const QuestionAccordion = () => {
                     </Box>
                   </HStack>
                 )}
+                {/* upto here */}
 
-                <Button type="submit" isLoading={isLoading}>
-                  Save
-                </Button>
+                {/* button */}
+                <Box>
+                  <Flex pt={3}>
+                    <Spacer />
+                    <Flex gap={4}>
+                      <Button type="submit" isLoading={isLoading}>
+                        Save
+                      </Button>
+                      <Button
+                        variant={"reset"}
+                        onClick={() => {
+                          navigate(
+                            `${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${questionSetId}`
+                          );
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      {/* <Button onClick={routeChange}>Finish</Button> */}
+                    </Flex>
+                  </Flex>
+                </Box>
+                {/* end */}
               </>
             ))}
         </Flex>

@@ -27,7 +27,7 @@ interface ISolution {
   solution_image_base64?: string | unknown;
 }
 
-// questionset
+// Questionset
 export interface IQuestionSetReq {
   subject_id: string;
   name: string;
@@ -37,7 +37,7 @@ export interface IQuestionSetRes extends IQuestionSetReq {
   id: number;
   question: IQuestionRes[];
 }
-//  questionset end
+//  Questionset end
 
 export interface IQuestionSetUpdateReq {
   id: string;
@@ -222,14 +222,28 @@ const createQuestion = (questionDetails: IQuestion) => {
   );
 };
 
+interface IError {
+  data: {
+    errors: IErrors[];
+  };
+}
+
+interface IErrors {
+  subject_question_set_id: string;
+}
+
 const useCreateQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation(createQuestion, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
     },
-    onError: () => {
-      toastFail("Question creation failed");
+    onError: (e: IError) => {
+      console.log(e.data.errors[0].subject_question_set_id, "zen");
+      toastFail(
+        e?.data.errors[0]?.subject_question_set_id ||
+          "Failed to create Question"
+      );
     },
   });
 };

@@ -28,7 +28,6 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { AddImageIcon } from "@sikaai/assets/svgs/index";
 import { sikaai_colors } from "@sikaai/theme/color";
-import Switch from "@sikaai/components/switch";
 import FormControl from "@sikaai/components/form/FormControl";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -163,25 +162,13 @@ const QuestionAccordionView = ({
     defaultValues: defaultValues,
     resolver: yupResolver(schema),
   });
-  const {
-    isOpen: isStatusOpen,
-    onOpen: onStatusOpen,
-    onClose: onStatusClose,
-  } = useDisclosure();
+  const { isOpen: isStatusOpen } = useDisclosure();
   const { id: questionSetId = "" } = useParams();
 
   // react queries
   const { mutateAsync: updateQuestion, isLoading } =
     useUpdateQuestionSetDetails();
   // react queries end
-
-  const toggleSwitch = () => {
-    if (isStatusOpen) {
-      onStatusClose();
-    } else {
-      onStatusOpen();
-    }
-  };
 
   const onSubmitHandler = async (questionDetails: typeof defaultValues) => {
     const requestBody = {
@@ -317,18 +304,6 @@ const QuestionAccordionView = ({
             </h2>
             <AccordionPanel pb={4}>
               <Flex direction={"column"} gap={5}>
-                <Box>
-                  <Flex gap={5}>
-                    <Text
-                      fontWeight={600}
-                      fontSize={"16px"}
-                      color={sikaai_colors.primary}
-                    >
-                      Description
-                    </Text>
-                    <Switch value={isStatusOpen} toggleSwitch={toggleSwitch} />
-                  </Flex>
-                </Box>
                 {!isStatusOpen && (
                   // TODO: add description portion
                   <>

@@ -1,7 +1,5 @@
-import { Box, Button, Flex, Spacer } from "@chakra-ui/react";
-import { sikaai_colors } from "@sikaai/theme/color";
-import { useNavigate, useParams } from "react-router-dom";
-import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
+import { Button, Flex } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
 import QuestionAccordion from "./QuestionAccordion";
 import httpStatus from "http-status";
 import { ExcelDownloadIcon } from "@sikaai/assets/svgs";
@@ -13,11 +11,6 @@ function Question() {
 
   // TODO loader
   const { mutateAsync: downloadExcelTemplate } = useDownloadExcelTemplate();
-
-  const navigate = useNavigate();
-  const routeChange = () => {
-    navigate(`${NAVIGATION_ROUTES.SERVICES}`);
-  };
 
   const onDownloadExcelTemplate = async () => {
     const response: any = await downloadExcelTemplate();
@@ -50,27 +43,6 @@ function Question() {
 
       <Flex direction={"column"} gap={3}>
         <QuestionAccordion />
-
-        {/* cancel button */}
-        <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
-          <Flex>
-            <Spacer />
-            <Flex gap={2}>
-              <Button
-                variant={"reset"}
-                onClick={() => {
-                  navigate(
-                    `${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${questionSetId}`
-                  );
-                }}
-              >
-                Cancel
-              </Button>
-              <Button onClick={routeChange}>Finish</Button>
-            </Flex>
-          </Flex>
-        </Box>
-        {/* end */}
       </Flex>
     </>
   );

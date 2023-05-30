@@ -6,11 +6,12 @@ import {
   Grid,
   GridItem,
   HStack,
+  Image,
   SimpleGrid,
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { AddImageIcon } from "@sikaai/assets/svgs";
+import { AddImageIcon, ImageCancel } from "@sikaai/assets/svgs";
 import FormControl from "@sikaai/components/form/FormControl";
 import { IQuestion, useCreateQuestion } from "@sikaai/service/sikaai-question";
 import { sikaai_colors } from "@sikaai/theme/color";
@@ -22,25 +23,25 @@ import { useLocation, useParams } from "react-router-dom";
 const defaultValues = {
   parent_content: "",
   question_text: "",
-  question_image_base64: null,
+  question_image_base64: null as FileList | null,
   // subject_question_set_id: null as number | null,
-  answer_text1: null,
-  answer_text2: null,
-  answer_text3: null,
-  answer_text4: null,
-  optionAImage: null,
-  optionBImage: null,
-  optionCImage: null,
-  optionDImage: null,
+  answer_text1: "",
+  answer_text2: "",
+  answer_text3: "",
+  answer_text4: "",
+  optionAImage: null as FileList | null,
+  optionBImage: null as FileList | null,
+  optionCImage: null as FileList | null,
+  optionDImage: null as FileList | null,
   answer: "",
   description: "",
-  image: null,
+  image: null as FileList | null,
 };
 
 interface IQuestionDetails {
   parent_content: string;
   question_text: string;
-  question_image_base64: null;
+  question_image_base64: FileList | null;
   answer_text1: string | null;
   answer_text2: string | null;
   answer_text3: string | null;
@@ -144,13 +145,14 @@ const MyComponent = () => {
             />
           )}
           <>
+            {/* TODO: from here */}
             <Box>
               <Text
                 fontWeight={600}
                 fontSize={"16px"}
                 color={sikaai_colors.primary}
               >
-                Question
+                Question :
               </Text>
               <Flex gap={3}>
                 <FormControl
@@ -193,6 +195,26 @@ const MyComponent = () => {
                 display="none"
               />
             </Box>
+            {/* here */}
+            {watch("question_image_base64") && (
+              <HStack alignItems={"top"} marginLeft={"2px"}>
+                <Image
+                  height="55px"
+                  width="55px"
+                  src={URL.createObjectURL(
+                    watch("question_image_base64")?.[0] as Blob
+                  )}
+                  alt="this is image"
+                />
+                <Box
+                  onClick={() => {
+                    setValue("question_image_base64", null);
+                  }}
+                >
+                  <ImageCancel style={{ cursor: "pointer" }} />
+                </Box>
+              </HStack>
+            )}
 
             <Box>
               <Text
@@ -200,7 +222,7 @@ const MyComponent = () => {
                 fontSize={"16px"}
                 color={sikaai_colors.primary}
               >
-                Options
+                Options :
               </Text>
               <SimpleGrid
                 columns={{ base: 2, sm: 1, md: 2, lg: 2, xl: 2 }}
@@ -255,6 +277,27 @@ const MyComponent = () => {
                       display="none"
                     />
                   </GridItem>
+                  <GridItem colSpan={6}>
+                    {watch("optionAImage") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("optionAImage")?.[0] as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("optionAImage", null);
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
+                  </GridItem>
                 </Grid>
                 <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
                   <GridItem colSpan={1}>
@@ -305,7 +348,29 @@ const MyComponent = () => {
                       display="none"
                     />
                   </GridItem>
+                  <GridItem colSpan={6}>
+                    {watch("optionBImage") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("optionBImage")?.[0] as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("optionBImage", null);
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
+                  </GridItem>
                 </Grid>
+
                 <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
                   <GridItem colSpan={1}>
                     <Text
@@ -354,6 +419,27 @@ const MyComponent = () => {
                       name={"optionCImage"}
                       display="none"
                     />
+                  </GridItem>
+                  <GridItem colSpan={6}>
+                    {watch("optionCImage") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("optionCImage")?.[0] as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("optionCImage", null);
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
                   </GridItem>
                 </Grid>
                 <Grid templateColumns="min-content repeat(6, 1fr)" gap={6}>
@@ -409,6 +495,27 @@ const MyComponent = () => {
                       display="none"
                     />
                   </GridItem>
+                  <GridItem colSpan={6}>
+                    {watch("optionDImage") && (
+                      <HStack alignItems={"top"} marginLeft={"2px"}>
+                        <Image
+                          height="55px"
+                          width="55px"
+                          src={URL.createObjectURL(
+                            watch("optionDImage")?.[0] as Blob
+                          )}
+                          alt="this is image"
+                        />
+                        <Box
+                          onClick={() => {
+                            setValue("optionDImage", null);
+                          }}
+                        >
+                          <ImageCancel style={{ cursor: "pointer" }} />
+                        </Box>
+                      </HStack>
+                    )}
+                  </GridItem>
                 </Grid>
               </SimpleGrid>
             </Box>
@@ -454,7 +561,7 @@ const MyComponent = () => {
                 fontSize={"16px"}
                 color={sikaai_colors.primary}
               >
-                Solution
+                Solution :
               </Text>
               <FormControl
                 control="editor"
@@ -501,6 +608,30 @@ const MyComponent = () => {
                 />
               </Box>
             </HStack>
+            {watch("image") && (
+              <HStack alignItems={"top"} marginLeft={"2px"}>
+                <Image
+                  height="55px"
+                  width="55px"
+                  src={URL.createObjectURL(
+                    watch("image")?.[0] as unknown as Blob
+                  )}
+                  alt="this is image"
+                />
+                <Box
+                  onClick={() => {
+                    setValue("image", null);
+                    // reset({
+                    //   ...watch(),
+                    //   image: null as FileList | null,
+                    // });
+                  }}
+                >
+                  <ImageCancel style={{ cursor: "pointer" }} />
+                </Box>
+              </HStack>
+            )}
+            {/* upto here */}
             <Button
               onClick={handleSubmit(onSubmitHandler)}
               isLoading={isLoading}
