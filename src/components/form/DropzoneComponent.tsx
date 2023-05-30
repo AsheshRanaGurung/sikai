@@ -30,6 +30,7 @@ import Dropzone, { Accept, FileRejection } from "react-dropzone";
 interface IDropzoneComponentProps {
   setAcceptedFiles: Dispatch<SetStateAction<Blob[]>>;
   imagePreview?: string;
+  videoPreview?: string;
   previewColumnsNo?: {
     xl?: number;
     lg?: number;
@@ -74,6 +75,7 @@ export default function DropzoneComponent({
   multiple,
   helperText,
   imagePreview,
+  videoPreview,
   maxSize,
   accept,
   isFile,
@@ -84,18 +86,30 @@ export default function DropzoneComponent({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [imageIndex, setImageIndex] = useState(0);
   useEffect(() => {
-    if (imagePreview && imagePreview != "")
+    if (imagePreview && imagePreview != "") {
       setPreview([
         {
+          fileName:
+            imagePreview?.split("/")[imagePreview.split("/").length - 1] ?? "",
           fileType: "image",
           link: imagePreview ?? "",
         },
       ]);
-  }, [imagePreview]);
+    } else if (videoPreview && videoPreview != "") {
+      setPreview([
+        {
+          fileType: "video",
+          fileName:
+            videoPreview?.split("/")[videoPreview.split("/").length - 1] ?? "",
+          link: videoPreview ?? "",
+        },
+      ]);
+    }
+  }, [imagePreview, videoPreview]);
 
   const singleUpload = useMemo(() => {
     return !multiple && preview.length > 0;
-  }, [preview, imagePreview, multiple]);
+  }, [preview, imagePreview, videoPreview, multiple]);
 
   return (
     <Dropzone

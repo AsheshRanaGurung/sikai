@@ -181,7 +181,7 @@ const AdvanceAd = () => {
           }}
           items={[
             {
-              name: `Basic Ads`,
+              name: `Advance Ads`,
               route: NAVIGATION_ROUTES.PREMIUM_AD,
             },
           ]}
