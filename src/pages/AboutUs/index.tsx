@@ -1,6 +1,6 @@
-import { Box, Button, Stack, Text, useDisclosure } from "@chakra-ui/react";
-import ModalForm from "@sikaai/components/common/Modal/Modal";
+import { Flex, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import { BreadCrumb } from "@sikaai/components/common/breadCrumb";
+import ModalForm from "@sikaai/components/common/Modal/Modal";
 import DataTable from "@sikaai/components/common/table";
 import TableActions from "@sikaai/components/common/table/TableActions";
 import DropzoneComponent from "@sikaai/components/form/DropzoneComponent";
@@ -8,9 +8,11 @@ import FormControl from "@sikaai/components/form/FormControl";
 import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import {
   IAboutUs,
+  IAboutUsMedia,
   useEditAboutUs,
   useFetchAboutUs,
-  useSaveVideo,
+  useGetVideoData,
+  useUpdateVideoData,
 } from "@sikaai/service/service-aboutUs";
 import httpStatus from "http-status";
 import { useEffect, useState } from "react";
@@ -22,81 +24,98 @@ const initialValue = {
   sub_heading: "",
   description: "",
 };
+const initialValueMedia = {
+  heading: "",
+  video: "",
+  description: "",
+};
 
 const AboutUs = () => {
-  const [editId, setEditId] = useState("");
-  const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
-  const [file, setFile] = useState<File | undefined>(undefined);
-
-  // react queries
   const { data: aboutUsData = [] } = useFetchAboutUs();
-  console.log("DATA", aboutUsData);
-  console.log("DATA", typeof aboutUsData);
-  const { mutateAsync: editAboutUs, isLoading: isUpdating } = useEditAboutUs();
-  const { mutateAsync: createVideo, isLoading: isCreatingVideo } =
-    useSaveVideo();
-  // react queries end
+  const { data: videoData } = useGetVideoData();
+  const { mutateAsync: editAboutUs, isLoading } = useEditAboutUs();
+  const { mutateAsync: editVideoData, isLoading: isLoadingVideo } =
+    useUpdateVideoData();
 
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const [editId, setEditId] = useState("");
+  const [previewVideo, setPreviewVideo] = useState("");
+  const [acceptedFiles, setAcceptedFiles] = useState<Blob[]>([]);
+  const [editTable, setEditTable] = useState(false);
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+  } = useDisclosure();
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: initialValue,
   });
+  const {
+    register: registerMedia,
+    reset: resetMedia,
+    handleSubmit: handleSubmitMedia,
+  } = useForm({
+    defaultValues: initialValueMedia,
+  });
 
   const onCloseHandler = () => {
-    onClose();
-    reset(initialValue);
-  };
-
-  const onSubmitHandler = async (data: typeof initialValue) => {
-    try {
-      const editAboutUsResponse = await editAboutUs({ ...data, id: editId });
-
-      if (editAboutUsResponse?.status == httpStatus.OK) {
-        onCloseHandler();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setEditId("");
+    setEditTable(false);
+    setPreviewVideo("");
+    onModalClose();
   };
 
   useEffect(() => {
-    if (editId) {
+    if (editId && editTable) {
       const findEditData = aboutUsData?.find(
         item => item.id.toString() == editId
       );
-
       reset({
         heading: findEditData?.heading,
         sub_heading: findEditData?.sub_heading,
         description: findEditData?.description,
       });
-    }
-  }, [editId]);
+    } else {
+      const findEditMediaData = videoData?.find(
+        item => item.id.toString() == editId
+      );
+      resetMedia({
+        heading: findEditMediaData?.heading,
 
-  useEffect(() => {
-    if (acceptedFiles) {
-      const intoFile = new File([acceptedFiles[0]], "video");
-      setFile(intoFile);
+        description: findEditMediaData?.description,
+      });
+      setPreviewVideo(findEditMediaData?.video || "");
     }
-  }, [acceptedFiles]);
+  }, [editId, editTable]);
+
+  const onSubmitHandler = async (data: typeof initialValue) => {
+    const editAboutUsResponse = await editAboutUs({
+      ...data,
+      id: editId,
+    });
+    if (editAboutUsResponse?.status == httpStatus.OK) {
+      onCloseHandler();
+    }
+  };
+
+  const onSubmitMediaHandler = async (data: typeof initialValueMedia) => {
+    const editVideoResponse = await editVideoData({
+      ...data,
+      video: acceptedFiles?.[0],
+    });
+    if (editVideoResponse?.status == httpStatus.OK) {
+      onCloseHandler();
+    }
+  };
 
   const columns = [
     {
-      Header: "SN",
-      Cell: (cell: Cell<IAboutUs>) => {
-        return <Text>{cell.row.index + 1}</Text>;
-      },
+      Header: "Heading",
+      accessor: "heading",
     },
     {
-      Header: "Created Date",
-      Cell: (cell: Cell<IAboutUs>) => {
-        return <Text>{cell.row.original.created_at.slice(0, 10)}</Text>;
-      },
-    },
-    { Header: "Heading", accessor: "heading" },
-    {
-      Header: "Sub-heading",
+      Header: "Sub Heading",
       accessor: "sub_heading",
     },
     {
@@ -108,9 +127,9 @@ const AboutUs = () => {
       Cell: (cell: Cell<IAboutUs>) => {
         const onEdit = () => {
           setEditId(cell.row.original.id?.toString());
-          onOpen();
+          setEditTable(true);
+          onModalOpen();
         };
-
         return (
           <Stack alignItems={"flex-start"}>
             <TableActions onEdit={onEdit} />
@@ -120,80 +139,101 @@ const AboutUs = () => {
     },
   ];
 
-  const onVideUpload = async () => {
-    try {
-      const saveVideoResponse = await createVideo({ video: file });
-      if (saveVideoResponse?.status == httpStatus.OK) {
-        setAcceptedFiles([]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const columnMedia = [
+    {
+      Header: "Heading",
+      accessor: "heading",
+    },
+
+    {
+      Header: "Video",
+      accessor: "video",
+    },
+    {
+      Header: "Description",
+      accessor: "description",
+    },
+    {
+      Header: "Action",
+      Cell: (cell: Cell<IAboutUsMedia>) => {
+        return (
+          <Stack alignItems={"flex-start"}>
+            <TableActions
+              onEdit={() => {
+                setEditId(cell.row.original.id?.toString());
+                onModalOpen();
+              }}
+            />
+          </Stack>
+        );
+      },
+    },
+  ];
 
   return (
     <>
-      {" "}
       <BreadCrumb
         items={[]}
         title={{ name: "About Us", route: `${NAVIGATION_ROUTES.ABOUT_US}` }}
       />
-      <Box marginY={5} height={240} width={"100%"}>
-        <DropzoneComponent
-          setAcceptedFiles={setAcceptedFiles}
-          helperText="Please Upload Files of size smaller than 10MB"
-          multiple
-          accept={{
-            // "application/pdf": [".pdf"],
-            // "image/png": [".png", ".jpeg", ".jpg"],
-            "video/*": [".mp4"],
-          }}
-        />
-      </Box>
-      {/* TODO: change this button */}
-      <Button
-        width={"100%"}
-        onClick={onVideUpload}
-        marginY={5}
-        isLoading={isCreatingVideo}
-      >
-        Upload Video
-      </Button>
-      <DataTable data={aboutUsData ?? []} columns={columns} />
+      <Flex flexDir={"column"} gap={10}>
+        <DataTable columns={columnMedia} data={videoData ?? []} />
+        <DataTable columns={columns} data={aboutUsData} />
+      </Flex>
+
       <ModalForm
-        isLoading={isUpdating}
-        isModalOpen={isOpen}
-        title={"Edit About Us"}
+        isModalOpen={isModalOpen}
+        title={"Edit"}
         closeModal={onCloseHandler}
         resetButttonText={"Cancel"}
         submitButtonText={"Update"}
-        submitHandler={handleSubmit(onSubmitHandler)}
+        submitHandler={
+          editTable
+            ? handleSubmit(onSubmitHandler)
+            : handleSubmitMedia(onSubmitMediaHandler)
+        }
+        isLoading={editTable ? isLoading : isLoadingVideo}
       >
         <FormControl
-          control="input"
+          control={"input"}
           size="lg"
-          register={register}
-          name="heading"
-          placeholder={"Enter Heading"}
+          register={editTable ? register : registerMedia}
+          name={"heading"}
+          placeholder={"Enter heading"}
           label={"Heading"}
           isRequired
         />
+        {editTable ? (
+          <FormControl
+            control={"input"}
+            size="lg"
+            register={register}
+            name={"sub_heading"}
+            placeholder={"Enter sub-heading"}
+            label={"Sub Heading"}
+            isRequired
+          />
+        ) : (
+          <>
+            <Text fontWeight={"bold"} fontSize={"lg"}>
+              Video
+            </Text>
+            <DropzoneComponent
+              setAcceptedFiles={setAcceptedFiles}
+              helperText="Please Upload files of size smaller than 10MB"
+              videoPreview={previewVideo}
+              multiple
+              accept={{ "video/*": [".mp4"] }}
+            />
+          </>
+        )}
         <FormControl
-          control="input"
-          size="lg"
-          register={register}
-          name="sub_heading"
-          placeholder={"Enter Sub Heading"}
-          label={"Sub Heading"}
-          isRequired
-        />
-        <FormControl
-          control="textArea"
-          size="lg"
-          register={register}
-          name="description"
-          placeholder={"Type Description"}
-          label={"Answer"}
+          control={"textArea"}
+          size={"lg"}
+          register={editTable ? register : registerMedia}
+          name={"description"}
+          placeholder={"Type here"}
+          label={"Description"}
           isRequired
         />
       </ModalForm>

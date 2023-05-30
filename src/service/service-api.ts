@@ -18,9 +18,16 @@ export const api = {
   form: {
     get: "/api/v1/service/{service_id}/service-form/",
     getById: "/api/v1/service/service-form/{id}/",
+    delete: "/api/v1/service/service-form/{id}/",
   },
   subjects: {
     get: "/api/v1/service/course/{course_id}/subject/",
+    itTraining: {
+      get: "/api/v1/service/course/it-training/",
+      patch: "/api/v1/service/course/it-training/{id}/",
+      post: "/api/v1/service/course/it-training/",
+      delete: "/api/v1/service/course/it-training/{id}",
+    },
   },
   // TODO: get and post has similar api name
   subjects_set: {
@@ -45,6 +52,8 @@ export const api = {
     fetch: "/api/v1/info/about-us-content/",
     edit: "/api/v1/info/about-us-content/{id}/",
     saveVideo: "/api/v1/info/about-us-media/",
+    get: "/api/v1/info/about-us-media/",
+    patch: "/api/v1/info/about-us-media/",
   },
   advertisement: {
     get: "api/v1/advertisement/?type={type}",

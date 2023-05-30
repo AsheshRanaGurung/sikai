@@ -181,7 +181,7 @@ const PremiumAd = () => {
           }}
           items={[
             {
-              name: `Basic Ads`,
+              name: `Premium Ads`,
               route: NAVIGATION_ROUTES.PREMIUM_AD,
             },
           ]}
