@@ -142,7 +142,7 @@ function getAnswer(answerArray: IOption[]) {
   }
 }
 
-const QuestionAccordionView = ({
+const QuestionViewAccordion = ({
   questionDetailsProp,
   index,
 }: // TODO: wrap parentId this with provider
@@ -795,4 +795,4 @@ const QuestionAccordionView = ({
   );
 };
 
-export { QuestionAccordionView };
+export { QuestionViewAccordion };

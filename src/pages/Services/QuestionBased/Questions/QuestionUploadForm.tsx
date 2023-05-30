@@ -120,7 +120,7 @@ const schema = Yup.object().shape(
   ]
 );
 
-const QuestionAccordion = () => {
+const QuestionUploadForm = () => {
   const navigate = useNavigate();
 
   // Access optional params
@@ -801,4 +801,4 @@ const QuestionAccordion = () => {
     </form>
   );
 };
-export default QuestionAccordion;
+export default QuestionUploadForm;

@@ -1,6 +1,6 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import QuestionAccordion from "./QuestionAccordion";
+import QuestionUploadForm from "./QuestionUploadForm";
 import httpStatus from "http-status";
 import { ExcelDownloadIcon } from "@sikaai/assets/svgs";
 import { useDownloadExcelTemplate } from "@sikaai/service/sikaai-question";
@@ -42,7 +42,7 @@ function Question() {
       {/* bulk upload end */}
 
       <Flex direction={"column"} gap={3}>
-        <QuestionAccordion />
+        <QuestionUploadForm />
       </Flex>
     </>
   );

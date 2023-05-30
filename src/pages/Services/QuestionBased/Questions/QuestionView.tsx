@@ -4,7 +4,7 @@ import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useGetQuestionSetById } from "@sikaai/service/sikaai-question";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useNavigate, useParams } from "react-router-dom";
-import { QuestionAccordionView } from "./QuestionAccordionView";
+import { QuestionViewAccordion } from "./QuestionViewAccordion";
 
 function ViewQuestion() {
   const { id: questionSetId = "" } = useParams();
@@ -72,7 +72,7 @@ function ViewQuestion() {
                 </Box>
               )}
             {/* end */}
-            <QuestionAccordionView
+            <QuestionViewAccordion
               key={questionDetails?.id}
               questionDetailsProp={questionDetails}
               index={index + 1}
