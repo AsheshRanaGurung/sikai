@@ -694,6 +694,7 @@ const QuestionViewAccordion = ({
                         </Text>
                         <FormControl
                           control="radio"
+                          value={getAnswer(questionDetailsProp?.options)}
                           options={[
                             {
                               label: "A",

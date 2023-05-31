@@ -114,7 +114,7 @@ const MyComponent = () => {
     parent_content: "",
     ...subDefaultVAlues,
   };
-  console.log(defaultValues, "defaultValues");
+
   const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
   const {
     register,
