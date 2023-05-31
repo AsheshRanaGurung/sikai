@@ -26,6 +26,7 @@ import {
   useGetDashboardCard,
   useGetStudent,
 } from "@sikaai/service/service-dashboard";
+import { CellProps } from "react-table";
 
 const Dashboard = () => {
   //react query
@@ -117,7 +118,10 @@ const Dashboard = () => {
       },
       {
         Header: "Date",
-        accessor: "created_at",
+        Cell: ({ row }: CellProps<{ created_at: string }>) => {
+          const date = row.original?.created_at?.substring(0, 10);
+          return date;
+        },
       },
     ],
     []
