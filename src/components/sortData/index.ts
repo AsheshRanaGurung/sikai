@@ -32,4 +32,4 @@ export function customSort(
 array.sort(customSort);
 
 // Output the sorted and grouped array
-console.log(array.map(obj => obj.id));
+// console.log(array.map(obj => obj.id));

@@ -1,8 +1,10 @@
 import { Button } from "@chakra-ui/react";
 import { ExcelIcon } from "@sikaai/assets/svgs";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 import { useBulkUpload } from "@sikaai/service/sikaai-question";
 import httpStatus from "http-status";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import FormControl from "../form/FormControl";
 
 const defaultValues = {
@@ -11,7 +13,11 @@ const defaultValues = {
 
 const BulkUpload = ({ subject_set_id }: { subject_set_id: string }) => {
   const { handleSubmit, register } = useForm({ defaultValues });
+  const navigate = useNavigate();
+
+  // react queries
   const { mutateAsync: bulkUpload, isLoading } = useBulkUpload();
+  // react queries end
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -28,8 +34,8 @@ const BulkUpload = ({ subject_set_id }: { subject_set_id: string }) => {
         csv_file: bulkData.csv_file?.[0] || null,
         subject_set_id,
       });
-      if (response.status === httpStatus.CREATED) {
-        console.log("");
+      if (response.status === httpStatus.OK) {
+        navigate(`${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${subject_set_id}`);
       }
     } catch (e) {
       console.error(e);

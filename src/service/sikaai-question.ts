@@ -1,3 +1,7 @@
+import {
+  ErrorResponseData,
+  responseErrorHandler,
+} from "@sikaai/utils/error-handle";
 import { AxiosError, toFormData } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { api, SikaaiResponse } from "./service-api";
@@ -222,28 +226,14 @@ const createQuestion = (questionDetails: IQuestion) => {
   );
 };
 
-interface IError {
-  data: {
-    errors: IErrors[];
-  };
-}
-
-interface IErrors {
-  subject_question_set_id: string;
-}
-
 const useCreateQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation(createQuestion, {
     onSuccess: () => {
       queryClient.invalidateQueries(api.subjects_set.get);
     },
-    onError: (e: IError) => {
-      console.log(e.data.errors[0].subject_question_set_id, "zen");
-      toastFail(
-        e?.data.errors[0]?.subject_question_set_id ||
-          "Failed to create Question"
-      );
+    onError: (e: ErrorResponseData) => {
+      responseErrorHandler(e);
     },
   });
 };
