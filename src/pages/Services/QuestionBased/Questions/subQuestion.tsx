@@ -110,6 +110,7 @@ const subQuestionSchema = Yup.object().shape(
     ["answer_text1", "optionAImage"],
   ]
 );
+
 const MyComponent = () => {
   const defaultValues = {
     parent_content: "",
@@ -201,7 +202,6 @@ const MyComponent = () => {
   return (
     <>
       {/* TODO: check this */}
-      {/* <form onSubmit={handleSubmit(onSubmitHandler)}> */}
       <form>
         <Flex direction={"column"} gap={5}>
           {!parentId && (
@@ -222,7 +222,9 @@ const MyComponent = () => {
               register={register as UseFormRegister<Partial<IdefaultForm>>}
             />
             <Button
-              onClick={handleSubmit(onSubmitHandler)}
+              onClick={() => {
+                handleSubmit(onSubmitHandler);
+              }}
               isLoading={isLoading}
             >
               Save

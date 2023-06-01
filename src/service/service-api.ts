@@ -78,6 +78,7 @@ export const api = {
   question: {
     get: "/api/v1/assessment/question/",
     post: "/api/v1/assessment/question/",
+    getById: "/api/v1/assessment/question/{id}/",
     patch: "/api/v1/assessment/question/{id}/",
     delete: "/api/v1/assessment/question/{id}/",
     bulk: {

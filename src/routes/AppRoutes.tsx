@@ -26,6 +26,7 @@ import Roles from "@sikaai/pages/roles";
 import ContactUs from "@sikaai/pages/ContactUs";
 import PageNotFound from "@sikaai/pages/PageNotFound";
 import ViewQuestion from "@sikaai/pages/Services/QuestionBased/Questions/QuestionView";
+import QuestionViewForm from "@sikaai/pages/Services/QuestionBased/Questions/QuestionViewForm";
 
 const AppRoutes = () => {
   const { data: isAuthenticated, isFetching } = useAuthentication();
@@ -165,6 +166,16 @@ const AppRoutes = () => {
       element: isAuthenticated ? (
         <Layout>
           <ViewQuestion />
+        </Layout>
+      ) : (
+        <PageNotFound />
+      ),
+    },
+    {
+      path: `${NAVIGATION_ROUTES.VIEW_QUESTION}/questionSet/:questionSetId/question/:id`,
+      element: isAuthenticated ? (
+        <Layout>
+          <QuestionViewForm />
         </Layout>
       ) : (
         <PageNotFound />

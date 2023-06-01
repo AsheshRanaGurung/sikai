@@ -82,11 +82,11 @@ export interface IQuestionDetailsReq {
   ///////////////
   id: number;
   parent_id?: number;
-  parent_content?: string;
+  parent_content?: string | null;
 
   question_text: string;
   // question_image: string
-  question_image_base64: string | unknown;
+  question_image_base64?: string | unknown;
   // subject: number
   options: IOptionReq[];
   solution: ISolution;
@@ -95,13 +95,13 @@ export interface IQuestionDetailsReq {
 export interface IOptionReq {
   answer_text: string | null;
   // test this for unkknown//////////////
-  answer_image_base64: string | unknown;
+  answer_image_base64?: string | unknown;
   is_correct: boolean;
 }
 
 export interface ISolutionReq {
   description: string;
-  solution_image_base64: string;
+  solution_image_base64?: string;
 }
 
 // update question
@@ -109,6 +109,7 @@ export interface ISolutionReq {
 const updateQuestionSetDetails = (questionSetDetails: IQuestionDetailsReq) => {
   const requestPayload = {
     ...questionSetDetails,
+    parent_content: questionSetDetails?.parent_content ?? null,
     question_text: questionSetDetails?.question_text ?? null,
     question_image_base64:
       typeof questionSetDetails?.question_image_base64 == "string"
@@ -230,7 +231,7 @@ const useCreateQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation(createQuestion, {
     onSuccess: () => {
-      queryClient.invalidateQueries(api.subjects_set.get);
+      queryClient.invalidateQueries(api.subjects_set.getById);
     },
     onError: (e: ErrorResponseData) => {
       responseErrorHandler(e);
