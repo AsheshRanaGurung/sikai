@@ -61,16 +61,16 @@ export function responseErrorHandler<T>(
         res.data.errors[0],
         Object.keys(res.data.errors[0])[0]
       );
-      throw toastFail(errorResponse as unknown as string);
+      return toastFail(errorResponse as unknown as string);
     }
     // fire alert
   } else if (res && res.data && res.data.message) {
-    throw toastFail(res.data.message);
+    return toastFail(res.data.message);
   }
 
   if (res && res.data && res.data.message) {
-    throw toastFail(res.data.message);
+    return toastFail(res.data.message);
   }
 
-  throw toastFail("Something went wrong, please try again.");
+  return toastFail("Something went wrong, please try again.");
 }

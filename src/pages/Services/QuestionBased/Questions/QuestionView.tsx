@@ -5,7 +5,6 @@ import { useGetQuestionSetById } from "@sikaai/service/sikaai-question";
 import { sikaai_colors } from "@sikaai/theme/color";
 import { useNavigate, useParams } from "react-router-dom";
 import { QuestionViewAccordion } from "./QuestionViewAccordion";
-import parse from "html-react-parser";
 
 function ViewQuestion() {
   const { id: questionSetId = "" } = useParams();
@@ -18,7 +17,7 @@ function ViewQuestion() {
   // react queries end
 
   if (isFetching) {
-    return <> loading ...</>;
+    return <Spinner />;
   }
 
   if (!data) {
@@ -54,7 +53,7 @@ function ViewQuestion() {
             {/* addition of subquestion */}
             {questionDetails?.parent &&
               questionDetails?.id === questionDetails?.parent?.id + 1 && (
-                <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3}>
+                <Box bg={sikaai_colors.white} borderRadius={"8px"} p={3} mt={3}>
                   <Flex
                     gap={3}
                     alignItems={"center"}

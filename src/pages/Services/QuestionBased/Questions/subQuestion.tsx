@@ -10,12 +10,13 @@ import {
   UseFormWatch,
   useForm,
 } from "react-hook-form";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CKForm, { IdefaultForm } from "../QuestionCKform";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as Yup from "yup";
 import { defaultValues as subDefaultVAlues } from "./QuestionUploadForm";
+import { NAVIGATION_ROUTES } from "@sikaai/routes/routes.constant";
 
 interface IQuestionDetails {
   parent_content?: string;
@@ -109,12 +110,13 @@ const subQuestionSchema = Yup.object().shape(
     ["answer_text1", "optionAImage"],
   ]
 );
+
 const MyComponent = () => {
   const defaultValues = {
     parent_content: "",
     ...subDefaultVAlues,
   };
-  console.log(defaultValues, "defaultValues");
+
   const { mutateAsync: createQuestion, isLoading } = useCreateQuestion();
   const {
     register,
@@ -126,13 +128,15 @@ const MyComponent = () => {
     defaultValues,
     resolver: yupResolver(subQuestionSchema),
   });
+
   const { id: questionSetId = "" } = useParams();
+  const navigate = useNavigate();
 
   // Access optional params
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const parentId = queryParams.get("parentId");
-  // end
+  // Access optional params end
 
   const onSubmitHandler = async (questionDetails: IQuestionDetails) => {
     let requestBody: IQuestion = {
@@ -191,14 +195,13 @@ const MyComponent = () => {
     );
 
     if (response.status === httpStatus.CREATED) {
-      console.log("navigation to view page");
+      navigate(`${NAVIGATION_ROUTES.VIEW_QUESTION_SET}/${questionSetId}`);
     }
   };
 
   return (
     <>
       {/* TODO: check this */}
-      {/* <form onSubmit={handleSubmit(onSubmitHandler)}> */}
       <form>
         <Flex direction={"column"} gap={5}>
           {!parentId && (
@@ -219,8 +222,14 @@ const MyComponent = () => {
               register={register as UseFormRegister<Partial<IdefaultForm>>}
             />
             <Button
+<<<<<<< HEAD
               onClick={handleSubmit(onSubmitHandler)}
               // type="submit"
+=======
+              onClick={() => {
+                handleSubmit(onSubmitHandler);
+              }}
+>>>>>>> origin/main
               isLoading={isLoading}
             >
               Saveghjkl
