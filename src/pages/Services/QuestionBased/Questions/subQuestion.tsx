@@ -222,14 +222,8 @@ const MyComponent = () => {
               register={register as UseFormRegister<Partial<IdefaultForm>>}
             />
             <Button
-<<<<<<< HEAD
               onClick={handleSubmit(onSubmitHandler)}
               // type="submit"
-=======
-              onClick={() => {
-                handleSubmit(onSubmitHandler);
-              }}
->>>>>>> origin/main
               isLoading={isLoading}
             >
               Saveghjkl

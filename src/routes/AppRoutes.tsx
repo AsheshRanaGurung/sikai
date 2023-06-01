@@ -181,10 +181,6 @@ const AppRoutes = () => {
         <PageNotFound />
       ),
     },
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
     {
       path: `${NAVIGATION_ROUTES.MODEL_SET}/:service/:serviceId/:course/:courseId`,
       element: isAuthenticated ? (
