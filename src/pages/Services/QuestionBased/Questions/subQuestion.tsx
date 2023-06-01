@@ -186,7 +186,7 @@ const MyComponent = () => {
     if (questionDetails.parent_content) {
       requestBody = {
         ...requestBody,
-        parent_content: questionDetails.parent_content ?? null,
+        parent_content: questionDetails.parent_content,
       };
     }
 

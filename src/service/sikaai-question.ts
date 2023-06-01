@@ -109,7 +109,7 @@ export interface ISolutionReq {
 const updateQuestionSetDetails = (questionSetDetails: IQuestionDetailsReq) => {
   const requestPayload = {
     ...questionSetDetails,
-    parent_content: questionSetDetails?.parent_content ?? null,
+    parent_content: questionSetDetails?.parent_content,
     question_text: questionSetDetails?.question_text ?? null,
     question_image_base64:
       typeof questionSetDetails?.question_image_base64 == "string"
