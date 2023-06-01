@@ -245,7 +245,6 @@ const QuestionViewAccordion = ({
         optionBImage: questionDetailsProp?.options?.[1]?.answer_image,
         optionCImage: questionDetailsProp?.options?.[2]?.answer_image,
         optionDImage: questionDetailsProp?.options?.[3]?.answer_image,
-        // here
         answer: getAnswer(questionDetailsProp?.options),
         description: questionDetailsProp?.solution?.description,
         image: questionDetailsProp?.solution?.image,
@@ -694,6 +693,7 @@ const QuestionViewAccordion = ({
                         </Text>
                         <FormControl
                           control="radio"
+                          value={getAnswer(questionDetailsProp?.options)}
                           options={[
                             {
                               label: "A",
