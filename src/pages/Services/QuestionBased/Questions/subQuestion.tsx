@@ -36,7 +36,7 @@ interface IQuestionDetails {
 
 const subQuestionSchema = Yup.object().shape(
   {
-    parent_content: Yup.string().required("This field is required"),
+    // parent_content: Yup.string().required("This field is required"),
 
     question_text: Yup.string().when("question_image_base64", {
       is: null,
@@ -220,9 +220,10 @@ const MyComponent = () => {
             />
             <Button
               onClick={handleSubmit(onSubmitHandler)}
+              // type="submit"
               isLoading={isLoading}
             >
-              Save
+              Saveghjkl
             </Button>
           </>
         </Flex>
