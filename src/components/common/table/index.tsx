@@ -466,7 +466,6 @@ const DataTable = React.memo(
                         </Flex>
                       ) : null}
                     </Tr>
-                    {/* Show this view on expand */}
                     {row.isExpanded && (
                       <Tr {...row.getRowProps()}>
                         <Td colSpan={columns.length} p={0}></Td>
