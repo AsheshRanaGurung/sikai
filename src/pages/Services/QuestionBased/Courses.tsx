@@ -87,6 +87,7 @@ const Courses = () => {
 
   const columns = useMemo(
     () => [
+<<<<<<< Updated upstream:src/pages/Services/QuestionBased/Courses.tsx
       { Header: "Services", accessor: "name" },
       { Header: "Description", accessor: "description" },
       { Header: "Total Marks", accessor: "course_info.total_questions" },
@@ -97,46 +98,39 @@ const Courses = () => {
         Cell: ({ row }: CellProps<{ created_at: string }>) => {
           const date = row.original?.created_at.substring(0, 10);
           return date;
+=======
+      {
+        header: "S.N",
+        accessorFn: (_cell, index: number) => {
+          return index + 1;
         },
       },
       {
-        Header: "Action",
-        Cell: ({ row }: CellProps<{ name: string; id: string }>) => {
-          const encodedName = encodeURIComponent(row.original?.name);
-          const onEdit = () => {
-            setCourseId(row.original?.id);
-            setEdit(true);
-            onModalOpen();
-          };
-          // const onDelete = () => {
-          //   console.log("here");
-          // };
-          const onSetting = () => {
-            navigate(
-              `${NAVIGATION_ROUTES.SUBJECTS}/${encodedService}/${serviceId}/${encodedName}/${row.original.id}`
-            );
-          };
-          const onShowQues = () => {
-            navigate(
-              `${NAVIGATION_ROUTES.MODEL_SET}/${encodedService}/${serviceId}/${encodedName}/${row.original?.id}`
-            );
-          };
-          return (
-            <Stack alignItems={"flex-start"}>
-              <TableActions
-                onEdit={onEdit}
-                onSetting={onSetting}
-                onShowQues={onShowQues}
-                // onDelete={onDelete}
-              />
-            </Stack>
-          );
+        header: "Name",
+        accessorKey: "name",
+        accessorFn: (_cell: Idata) => {
+          return _cell?.user?.name;
+>>>>>>> Stashed changes:src/pages/Services/QuestionBased/Courses/index.tsx
+        },
+      },
+      {
+        header: "Are you cool?",
+        cell: ({
+          row,
+        }: CellContext<
+          {
+            coolness: boolean;
+          },
+          any
+        >) => {
+          return <p>{coolness}</p>;
         },
       },
     ],
     []
   );
 
+<<<<<<< Updated upstream:src/pages/Services/QuestionBased/Courses.tsx
   const onSubmitHandler = async (courseDetails: typeof defaultValues) => {
     const data = {
       id: courseId,
@@ -277,6 +271,9 @@ const Courses = () => {
       </ModalForm>
     </>
   );
+=======
+  return <DataTable columns={columns} data={tableData || []} />;
+>>>>>>> Stashed changes:src/pages/Services/QuestionBased/Courses/index.tsx
 };
 
 export default Courses;

@@ -363,13 +363,7 @@ const DataTable = React.memo(
               <Progress size="xs" isIndeterminate />
             </Box>
           )}
-          <Table
-            {...getTableProps()}
-            size="sm"
-            sx={
-              rowBottomBorder ? styleTableWithButtom : styleTableWithRightBorder
-            }
-          >
+          <Table {...getTableProps()} size="sm">
             <Thead
               background={headerBackgroundColor ? headerBackgroundColor : ""}
             >
